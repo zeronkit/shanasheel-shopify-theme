@@ -1,0 +1,13 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  A top level header link. Links with children open their navigator panel.
+  Params: link, panel_id
+{%- endcomment -%}
+{%- if link.links.size > 0 -%}
+  <button type="button" class="st-header__link" data-st-open="Navigator" data-st-panel="{{ panel_id }}" aria-haspopup="dialog">
+    {{- link.title | escape -}}
+    {% render 'icon', name: 'down' %}
+  </button>
+{%- else -%}
+  <a class="st-header__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+{%- endif -%}

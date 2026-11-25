@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "contact": {
+      "type": "sh-contact",
+      "blocks": {
+        "q1": {
+          "type": "quick",
+          "settings": {
+            "link": "/pages/shipping-returns"
+          }
+        },
+        "q2": {
+          "type": "quick",
+          "settings": {
+            "link": "/pages/faq"
+          }
+        },
+        "q3": {
+          "type": "quick",
+          "settings": {
+            "link": "/blogs/journal"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "contact"
+  ]
+}

@@ -1,0 +1,115 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Dimensions and materials block of the product page.
+  Params: block, product, color_scheme
+{%- endcomment -%}
+{%- liquid
+  assign dim_keys = 'width,depth,height,seat_height,diameter,length,weight' | split: ','
+  assign figures = ''
+  assign rows = ''
+  for key in dim_keys
+    assign field = product.metafields.shanasheel[key]
+    if field == blank
+      continue
+    endif
+    if field.type == 'dimension' or field.type == 'weight' or field.type == 'volume'
+      # Drop a trailing ".0" so 210.0 cm reads 210 cm.
+      assign amount = field.value.value | round: 2 | append: ''
+      assign amount_parts = amount | split: '.'
+      if amount_parts[1] == '0' or amount_parts[1] == '00'
+        assign amount = amount_parts[0]
+      endif
+      assign shown_value = amount | append: ' ' | append: field.value.unit | escape
+    else
+      assign shown_value = field | metafield_text | escape
+    endif
+    assign row_key = 'products.dimensions.' | append: key
+    assign row_label = row_key | t
+    capture rows
+      echo rows
+      echo '<tr><th scope="row">' | append: row_label | append: '</th><td>' | append: shown_value | append: '</td></tr>'
+    endcapture
+    if key == 'width' or key == 'depth' or key == 'height'
+      assign short_key = 'products.dimensions.' | append: key | append: '_short'
+      assign short_label = short_key | t
+      capture figures
+        echo figures
+        echo '<div class="st-dims__figure"><dt><abbr title="' | append: row_label | append: '">' | append: short_label | append: '</abbr></dt><dd>' | append: shown_value | append: '</dd></div>'
+      endcapture
+    endif
+  endfor
+
+  assign dim_lines = product.metafields.shanasheel.dimensions.value | default: block.settings.rows | newline_to_br | split: '<br />'
+  for line in dim_lines
+    assign line = line | strip
+    if line contains ':'
+      assign line_label = line | split: ':' | first | strip
+      assign line_value = line | remove_first: line_label | remove_first: ':' | strip | escape
+      assign line_label = line_label | escape
+      capture rows
+        echo rows
+        echo '<tr><th scope="row">' | append: line_label | append: '</th><td>' | append: line_value | append: '</td></tr>'
+      endcapture
+    endif
+  endfor
+
+  assign materials_field = product.metafields.shanasheel.materials | default: product.metafields.custom.material
+  assign finish_field = product.metafields.shanasheel.finish
+  if materials_field != blank
+    assign row_label = 'products.dimensions.materials' | t
+    assign shown_value = materials_field | metafield_text | escape
+    capture rows
+      echo rows
+      echo '<tr><th scope="row">' | append: row_label | append: '</th><td>' | append: shown_value | append: '</td></tr>'
+    endcapture
+  endif
+  if finish_field != blank
+    assign row_label = 'products.dimensions.finish' | t
+    assign shown_value = finish_field | metafield_text | escape
+    capture rows
+      echo rows
+      echo '<tr><th scope="row">' | append: row_label | append: '</th><td>' | append: shown_value | append: '</td></tr>'
+    endcapture
+  endif
+
+  capture from_description
+    render 'description-part', description: product.description, want: 'dimensions'
+    if materials_field == blank
+      render 'description-part', description: product.description, want: 'materials'
+    endif
+  endcapture
+
+  assign guide_page = block.settings.guide_page
+  if guide_page == blank and pages['measuring-guide'].title != blank
+    assign guide_page = pages['measuring-guide']
+  endif
+-%}
+{%- if rows != blank or from_description != blank -%}
+  <div class="st-spec st-dims" {{ block.shopify_attributes }}>
+    <h2 class="st-h4 st-spec__heading">{{ block.settings.heading | escape }}</h2>
+    {%- if block.settings.show_figures and figures != blank -%}
+      <dl class="st-dims__figures">{{ figures }}</dl>
+    {%- endif -%}
+    {%- if rows != blank -%}
+      <table class="st-dims__table">
+        <caption class="st-visually-hidden">{{ block.settings.heading | escape }}</caption>
+        <tbody>{{ rows }}</tbody>
+      </table>
+    {%- endif -%}
+    {%- if from_description != blank -%}
+      <div class="st-rte st-small">{{ from_description }}</div>
+    {%- endif -%}
+    {%- if guide_page != blank -%}
+      <button type="button" class="st-link-button" data-st-open="Guide-{{ block.id }}" aria-haspopup="dialog">
+        {% render 'icon', name: 'ruler' %} {{ block.settings.guide_label | default: guide_page.title | escape }}
+      </button>
+      <dialog class="st-drawer color-{{ color_scheme }}" id="Guide-{{ block.id }}" aria-labelledby="GuideTitle-{{ block.id }}">
+        <div class="st-drawer__head">
+          <h2 class="st-h4" id="GuideTitle-{{ block.id }}">{{ guide_page.title | escape }}</h2>
+          <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+        </div>
+        <div class="st-drawer__body st-rte">{{ guide_page.content }}</div>
+      </dialog>
+    {%- endif -%}
+  </div>
+{%- endif -%}

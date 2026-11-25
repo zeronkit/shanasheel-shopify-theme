@@ -1,0 +1,607 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Shanasheel",
+    "theme_version": "1.1.0",
+    "theme_author": "ZeronKit",
+    "theme_documentation_url": "https://zeronkit.com/themes/",
+    "theme_support_url": "https://zeronkit.com/legal/"
+  },
+  {
+    "name": "t:settings.style",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:info.style_intro"
+      },
+      {
+        "type": "select",
+        "id": "palette",
+        "label": "t:labels.palette",
+        "options": [
+          {
+            "value": "custom",
+            "label": "t:options.palette_custom"
+          },
+          {
+            "value": "linen",
+            "label": "t:options.palette_linen"
+          },
+          {
+            "value": "walnut",
+            "label": "t:options.palette_walnut"
+          },
+          {
+            "value": "clay",
+            "label": "t:options.palette_clay"
+          },
+          {
+            "value": "moss",
+            "label": "t:options.palette_moss"
+          },
+          {
+            "value": "stone",
+            "label": "t:options.palette_stone"
+          },
+          {
+            "value": "chalk",
+            "label": "t:options.palette_chalk"
+          },
+          {
+            "value": "ochre",
+            "label": "t:options.palette_ochre"
+          },
+          {
+            "value": "slate",
+            "label": "t:options.palette_slate"
+          }
+        ],
+        "default": "custom",
+        "info": "t:info.palette"
+      },
+      {
+        "type": "select",
+        "id": "background_style",
+        "label": "t:labels.background_style",
+        "options": [
+          {
+            "value": "solid",
+            "label": "t:options.bg_solid"
+          },
+          {
+            "value": "soft_gradient",
+            "label": "t:options.bg_soft_gradient"
+          },
+          {
+            "value": "two_tone",
+            "label": "t:options.bg_two_tone"
+          },
+          {
+            "value": "dark",
+            "label": "t:options.bg_dark"
+          }
+        ],
+        "default": "solid"
+      },
+      {
+        "type": "select",
+        "id": "font_pairing",
+        "label": "t:labels.font_pairing",
+        "options": [
+          {
+            "value": "custom",
+            "label": "t:options.fonts_custom"
+          },
+          {
+            "value": "gallery",
+            "label": "t:options.fonts_gallery"
+          },
+          {
+            "value": "heritage",
+            "label": "t:options.fonts_heritage"
+          },
+          {
+            "value": "studio",
+            "label": "t:options.fonts_studio"
+          },
+          {
+            "value": "cottage",
+            "label": "t:options.fonts_cottage"
+          },
+          {
+            "value": "arabic",
+            "label": "t:options.fonts_arabic"
+          }
+        ],
+        "default": "custom",
+        "info": "t:info.font_pairing"
+      },
+      {
+        "type": "select",
+        "id": "type_scale",
+        "label": "t:labels.type_scale",
+        "options": [
+          {
+            "value": "compact",
+            "label": "t:options.type_compact"
+          },
+          {
+            "value": "balanced",
+            "label": "t:options.type_balanced"
+          },
+          {
+            "value": "bold",
+            "label": "t:options.type_bold"
+          }
+        ],
+        "default": "balanced"
+      },
+      {
+        "type": "select",
+        "id": "corner_style",
+        "label": "t:labels.corner_style",
+        "options": [
+          {
+            "value": "custom",
+            "label": "t:options.corner_custom"
+          },
+          {
+            "value": "sharp",
+            "label": "t:options.corner_sharp"
+          },
+          {
+            "value": "soft",
+            "label": "t:options.corner_soft"
+          },
+          {
+            "value": "round",
+            "label": "t:options.corner_round"
+          }
+        ],
+        "default": "round"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "t:labels.button_style",
+        "options": [
+          {
+            "value": "solid",
+            "label": "t:options.button_solid"
+          },
+          {
+            "value": "outline",
+            "label": "t:options.button_outline"
+          },
+          {
+            "value": "underline",
+            "label": "t:options.button_underline"
+          },
+          {
+            "value": "pill",
+            "label": "t:options.button_pill"
+          }
+        ],
+        "default": "pill"
+      },
+      {
+        "type": "select",
+        "id": "card_style",
+        "label": "t:labels.card_style",
+        "options": [
+          {
+            "value": "plinth",
+            "label": "t:options.card_plinth"
+          },
+          {
+            "value": "minimal",
+            "label": "t:options.card_minimal"
+          },
+          {
+            "value": "framed",
+            "label": "t:options.card_framed"
+          },
+          {
+            "value": "overlay",
+            "label": "t:options.card_overlay"
+          }
+        ],
+        "default": "plinth"
+      },
+      {
+        "type": "select",
+        "id": "spacing",
+        "label": "t:labels.spacing",
+        "options": [
+          {
+            "value": "tight",
+            "label": "t:options.space_tight"
+          },
+          {
+            "value": "regular",
+            "label": "t:options.space_regular"
+          },
+          {
+            "value": "airy",
+            "label": "t:options.space_airy"
+          }
+        ],
+        "default": "regular"
+      },
+      {
+        "type": "select",
+        "id": "animations",
+        "label": "t:labels.animations",
+        "options": [
+          {
+            "value": "off",
+            "label": "t:options.motion_off"
+          },
+          {
+            "value": "subtle",
+            "label": "t:options.motion_subtle"
+          },
+          {
+            "value": "expressive",
+            "label": "t:options.motion_expressive"
+          }
+        ],
+        "default": "subtle",
+        "info": "t:info.animations"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.colors",
+    "settings": [
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "color",
+            "id": "background",
+            "label": "t:labels.background",
+            "default": "#F6F3EE"
+          },
+          {
+            "type": "color_background",
+            "id": "background_gradient",
+            "label": "t:labels.background_gradient",
+            "info": "t:info.gradient"
+          },
+          {
+            "type": "color",
+            "id": "text",
+            "label": "t:labels.text_color",
+            "default": "#1B1A18"
+          },
+          {
+            "type": "color",
+            "id": "accent",
+            "label": "t:labels.accent",
+            "default": "#9E3B22"
+          },
+          {
+            "type": "color",
+            "id": "button",
+            "label": "t:labels.button",
+            "default": "#1B1A18"
+          },
+          {
+            "type": "color",
+            "id": "button_label",
+            "label": "t:labels.button_label_color",
+            "default": "#F6F3EE"
+          }
+        ],
+        "role": {
+          "background": {
+            "solid": "background",
+            "gradient": "background_gradient"
+          },
+          "text": "text",
+          "links": "accent",
+          "icons": "text",
+          "primary_button": "button",
+          "on_primary_button": "button_label",
+          "primary_button_border": "button",
+          "secondary_button": "background",
+          "on_secondary_button": "text",
+          "secondary_button_border": "text"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.schemes"
+      },
+      {
+        "type": "color_scheme",
+        "id": "body_scheme",
+        "label": "t:labels.body_scheme",
+        "default": "scheme-1"
+      },
+      {
+        "type": "color_scheme",
+        "id": "drawer_scheme",
+        "label": "t:labels.drawer_scheme",
+        "default": "scheme-1"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.contrast"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "label": "t:labels.heading_font",
+        "default": "lora_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "label": "t:labels.heading_scale",
+        "min": 80,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "t:labels.body_font",
+        "default": "work_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "body_scale",
+        "label": "t:labels.body_scale",
+        "min": 90,
+        "max": 120,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "paragraph",
+        "content": "t:info.arabic_fonts"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "t:labels.page_width",
+        "min": 1000,
+        "max": 1800,
+        "step": 50,
+        "unit": "px",
+        "default": 1400
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "label": "t:labels.corner_radius",
+        "min": 0,
+        "max": 16,
+        "step": 2,
+        "unit": "px",
+        "default": 12,
+        "info": "t:info.corner_radius"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.product_cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "card_ratio",
+        "label": "t:labels.image_ratio",
+        "options": [
+          {
+            "value": "0.75",
+            "label": "t:options.portrait_3_4"
+          },
+          {
+            "value": "0.6667",
+            "label": "t:options.portrait_2_3"
+          },
+          {
+            "value": "0.8",
+            "label": "t:options.portrait_4_5"
+          },
+          {
+            "value": "1",
+            "label": "t:options.square"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_secondary",
+        "label": "t:labels.card_show_secondary",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_sizes",
+        "label": "t:labels.card_show_sizes",
+        "default": true,
+        "info": "t:info.card_sizes"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_swatches",
+        "label": "t:labels.card_show_swatches",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "t:labels.show_vendor",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "size_option_names",
+        "label": "t:labels.size_option_names",
+        "default": "Size,Shoe size,Taille,Größe,Talla,Taglia,Maat,Rozmiar,Beden"
+      },
+      {
+        "type": "text",
+        "id": "colour_option_names",
+        "label": "t:labels.colour_option_names",
+        "default": "Color,Colour,Couleur,Farbe,Colore,Kleur,Kolor,Renk"
+      },
+      {
+        "type": "range",
+        "id": "new_badge_days",
+        "label": "t:labels.new_badge_days",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "d",
+        "default": 21,
+        "info": "t:info.new_badge"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "t:labels.cart_type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "t:options.drawer"
+          },
+          {
+            "value": "page",
+            "label": "t:options.page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_note",
+        "label": "t:labels.cart_note",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "currency_code_enabled",
+        "label": "t:labels.currency_code",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "t:settings.search",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search",
+        "label": "t:labels.predictive_search",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "search_popular",
+        "label": "t:labels.search_popular",
+        "default": "Sofas, Lamps, Rugs, Bedding, Oak",
+        "info": "t:info.search_popular"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.brand",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:labels.favicon",
+        "info": "t:info.favicon"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_social",
+        "label": "t:labels.logo_social",
+        "info": "t:info.logo_social"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.social",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "t:social.instagram",
+        "placeholder": "https://instagram.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "t:social.tiktok",
+        "placeholder": "https://tiktok.com/@shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "t:social.facebook",
+        "placeholder": "https://facebook.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "t:social.pinterest",
+        "placeholder": "https://pinterest.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "t:social.youtube",
+        "placeholder": "https://youtube.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_snapchat_link",
+        "label": "t:social.snapchat",
+        "placeholder": "https://snapchat.com/add/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "t:social.twitter",
+        "placeholder": "https://x.com/shopify"
+      }
+    ]
+  },
+  {
+    "name": "t:settings.credit",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_credit",
+        "label": "t:labels.show_credit",
+        "default": true,
+        "info": "t:info.credit_setting"
+      }
+    ]
+  }
+]

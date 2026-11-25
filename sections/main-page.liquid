@@ -1,0 +1,63 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<section class="st-page shp color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap shp__grid">
+    <header class="shp__head">
+      <a class="shp__home" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+      {%- if section.settings.eyebrow != blank -%}<p class="shp__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="shp__title">{{ page.title | escape }}</h1>
+      <span class="shp__rule" aria-hidden="true"></span>
+    </header>
+    <div class="shp__body">
+      <div class="st-rte shp__content">{{ page.content }}</div>
+      {%- comment -%} A page with the handle contact gets a working form even on the default page template. {%- endcomment -%}
+      {%- if page.handle == 'contact' and template.suffix != 'contact' -%}
+        {%- form 'contact', class: 'st-form st-contact__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="st-notice st-notice--success" role="status">{% render 'icon', name: 'check' %} {{ 'contact.success' | t }}</p>
+          {%- elsif form.errors -%}
+            <div class="st-notice st-notice--error" role="alert" id="PageContact-errors">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="st-contact__fields">
+            {% render 'contact-field', type: 'name', id: 'PageContact-name', form: form, form_id: 'PageContact', width: 'half' %}
+            {% render 'contact-field', type: 'email', id: 'PageContact-email', form: form, form_id: 'PageContact', width: 'half', required: true %}
+            {% render 'contact-field', type: 'message', id: 'PageContact-message', form: form, form_id: 'PageContact', width: 'full', required: true %}
+          </div>
+          <button type="submit" class="st-button st-button--primary">{{ 'contact.send' | t }}</button>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.page",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "title_style",
+      "label": "t:labels.title_style",
+      "options": [
+        { "value": "panel", "label": "t:options.title_panel" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "plain", "label": "t:options.position_start" }
+      ],
+      "default": "panel"
+    },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:labels.width",
+      "options": [
+        { "value": "narrow", "label": "t:options.narrow" },
+        { "value": "wide", "label": "t:options.wide" }
+      ],
+      "default": "narrow"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

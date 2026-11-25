@@ -1,0 +1,116 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  The navigator dialog: numbered departments, collection image tiles and link groups. Mega menu on desktop, drawer on mobile.
+  Params: menu, use_auto, auto_handles, key_pages, section_id, nav_label, scheme
+{%- endcomment -%}
+{%- comment -%} The navigator: index of departments on the start side, image tiles and link groups beside it. {%- endcomment -%}
+<dialog class="st-nav color-{{ scheme }}" id="Navigator" aria-labelledby="NavigatorTitle">
+  <st-navigator class="st-nav__inner">
+    <div class="st-nav__head">
+      <p class="st-nav__title" id="NavigatorTitle">{{ nav_label | escape }}</p>
+      <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="st-nav__body">
+      <ol class="st-nav__root" role="list">
+        {%- if use_auto -%}
+          {%- if auto_handles.size > 0 -%}
+            <li>
+              <button type="button" class="st-nav__item" aria-expanded="false" aria-controls="Nav-{{ section_id }}-auto">
+                <span class="st-nav__index" aria-hidden="true">01</span><span class="st-nav__label">{{ 'header.collections' | t }}</span>{% render 'icon', name: 'chevron' %}
+              </button>
+            </li>
+          {%- endif -%}
+          {%- if blogs.news.articles_count > 0 -%}
+            <li><a class="st-nav__item" href="{{ blogs.news.url }}"><span class="st-nav__index" aria-hidden="true">02</span><span class="st-nav__label">{{ blogs.news.title | escape }}</span></a></li>
+          {%- endif -%}
+          {%- for handle in key_pages -%}
+            {%- if pages[handle].title != blank -%}
+              <li><a class="st-nav__item" href="{{ pages[handle].url }}"><span class="st-nav__index" aria-hidden="true">0{{ forloop.index | plus: 2 }}</span><span class="st-nav__label">{{ pages[handle].title | escape }}</span></a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <button type="button" class="st-nav__item" aria-expanded="false" aria-controls="Nav-{{ section_id }}-{{ forloop.index }}">
+                  <span class="st-nav__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><span class="st-nav__label">{{ link.title | escape }}</span>{% render 'icon', name: 'chevron' %}
+                </button>
+              {%- else -%}
+                <a class="st-nav__item" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+                  <span class="st-nav__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><span class="st-nav__label">{{ link.title | escape }}</span>
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ol>
+
+      {%- if use_auto and auto_handles.size > 0 -%}
+        <div class="st-nav__panel" id="Nav-{{ section_id }}-auto" hidden>
+          <button type="button" class="st-nav__back" data-st-back>{% render 'icon', name: 'back' %} {{ 'general.back' | t }}</button>
+          <div class="st-nav__panel-head">
+            <p class="st-nav__panel-title">{{ 'header.collections' | t }}</p>
+            <a class="st-button st-button--text" href="{{ routes.collections_url }}">{{ 'header.view_all_plain' | t }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+          <ul class="st-nav__tiles" role="list">
+            {%- for handle in auto_handles -%}
+              {%- assign c = collections[handle] -%}
+              <li>{% render 'nav-tile', url: c.url, title: c.title, collection: c, count: c.products_count %}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <div class="st-nav__panel" id="Nav-{{ section_id }}-{{ forloop.index }}" hidden>
+            <button type="button" class="st-nav__back" data-st-back>{% render 'icon', name: 'back' %} {{ 'general.back' | t }}</button>
+            <div class="st-nav__panel-head">
+              <p class="st-nav__panel-title">{{ link.title | escape }}</p>
+              <a class="st-button st-button--text" href="{{ link.url }}">{{ 'header.view_all_plain' | t }}<span class="st-visually-hidden">: {{ link.title | escape }}</span> {% render 'icon', name: 'arrow' %}</a>
+            </div>
+            {%- liquid
+              # A child becomes an image tile when it points to a collection with products, whether it was
+              # added as a collection link or typed as a web address such as /collections/dresses.
+              assign tiles = ''
+              assign groups = ''
+              for child in link.links
+                assign tile_collection = nil
+                if child.links.size == 0
+                  if child.type == 'collection_link'
+                    assign tile_collection = child.object
+                  elsif child.url contains '/collections/'
+                    assign tile_handle = child.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+                    if tile_handle != blank and tile_handle != 'all'
+                      assign tile_collection = collections[tile_handle]
+                    endif
+                  endif
+                endif
+                if tile_collection and tile_collection.products_count > 0
+                  capture tile
+                    render 'nav-tile', url: child.url, title: child.title, collection: tile_collection, count: tile_collection.products_count, current: child.current
+                  endcapture
+                  assign tiles = tiles | append: '<li>' | append: tile | append: '</li>'
+                else
+                  capture group
+                    render 'nav-group', link: child
+                  endcapture
+                  assign groups = groups | append: group
+                endif
+              endfor
+            -%}
+            {%- if tiles != blank -%}
+              <ul class="st-nav__tiles" role="list">{{ tiles }}</ul>
+            {%- endif -%}
+            {%- if groups != blank -%}
+              <div class="st-nav__groups">{{ groups }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="st-nav__foot">
+      {% render 'localization', id: 'NavLocalization', show_country: true, show_language: true %}
+    </div>
+  </st-navigator>
+</dialog>

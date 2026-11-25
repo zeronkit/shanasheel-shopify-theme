@@ -1,0 +1,56 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<section class="st-section st-canvas color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap{% if section.settings.narrow %} st-wrap--narrow{% endif %} st-canvas__inner st-canvas__inner--{{ section.settings.layout }}" style="--gap: {{ section.settings.gap }}px;">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.canvas",
+  "class": "st-shopify-section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.layout",
+      "options": [
+        { "value": "stack", "label": "t:options.stacked" },
+        { "value": "split", "label": "t:options.two_columns" }
+      ],
+      "default": "stack"
+    },
+    { "type": "range", "id": "gap", "label": "t:labels.gap", "min": 0, "max": 96, "step": 8, "unit": "px", "default": 24 },
+    { "type": "checkbox", "id": "narrow", "label": "t:labels.narrow", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.rich_text",
+      "settings": { "layout": "stack", "narrow": true },
+      "blocks": [
+        { "type": "heading", "settings": { "heading": "Pieces made to stay", "size": "h1", "tag": "h2", "alignment": "center" } },
+        { "type": "text", "settings": { "text": "<p>Share what your pieces are made of, who makes them and how they are meant to be worn.</p>", "style": "large", "alignment": "center" } }
+      ]
+    },
+    {
+      "name": "t:names.image_with_text",
+      "settings": { "layout": "split" },
+      "blocks": [
+        { "type": "image", "settings": { "ratio": "3 / 4" } },
+        {
+          "type": "group",
+          "settings": { "direction": "column", "align": "center", "gap": 16 },
+          "blocks": [
+            { "type": "text", "settings": { "text": "<p>Our fabrics</p>", "style": "eyebrow" } },
+            { "type": "heading", "settings": { "heading": "Chosen for the long run", "size": "h2", "tag": "h2" } },
+            { "type": "text", "settings": { "text": "<p>Tell the story behind a collection, a material or a maker.</p>" } },
+            { "type": "button", "settings": { "label": "Read more", "style": "ghost" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

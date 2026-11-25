@@ -1,0 +1,83 @@
+{%- layout none -%}
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign lang = request.locale.iso_code | split: '-' | first
+  assign dir = 'ltr'
+  assign rtl_languages = 'ar,he,fa,ur,ps,yi' | split: ','
+  if rtl_languages contains lang
+    assign dir = 'rtl'
+  endif
+  assign formatted_balance = gift_card.balance | money_with_currency
+  assign formatted_initial = gift_card.initial_value | money_with_currency
+  assign formatted_expiry = gift_card.expires_on | date: format: 'date'
+-%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{{ dir }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>{{ 'gift_card.title' | t: value: formatted_balance, shop: shop.name }}</title>
+    {% render 'theme-styles' %}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+    {{ content_for_header }}
+  </head>
+  <body class="st-body color-{{ settings.body_scheme }}">
+    <main class="st-giftcard st-wrap st-wrap--narrow" id="MainContent">
+      <header class="st-giftcard__head">
+        {%- if settings.logo_social != blank -%}
+          {{ settings.logo_social | image_url: width: 320 | image_tag: alt: shop.name, class: 'st-giftcard__logo', width: 160 }}
+        {%- else -%}
+          <p class="st-header__wordmark">{{ shop.name | escape }}</p>
+        {%- endif -%}
+      </header>
+
+      <div class="st-giftcard__card color-{{ settings.drawer_scheme }}">
+        <h1 class="st-h3">{{ 'gift_card.heading' | t }}</h1>
+        <p class="st-giftcard__balance">{{ formatted_balance }}</p>
+        {%- if gift_card.balance != gift_card.initial_value -%}
+          <p class="st-small st-muted">{{ 'gift_card.initial_value' | t: value: formatted_initial }}</p>
+        {%- endif -%}
+        {%- if gift_card.expired or gift_card.enabled == false -%}
+          <p class="st-badge st-badge--muted">{{ 'gift_card.expired' | t }}</p>
+        {%- elsif gift_card.expires_on -%}
+          <p class="st-small">{{ 'gift_card.expires_on' | t: date: formatted_expiry }}</p>
+        {%- endif -%}
+
+        <div class="st-giftcard__code">
+          <label class="st-field__label" for="GiftCardCode">{{ 'gift_card.code_label' | t }}</label>
+          <input class="st-input" id="GiftCardCode" type="text" value="{{ gift_card.code | format_code }}" readonly>
+          <button type="button" class="st-button st-button--ghost" data-copy="{{ gift_card.code }}">{{ 'gift_card.copy' | t }}</button>
+          <p class="st-small" role="status" data-copy-status></p>
+        </div>
+
+        <div class="st-giftcard__qr" id="GiftCardQr" data-code="{{ gift_card.qr_identifier }}" role="img" aria-label="{{ 'gift_card.qr_label' | t }}"></div>
+
+        <div class="st-giftcard__actions">
+          {%- if gift_card.pass_url -%}
+            <a href="{{ gift_card.pass_url }}" class="st-giftcard__wallet">
+              <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_card.apple_wallet' | t }}" loading="lazy">
+            </a>
+          {%- endif -%}
+          <a class="st-button st-button--primary" href="{{ shop.url }}">{{ 'gift_card.shop' | t }}</a>
+          <button type="button" class="st-button st-button--ghost" onclick="window.print()">{{ 'gift_card.print' | t }}</button>
+        </div>
+      </div>
+    </main>
+    <script>
+      window.addEventListener('load', function () {
+        var target = document.getElementById('GiftCardQr');
+        if (window.QRCode && target) {
+          new QRCode(target, { text: target.dataset.code, width: 140, height: 140, correctLevel: QRCode.CorrectLevel.M });
+        }
+      });
+      document.querySelector('[data-copy]').addEventListener('click', function (event) {
+        var status = document.querySelector('[data-copy-status]');
+        navigator.clipboard.writeText(event.currentTarget.dataset.copy).then(function () {
+          status.textContent = {{ 'gift_card.copied' | t | json }};
+        });
+      });
+    </script>
+  </body>
+</html>

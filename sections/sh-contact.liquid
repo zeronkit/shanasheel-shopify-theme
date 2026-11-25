@@ -1,0 +1,381 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Contact page built as a workshop door: a lattice arch with three ways in, then a letter form beside a workshop card.
+{%- endcomment -%}
+{%- liquid
+  assign form_id = 'ShContact-' | append: section.id
+  assign form_dom_id = form_id | append: '-form'
+-%}
+{%- liquid
+  assign t_eyebrow = 'sh_contact.eyebrow' | t
+  if section.settings.eyebrow != blank
+    assign t_eyebrow = section.settings.eyebrow
+  endif
+  assign t_heading = 'sh_contact.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+  assign t_intro = 'sh_contact.intro' | t
+  if section.settings.intro != blank
+    assign t_intro = section.settings.intro
+  endif
+  assign t_reply_note = 'sh_contact.reply_note' | t
+  if section.settings.reply_note != blank
+    assign t_reply_note = section.settings.reply_note
+  endif
+  assign t_way_write = 'sh_contact.way_write' | t
+  if section.settings.way_write != blank
+    assign t_way_write = section.settings.way_write
+  endif
+  assign t_way_write_text = 'sh_contact.way_write_text' | t
+  if section.settings.way_write_text != blank
+    assign t_way_write_text = section.settings.way_write_text
+  endif
+  assign t_way_email = 'sh_contact.way_email' | t
+  if section.settings.way_email != blank
+    assign t_way_email = section.settings.way_email
+  endif
+  assign t_way_visit = 'sh_contact.way_visit' | t
+  if section.settings.way_visit != blank
+    assign t_way_visit = section.settings.way_visit
+  endif
+  assign t_way_visit_text = 'sh_contact.way_visit_text' | t
+  if section.settings.way_visit_text != blank
+    assign t_way_visit_text = section.settings.way_visit_text
+  endif
+  assign t_form_heading = 'sh_contact.form_heading' | t
+  if section.settings.form_heading != blank
+    assign t_form_heading = section.settings.form_heading
+  endif
+  assign t_topic_label = 'sh_contact.topic_label' | t
+  if section.settings.topic_label != blank
+    assign t_topic_label = section.settings.topic_label
+  endif
+  assign t_topics = 'sh_contact.topics' | t
+  if section.settings.topics != blank
+    assign t_topics = section.settings.topics
+  endif
+  assign t_name_label = 'sh_contact.name_label' | t
+  if section.settings.name_label != blank
+    assign t_name_label = section.settings.name_label
+  endif
+  assign t_email_label = 'sh_contact.email_label' | t
+  if section.settings.email_label != blank
+    assign t_email_label = section.settings.email_label
+  endif
+  assign t_order_label = 'sh_contact.order_label' | t
+  if section.settings.order_label != blank
+    assign t_order_label = section.settings.order_label
+  endif
+  assign t_message_label = 'sh_contact.message_label' | t
+  if section.settings.message_label != blank
+    assign t_message_label = section.settings.message_label
+  endif
+  assign t_button_label = 'sh_contact.button_label' | t
+  if section.settings.button_label != blank
+    assign t_button_label = section.settings.button_label
+  endif
+  assign t_success_message = 'sh_contact.success_message' | t
+  if section.settings.success_message != blank
+    assign t_success_message = section.settings.success_message
+  endif
+  assign t_card_heading = 'sh_contact.card_heading' | t
+  if section.settings.card_heading != blank
+    assign t_card_heading = section.settings.card_heading
+  endif
+  assign t_address = 'sh_contact.address_html' | t
+  if section.settings.address != blank
+    assign t_address = section.settings.address
+  endif
+  assign t_hours = 'sh_contact.hours_html' | t
+  if section.settings.hours != blank
+    assign t_hours = section.settings.hours
+  endif
+  assign topics = t_topics | replace: '،', ',' | split: ','
+-%}
+<section class="sh-contact" id="{{ section.id }}">
+  <div class="sh-contact__door-band">
+    <div class="st-wrap sh-contact__door-grid">
+      <div class="sh-contact__intro">
+        {%- if t_eyebrow != blank -%}<p class="sh-contact__eyebrow">{{ t_eyebrow | escape }}</p>{%- endif -%}
+        <h1 class="sh-contact__title">{{ t_heading | escape }}</h1>
+        {%- if t_intro != blank -%}<div class="sh-contact__lead">{{ t_intro }}</div>{%- endif -%}
+        <p class="sh-contact__promise">
+          <span class="sh-contact__dial" aria-hidden="true"></span>
+          {{ t_reply_note | escape }}
+        </p>
+      </div>
+
+      <div class="sh-contact__door" aria-label="{{ 'contact.info_label' | t | escape }}">
+        <div class="sh-contact__lattice" aria-hidden="true"></div>
+        <ul class="sh-contact__ways" role="list">
+          <li>
+            <a class="sh-contact__way" href="#{{ form_id }}">
+              <span class="sh-contact__way-num">01</span>
+              <span class="sh-contact__way-title">{{ t_way_write | escape }}</span>
+              <span class="sh-contact__way-text">{{ t_way_write_text | escape }}</span>
+            </a>
+          </li>
+          {%- if section.settings.email != blank -%}
+            <li>
+              <a class="sh-contact__way" href="mailto:{{ section.settings.email | escape }}">
+                <span class="sh-contact__way-num">02</span>
+                <span class="sh-contact__way-title">{{ t_way_email | escape }}</span>
+                <span class="sh-contact__way-text">{{ section.settings.email | escape }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+          <li>
+            <a class="sh-contact__way" href="#{{ section.id }}-card">
+              <span class="sh-contact__way-num">03</span>
+              <span class="sh-contact__way-title">{{ t_way_visit | escape }}</span>
+              <span class="sh-contact__way-text">{{ t_way_visit_text | escape }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="st-wrap sh-contact__body">
+    <div class="sh-contact__letter" id="{{ form_id }}">
+      <p class="sh-contact__letter-head">{{ t_form_heading | escape }}</p>
+      {%- form 'contact', id: form_dom_id, class: 'sh-contact__form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="sh-contact__ok" role="status" tabindex="-1" autofocus>{{ t_success_message | escape }}</p>
+        {%- elsif form.errors -%}
+          <div class="sh-contact__err" role="alert" tabindex="-1" autofocus>
+            <p>{{ 'contact.error_heading' | t }}</p>
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        {%- if topics.size > 0 -%}
+          <fieldset class="sh-contact__topics">
+            <legend>{{ t_topic_label | escape }}</legend>
+            {%- for topic in topics -%}
+              {%- assign t_clean = topic | strip -%}
+              <label class="sh-contact__chip">
+                <input type="radio" name="contact[{{ t_topic_label | escape }}]" value="{{ t_clean | escape }}"{% if forloop.first %} checked{% endif %}>
+                <span>{{ t_clean | escape }}</span>
+              </label>
+            {%- endfor -%}
+          </fieldset>
+        {%- endif -%}
+
+        <div class="sh-contact__lines">
+          <label class="sh-contact__line">
+            <span>{{ t_name_label | escape }}</span>
+            <input type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}" required>
+          </label>
+          <label class="sh-contact__line">
+            <span>{{ t_email_label | escape }}</span>
+            <input type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" value="{{ form.email }}" required>
+          </label>
+          <label class="sh-contact__line">
+            <span>{{ t_order_label | escape }}</span>
+            <input type="text" name="contact[{{ t_order_label | escape }}]" placeholder="#1001">
+          </label>
+          <label class="sh-contact__line sh-contact__line--area">
+            <span>{{ t_message_label | escape }}</span>
+            <textarea name="contact[body]" rows="5" required>{{ form.body }}</textarea>
+          </label>
+        </div>
+        <button type="submit" class="sh-contact__send">
+          {{ t_button_label | escape }}
+          {% render 'icon', name: 'arrow' %}
+        </button>
+      {%- endform -%}
+    </div>
+
+    <aside class="sh-contact__card" id="{{ section.id }}-card">
+      <p class="sh-contact__card-tag">{{ t_card_heading | escape }}</p>
+      {%- if t_address != blank -%}
+        <div class="sh-contact__card-row">
+          <p class="sh-contact__card-label">{{ 'contact.address' | t }}</p>
+          <div>{{ t_address }}</div>
+        </div>
+      {%- endif -%}
+      {%- if t_hours != blank -%}
+        <div class="sh-contact__card-row">
+          <p class="sh-contact__card-label">{{ 'contact.hours' | t }}</p>
+          <div class="sh-contact__hours">{{ t_hours }}</div>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.email != blank -%}
+        <div class="sh-contact__card-row">
+          <p class="sh-contact__card-label">{{ 'contact.email' | t }}</p>
+          <a href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a>
+        </div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="sh-contact__quick" role="list">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.link | default: '#' }}">
+                {%- capture qk -%}sh_contact.quick_{{ forloop.index }}{%- endcapture -%}{%- assign qt = qk | t -%}{%- if block.settings.title != blank -%}{%- assign qt = block.settings.title -%}{%- endif -%}<span>{{ qt | escape }}</span>
+                {% render 'icon', name: 'arrow' %}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact: workshop door",
+  "class": "st-shopify-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro"
+    },
+    {
+      "type": "text",
+      "id": "reply_note",
+      "label": "Reply promise"
+    },
+    {
+      "type": "header",
+      "content": "Three ways in"
+    },
+    {
+      "type": "text",
+      "id": "way_write",
+      "label": "Write title"
+    },
+    {
+      "type": "text",
+      "id": "way_write_text",
+      "label": "Write text"
+    },
+    {
+      "type": "text",
+      "id": "way_email",
+      "label": "Email title"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "default": "info@zeronkit.com"
+    },
+    {
+      "type": "text",
+      "id": "way_visit",
+      "label": "Visit title"
+    },
+    {
+      "type": "text",
+      "id": "way_visit_text",
+      "label": "Visit text"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading"
+    },
+    {
+      "type": "text",
+      "id": "topic_label",
+      "label": "Topic label"
+    },
+    {
+      "type": "text",
+      "id": "topics",
+      "label": "Topics",
+      "info": "Separate with commas"
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name label"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label"
+    },
+    {
+      "type": "text",
+      "id": "order_label",
+      "label": "Order label"
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message"
+    },
+    {
+      "type": "header",
+      "content": "Workshop card"
+    },
+    {
+      "type": "text",
+      "id": "card_heading",
+      "label": "Card heading"
+    },
+    {
+      "type": "richtext",
+      "id": "address",
+      "label": "Address"
+    },
+    {
+      "type": "richtext",
+      "id": "hours",
+      "label": "Hours"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quick",
+      "name": "Quick link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact: workshop door"
+    }
+  ]
+}
+{% endschema %}

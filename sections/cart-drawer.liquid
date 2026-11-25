@@ -1,0 +1,43 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- assign form_id = 'CartForm-drawer' -%}
+<dialog class="st-drawer st-drawer--cart color-{{ settings.drawer_scheme }}" id="CartDrawer" aria-labelledby="CartDrawerTitle">
+  <st-cart class="st-drawer__cart" data-section-id="cart-drawer">
+    <div class="st-drawer__head">
+      <h2 class="st-h4" id="CartDrawerTitle">{{ 'cart.title' | t }}</h2>
+      <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="st-drawer__content" data-st-cart-content data-count="{{ cart.item_count }}" data-count-label="{{ 'cart.title_with_count' | t: count: cart.item_count }}">
+      {%- if cart.item_count > 0 -%}
+        <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="st-drawer__body" novalidate>
+          {% render 'cart-lines', section_id: 'drawer' %}
+        </form>
+        <div class="st-drawer__foot">
+          {% render 'cart-summary', form_id: form_id, show_note: false %}
+          <a class="st-link-button" href="{{ routes.cart_url }}">{{ 'cart.view' | t }}</a>
+        </div>
+      {%- else -%}
+        <div class="st-drawer-empty">
+          <p class="st-h4">{{ 'cart.empty' | t }}</p>
+          {%- if section.settings.show_rooms -%}
+            <div>
+              <p class="st-field__label">{{ 'cart.empty_rooms' | t }}</p>
+              {%- assign rooms_label = 'cart.empty_rooms' | t -%}
+              {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, limit: 6 %}
+            </div>
+          {%- endif -%}
+          <a class="st-button st-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  </st-cart>
+</dialog>
+
+{% schema %}
+{
+  "name": "t:names.cart_drawer",
+  "settings": [
+    { "type": "checkbox", "id": "show_rooms", "label": "t:labels.show_empty_rooms", "default": true },
+    { "type": "link_list", "id": "rooms_menu", "label": "t:labels.rooms_menu", "info": "t:info.rooms_menu" }
+  ]
+}
+{% endschema %}

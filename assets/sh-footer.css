@@ -1,0 +1,141 @@
+/* Shanasheel: sh-footer. Arched window panels over a walnut band. */
+.sh-ft {
+  --sh-walnut: #3A2619;
+  --sh-sand: #F4EDE2;
+  --sh-turq: #8A4F2B;
+  --sh-amber: #C9A36A;
+  --sh-ink: #241913;
+  background: var(--sh-sand);
+  color: var(--sh-ink);
+  font-family: "Nunito Sans", system-ui, sans-serif;
+  margin-top: 4rem;
+}
+.sh-ft__heading,
+.sh-ft__wordmark {
+  font-family: Arvo, Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  margin: 0 0 .75rem;
+  color: var(--sh-walnut);
+}
+.sh-ft__wordmark { font-size: 1.6rem; }
+
+/* Window row */
+.sh-ft__windows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.5rem;
+  padding-block: 3rem 0;
+  align-items: end;
+}
+.sh-ft__window {
+  position: relative;
+  background: #fff8ec;
+  border: 3px solid var(--sh-walnut);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0 / 7rem 7rem 0 0;
+  padding: 4.5rem 1.75rem 2rem;
+  text-align: center;
+  min-height: 100%;
+}
+/* inner arch frame, like the carved inner border of a shanasheel window */
+.sh-ft__window::before {
+  content: "";
+  position: absolute;
+  inset: .6rem .6rem 0;
+  border: 1px solid var(--sh-turq);
+  border-bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.sh-ft__window::after {
+  content: "";
+  position: absolute;
+  top: 1.6rem;
+  left: 50%;
+  width: .7rem;
+  height: .7rem;
+  background: var(--sh-amber);
+  transform: translateX(-50%) rotate(45deg);
+}
+.sh-ft__window--newsletter { background: var(--sh-turq); color: var(--sh-sand); border-color: var(--sh-walnut); }
+.sh-ft__window--newsletter .sh-ft__heading { color: var(--sh-sand); }
+.sh-ft__window--newsletter::before { border-color: var(--sh-amber); }
+.sh-ft__window--newsletter .st-rte a { color: var(--sh-sand); }
+.sh-ft__window .st-rte p { margin: 0 0 .5rem; }
+.sh-ft__window form { margin-top: 1rem; position: relative; z-index: 1; }
+
+/* Walnut band */
+.sh-ft__band {
+  background: var(--sh-walnut);
+  color: var(--sh-sand);
+  padding-bottom: 2rem;
+}
+.sh-ft__lattice { display: block; width: 100%; height: 12px; background: var(--sh-walnut); }
+.sh-ft__band a { color: var(--sh-sand); text-decoration: none; }
+.sh-ft__band a:hover { color: var(--sh-amber); text-decoration: underline; }
+.sh-ft__band a:focus-visible,
+.sh-ft__window a:focus-visible { outline: 2px solid var(--sh-amber); outline-offset: 3px; }
+.sh-ft__band .sh-ft__heading { color: var(--sh-amber); font-size: 1.05rem; }
+
+.sh-ft__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 2rem;
+  padding-block: 2.5rem 2rem;
+}
+.sh-ft__links,
+.sh-ft__policies,
+.sh-ft__payments { list-style: none; margin: 0; padding: 0; }
+.sh-ft__links li { margin-bottom: .5rem; }
+
+.sh-ft__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid rgba(244, 237, 226, .2);
+}
+.sh-ft__row svg { fill: currentColor; }
+.sh-ft__row select { color: var(--sh-ink); }
+
+.sh-ft__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  font-size: .875rem;
+}
+.sh-ft__legal p { margin: 0 0 .5rem; }
+.sh-ft__policies { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
+.sh-ft__payments { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sh-ft__payments .st-payment-icon { width: 38px; height: 24px; }
+.sh-ft__signature {
+  margin: 2rem 0 0;
+  font-family: Arvo, Georgia, serif;
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  line-height: 1;
+  text-align: center;
+  color: rgba(244, 237, 226, .12);
+  overflow-wrap: anywhere;
+}
+
+/* Layout variants */
+.sh-ft--centered .sh-ft__cols,
+.sh-ft--centered .sh-ft__row,
+.sh-ft--centered .sh-ft__base { text-align: center; justify-content: center; }
+.sh-ft--columns .sh-ft__window { border-radius: 2rem 2rem 0 0; }
+
+@media (max-width: 749px) {
+  .sh-ft__windows { gap: 1rem; padding-inline: 16px; }
+  .sh-ft__window { padding: 3.5rem 1.25rem 1.5rem; border-bottom: 3px solid var(--sh-walnut); }
+  .sh-ft__row,
+  .sh-ft__base { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sh-ft__band a { transition: color .2s; }
+}

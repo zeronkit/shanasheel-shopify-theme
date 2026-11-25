@@ -1,0 +1,604 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Shanasheel product page: the gallery and a raised buy panel side by side, then a full-width
+  details band for blocks placed "In the details band" (dimensions, care and assembly, shop the room).
+{%- endcomment -%}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign materials_heading = 'products.tabs.materials' | t
+  assign care_heading = 'products.tabs.care' | t
+  assign locale_colour_names = 'products.option_names.colour' | t
+  assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ','
+  assign picker_style = 'none'
+  # Description sections that are shown by their own block are moved out of the main description.
+  assign moved = ''
+  for tab in section.blocks
+    case tab.type
+      when 'variant_picker'
+        assign picker_style = tab.settings.style
+      when 'dimensions'
+        assign moved = moved | append: 'dimensions,materials,'
+      when 'care_assembly'
+        assign moved = moved | append: 'care,assembly,'
+      when 'collapsible'
+        assign tab_source = tab.settings.source | default: 'auto'
+        if tab_source == 'auto'
+          assign tab_heading = tab.settings.heading | downcase
+          assign tab_source = 'custom'
+          if tab_heading contains 'ship' or tab_heading contains 'return' or tab_heading contains 'deliver'
+            assign tab_source = 'shipping'
+          elsif tab_heading contains 'material' or tab_heading contains 'care' or tab_heading contains 'fabric'
+            assign tab_source = 'materials'
+          endif
+        endif
+        if tab_source == 'materials'
+          assign moved = moved | append: 'materials,care,'
+        elsif tab_source != 'custom'
+          assign moved = moved | append: tab_source | append: ','
+        endif
+    endcase
+  endfor
+
+  case section.settings.media_ratio
+    when 'square'
+      assign ratio_style = '--st-pdp-ratio: 1;'
+    when 'landscape'
+      assign ratio_style = '--st-pdp-ratio: 4 / 3;'
+    when 'portrait'
+      assign ratio_style = '--st-pdp-ratio: 4 / 5;'
+    else
+      assign ratio_style = ''
+  endcase
+  assign band = ''
+-%}
+<section class="st-pdp color-{{ section.settings.color_scheme }} st-section" aria-label="{{ product.title | escape }}">
+  <st-product class="st-wrap st-pdp__root" data-section-id="{{ section.id }}" data-url="{{ product.url }}">
+    <div
+      class="st-pdp__grid st-pdp__grid--{{ section.settings.gallery_layout }} st-pdp__grid--media-{{ section.settings.media_position }}"
+      {% if ratio_style != blank %}style="{{ ratio_style }}"{% endif %}
+    >
+      {% render 'product-gallery', product: product, variant: variant, section_id: section.id, layout: section.settings.gallery_layout, colour_filter: section.settings.colour_gallery %}
+
+      <div class="st-pdp__info st-pdp__info--{{ section.settings.info_style }}{% if section.settings.sticky_info %} st-pdp__info--sticky{% endif %}">
+        {%- for block in section.blocks -%}
+          {%- capture block_html -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+
+            {%- when 'text' -%}
+              <div class="st-pdp__text st-text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+            {%- when 'title' -%}
+              {%- liquid
+                assign eyebrow = ''
+                case block.settings.eyebrow
+                  when 'vendor'
+                    assign eyebrow = product.vendor
+                  when 'type'
+                    assign eyebrow = product.type | default: product.vendor
+                endcase
+              -%}
+              <div class="st-pdp__title" {{ block.shopify_attributes }}>
+                {%- if eyebrow != blank -%}
+                  <p class="st-eyebrow">{{ eyebrow | escape }}</p>
+                {%- endif -%}
+                <h1 class="st-h2 st-pdp__heading">{{ product.title | escape }}</h1>
+              </div>
+
+            {%- when 'price' -%}
+              <div class="st-pdp__price" data-st-swap="price-{{ block.id }}" {{ block.shopify_attributes }}>
+                {% render 'price', product: product, variant: variant, class: 'st-price--large' %}
+                {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                  <p class="st-small st-muted">
+                    {%- if cart.taxes_included -%}{{ 'products.tax_included' | t }}{% endif %}
+                    {%- if shop.shipping_policy.body != blank %} {{ 'products.shipping_policy_html' | t: link: shop.shipping_policy.url }}{% endif -%}
+                  </p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'variant_picker' -%}
+              <div data-st-swap="picker-{{ block.id }}" data-variant-id="{{ variant.id }}" data-variant-media="{{ variant.featured_media.id }}" {{ block.shopify_attributes }}>
+                {% render 'variant-picker', product: product, section_id: section.id, style: block.settings.style %}
+              </div>
+
+            {%- when 'finishes' -%}
+              {% render 'product-finishes', block: block, product: product, section_id: section.id, picker_style: picker_style, colour_names: colour_names %}
+
+            {%- when 'delivery' -%}
+              {%- liquid
+                assign lead = variant.metafields.shanasheel.lead_time.value | default: product.metafields.shanasheel.lead_time.value
+                assign state = 'stock'
+                if variant.available == false
+                  assign state = 'sold_out'
+                elsif variant.inventory_management != blank and variant.inventory_quantity <= 0
+                  assign state = 'order'
+                endif
+                if state == 'order'
+                  assign min_days = block.settings.order_min_days | default: 0
+                  assign max_days = block.settings.order_max_days | default: 0
+                else
+                  assign min_days = block.settings.stock_min_days | default: 0
+                  assign max_days = block.settings.stock_max_days | default: 0
+                endif
+                if max_days < min_days
+                  assign max_days = min_days
+                endif
+                # shortcut: calendar days from render time, so a cached page can lag by a day. Switch to working days if merchants ask.
+                assign now_seconds = 'now' | date: '%s' | plus: 0
+                assign date_format = 'products.delivery.date_format' | t
+                assign from_date = min_days | times: 86400 | plus: now_seconds | date: date_format
+                assign to_date = max_days | times: 86400 | plus: now_seconds | date: date_format
+              -%}
+              <div class="st-delivery st-delivery--{{ state }}" data-st-swap="delivery-{{ block.id }}" {{ block.shopify_attributes }}>
+                <span class="st-delivery__icon">{% render 'icon', name: 'truck' %}</span>
+                <div class="st-delivery__body">
+                  <p class="st-delivery__status">
+                    {%- case state -%}
+                      {%- when 'sold_out' -%}{{ 'products.delivery.sold_out' | t }}
+                      {%- when 'order' -%}{{ 'products.delivery.made_to_order' | t }}
+                      {%- else -%}{{ 'products.delivery.in_stock' | t }}
+                    {%- endcase -%}
+                  </p>
+                  {%- if lead != blank -%}
+                    <p>{{ lead | escape }}</p>
+                  {%- elsif state != 'sold_out' and block.settings.show_dates -%}
+                    <p>{{ 'products.delivery.estimate_html' | t: from: from_date, to: to_date }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.note != blank -%}
+                    <p class="st-small st-muted">{{ block.settings.note }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+
+            {%- when 'buy_buttons' -%}
+              <div data-st-swap="buy-{{ block.id }}" {{ block.shopify_attributes }}>
+                {% render 'buy-form',
+                  product: product,
+                  variant: variant,
+                  section_id: section.id,
+                  show_checkout: block.settings.show_dynamic_checkout,
+                  show_pickup: block.settings.show_pickup,
+                  show_quantity: block.settings.show_quantity
+                %}
+              </div>
+
+            {%- when 'description' -%}
+              {%- capture main_description -%}{% render 'description-part', description: product.description, want: 'main', moved: moved %}{%- endcapture -%}
+              {%- if main_description != blank -%}
+                <div class="st-rte st-pdp__description" {{ block.shopify_attributes }}>{{ main_description }}</div>
+              {%- endif -%}
+
+            {%- when 'dimensions' -%}
+              {% render 'product-dimensions', block: block, product: product, color_scheme: section.settings.color_scheme %}
+
+            {%- when 'care_assembly' -%}
+              {% render 'product-care', block: block, product: product %}
+
+            {%- when 'room' -%}
+              {% render 'product-room', block: block, product: product %}
+
+            {%- when 'collapsible' -%}
+              {%- liquid
+                assign tab_source = block.settings.source | default: 'auto'
+                if tab_source == 'auto'
+                  assign tab_heading = block.settings.heading | downcase
+                  assign tab_source = 'custom'
+                  if tab_heading contains 'ship' or tab_heading contains 'return' or tab_heading contains 'deliver'
+                    assign tab_source = 'shipping'
+                  elsif tab_heading contains 'material' or tab_heading contains 'care' or tab_heading contains 'fabric'
+                    assign tab_source = 'materials'
+                  endif
+                endif
+                # Preference: product metafields, then the matching description section, then the block text, then a translated default.
+                capture tab_body
+                  case tab_source
+                    when 'materials'
+                      assign materials_field = product.metafields.shanasheel.materials | default: product.metafields.custom.material
+                      assign care_field = product.metafields.shanasheel.care
+                      if materials_field != blank or care_field != blank
+                        if materials_field != blank
+                          echo materials_field | metafield_tag
+                        endif
+                        if care_field != blank
+                          echo '<h4>' | append: care_heading | append: '</h4>'
+                          echo care_field | metafield_tag
+                        endif
+                      else
+                        capture from_materials
+                          render 'description-part', description: product.description, want: 'materials'
+                        endcapture
+                        capture from_care
+                          render 'description-part', description: product.description, want: 'care'
+                        endcapture
+                        if from_materials != blank or from_care != blank
+                          if from_materials != blank
+                            echo '<h4>' | append: materials_heading | append: '</h4>' | append: from_materials
+                          endif
+                          if from_care != blank
+                            echo '<h4>' | append: care_heading | append: '</h4>' | append: from_care
+                          endif
+                        elsif block.settings.content != blank
+                          echo block.settings.content
+                        else
+                          echo 'products.tabs.materials_default_html' | t
+                        endif
+                      endif
+                    when 'shipping'
+                      capture from_shipping
+                        render 'description-part', description: product.description, want: 'shipping'
+                      endcapture
+                      if block.settings.content != blank
+                        echo block.settings.content
+                      elsif from_shipping != blank
+                        echo from_shipping
+                      else
+                        echo 'products.tabs.shipping_default_html' | t
+                      endif
+                    else
+                      echo block.settings.content
+                  endcase
+                  echo block.settings.page.content
+                endcapture
+                assign show_policy_links = false
+                if tab_source == 'shipping'
+                  if shop.shipping_policy.body != blank or shop.refund_policy.body != blank
+                    assign show_policy_links = true
+                  endif
+                endif
+              -%}
+              {%- if tab_body != blank or show_policy_links -%}
+                <details class="st-fold" {{ block.shopify_attributes }}>
+                  <summary class="st-fold__summary">
+                    <span>{{ block.settings.heading | escape }}</span>
+                    {% render 'icon', name: 'plus' %}
+                  </summary>
+                  <div class="st-fold__body st-rte">
+                    {{ tab_body }}
+                    {%- if show_policy_links -%}
+                      <ul class="st-fold__links" role="list">
+                        {%- if shop.shipping_policy.body != blank -%}<li><a href="{{ shop.shipping_policy.url }}">{{ 'products.tabs.shipping_policy' | t }}</a></li>{%- endif -%}
+                        {%- if shop.refund_policy.body != blank -%}<li><a href="{{ shop.refund_policy.url }}">{{ 'products.tabs.refund_policy' | t }}</a></li>{%- endif -%}
+                      </ul>
+                    {%- endif -%}
+                  </div>
+                </details>
+              {%- endif -%}
+
+            {%- when 'complementary' -%}
+              <st-recommendations
+                class="st-complementary"
+                data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.limit }}&intent=complementary"
+                data-block="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- if recommendations.performed and recommendations.products_count > 0 -%}
+                  <h2 class="st-field__label">{{ block.settings.heading | escape }}</h2>
+                  <ul class="st-mini-list" role="list">
+                    {%- for rec in recommendations.products -%}
+                      <li class="st-mini">
+                        <a class="st-mini__link" href="{{ rec.url }}">
+                          {%- if rec.featured_media -%}
+                            {% render 'image', image: rec.featured_media.preview_image, sizes: '96px', max: 200, class: 'st-mini__img', alt: '' %}
+                          {%- endif -%}
+                          <span class="st-mini__title">{{ rec.title | escape }}</span>
+                        </a>
+                        {% render 'price', product: rec %}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </st-recommendations>
+
+            {%- when 'custom_liquid' -%}
+              <div {{ block.shopify_attributes }}>{{ block.settings.custom_liquid }}</div>
+          {%- endcase -%}
+          {%- endcapture -%}
+          {%- if block.settings.placement == 'band' -%}
+            {%- assign band = band | append: block_html -%}
+          {%- else -%}
+            {{- block_html -}}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if band != blank -%}
+      <div class="st-pdp__details">
+        {%- if section.settings.band_heading != blank -%}
+          <h2 class="st-h3 st-pdp__details-heading">{{ section.settings.band_heading | escape }}</h2>
+        {%- endif -%}
+        <div class="st-pdp__band">{{ band }}</div>
+      </div>
+    {%- endif -%}
+  </st-product>
+
+  <script type="application/ld+json">
+    {{ product | structured_data }}
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.product_information",
+  "tag": "div",
+  "class": "st-shopify-section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "t:labels.gallery_layout",
+      "options": [
+        { "value": "mosaic", "label": "t:options.mosaic" },
+        { "value": "stack", "label": "t:options.single_column" }
+      ],
+      "default": "mosaic"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:labels.media_position",
+      "options": [
+        { "value": "start", "label": "t:options.gallery_first" },
+        { "value": "end", "label": "t:options.panel_first" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "media_ratio",
+      "label": "t:labels.media_ratio",
+      "options": [
+        { "value": "card", "label": "t:options.card_ratio" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "landscape", "label": "t:options.landscape" },
+        { "value": "portrait", "label": "t:options.portrait" }
+      ],
+      "default": "card"
+    },
+    {
+      "type": "select",
+      "id": "info_style",
+      "label": "t:labels.info_style",
+      "options": [
+        { "value": "panel", "label": "t:options.raised_panel" },
+        { "value": "plain", "label": "t:options.plain" }
+      ],
+      "default": "panel"
+    },
+    { "type": "checkbox", "id": "sticky_info", "label": "t:labels.sticky_info", "default": true },
+    { "type": "checkbox", "id": "colour_gallery", "label": "t:labels.colour_gallery", "default": true, "info": "t:info.colour_gallery" },
+    { "type": "text", "id": "band_heading", "label": "t:labels.band_heading", "default": "The details", "info": "t:info.band_heading" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "text",
+      "name": "t:names.text",
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text", "default": "Need help choosing? Our team can send photos of any finish." },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:labels.style",
+          "options": [
+            { "value": "body", "label": "t:options.body" },
+            { "value": "small", "label": "t:options.small" },
+            { "value": "eyebrow", "label": "t:options.eyebrow" }
+          ],
+          "default": "small"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "t:names.title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "eyebrow",
+          "label": "t:labels.eyebrow_source",
+          "options": [
+            { "value": "none", "label": "t:options.none" },
+            { "value": "type", "label": "t:options.product_type" },
+            { "value": "vendor", "label": "t:options.vendor" }
+          ],
+          "default": "type"
+        }
+      ]
+    },
+    { "type": "price", "name": "t:names.price", "limit": 1 },
+    {
+      "type": "variant_picker",
+      "name": "t:names.variant_picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:labels.style",
+          "options": [
+            { "value": "chips", "label": "t:options.chips" },
+            { "value": "dropdown", "label": "t:options.dropdown" }
+          ],
+          "default": "chips"
+        },
+        { "type": "paragraph", "content": "t:info.swatches" }
+      ]
+    },
+    {
+      "type": "finishes",
+      "name": "t:names.finishes",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.finishes" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Fabrics and finishes" },
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text" },
+        { "type": "text", "id": "option_names", "label": "t:labels.finish_option_names", "default": "Fabric, Finish, Material, Upholstery, Wood, Leather" },
+        { "type": "url", "id": "sample_url", "label": "t:labels.sample_link" },
+        { "type": "text", "id": "sample_label", "label": "t:labels.sample_label", "default": "Order free swatches" }
+      ]
+    },
+    {
+      "type": "delivery",
+      "name": "t:names.delivery",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.delivery" },
+        { "type": "checkbox", "id": "show_dates", "label": "t:labels.show_dates", "default": true },
+        { "type": "number", "id": "stock_min_days", "label": "t:labels.stock_min_days", "default": 3 },
+        { "type": "number", "id": "stock_max_days", "label": "t:labels.stock_max_days", "default": 7 },
+        { "type": "number", "id": "order_min_days", "label": "t:labels.order_min_days", "default": 35 },
+        { "type": "number", "id": "order_max_days", "label": "t:labels.order_max_days", "default": 56 },
+        { "type": "inline_richtext", "id": "note", "label": "t:labels.note", "default": "Large pieces are delivered to the room of your choice." }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:names.buy_buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_quantity", "label": "t:labels.show_quantity", "default": true },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": true, "info": "t:info.dynamic_checkout" },
+        { "type": "checkbox", "id": "show_pickup", "label": "t:labels.show_pickup", "default": true }
+      ]
+    },
+    { "type": "description", "name": "t:names.description", "limit": 1 },
+    {
+      "type": "dimensions",
+      "name": "t:names.dimensions",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.dimensions" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "band", "label": "t:options.place_band" },
+            { "value": "column", "label": "t:options.place_column" }
+          ],
+          "default": "band"
+        },
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Dimensions and materials" },
+        { "type": "checkbox", "id": "show_figures", "label": "t:labels.show_figures", "default": true },
+        { "type": "textarea", "id": "rows", "label": "t:labels.dimension_rows", "info": "t:info.dimension_rows" },
+        { "type": "page", "id": "guide_page", "label": "t:labels.guide_page", "info": "t:info.guide_page" },
+        { "type": "text", "id": "guide_label", "label": "t:labels.guide_label", "default": "Will it fit? Measuring guide" }
+      ]
+    },
+    {
+      "type": "care_assembly",
+      "name": "t:names.care_assembly",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.care_assembly" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "band", "label": "t:options.place_band" },
+            { "value": "column", "label": "t:options.place_column" }
+          ],
+          "default": "band"
+        },
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Care and assembly" },
+        {
+          "type": "select",
+          "id": "level",
+          "label": "t:labels.assembly_level",
+          "options": [
+            { "value": "none", "label": "t:options.none" },
+            { "value": "ready", "label": "t:options.assembly_ready" },
+            { "value": "easy", "label": "t:options.assembly_easy" },
+            { "value": "required", "label": "t:options.assembly_required" }
+          ],
+          "default": "none"
+        },
+        { "type": "richtext", "id": "care_text", "label": "t:labels.care_text" },
+        { "type": "richtext", "id": "assembly_text", "label": "t:labels.assembly_text" },
+        { "type": "url", "id": "guide_url", "label": "t:labels.assembly_guide" }
+      ]
+    },
+    {
+      "type": "room",
+      "name": "t:names.shop_the_room",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.shop_the_room" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "band", "label": "t:options.place_band" },
+            { "value": "column", "label": "t:options.place_column" }
+          ],
+          "default": "band"
+        },
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Shop the room" },
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text", "default": "Everything in this photo, ready to bring home." },
+        { "type": "image_picker", "id": "image", "label": "t:labels.room_image" },
+        { "type": "checkbox", "id": "show_list", "label": "t:labels.show_product_list", "default": true },
+        { "type": "header", "content": "t:names.hotspot_1" },
+        { "type": "product", "id": "product_1", "label": "t:labels.product" },
+        { "type": "range", "id": "x_1", "label": "t:labels.hotspot_x", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 32 },
+        { "type": "range", "id": "y_1", "label": "t:labels.hotspot_y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 62 },
+        { "type": "header", "content": "t:names.hotspot_2" },
+        { "type": "product", "id": "product_2", "label": "t:labels.product" },
+        { "type": "range", "id": "x_2", "label": "t:labels.hotspot_x", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 70 },
+        { "type": "range", "id": "y_2", "label": "t:labels.hotspot_y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 55 },
+        { "type": "header", "content": "t:names.hotspot_3" },
+        { "type": "product", "id": "product_3", "label": "t:labels.product" },
+        { "type": "range", "id": "x_3", "label": "t:labels.hotspot_x", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "y_3", "label": "t:labels.hotspot_y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 28 },
+        { "type": "header", "content": "t:names.hotspot_4" },
+        { "type": "product", "id": "product_4", "label": "t:labels.product" },
+        { "type": "range", "id": "x_4", "label": "t:labels.hotspot_x", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 84 },
+        { "type": "range", "id": "y_4", "label": "t:labels.hotspot_y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 78 }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "t:names.collapsible",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Delivery and returns" },
+        {
+          "type": "select",
+          "id": "source",
+          "label": "t:labels.tab_source",
+          "info": "t:info.tab_source",
+          "options": [
+            { "value": "auto", "label": "t:options.auto_from_heading" },
+            { "value": "materials", "label": "t:options.tab_materials" },
+            { "value": "shipping", "label": "t:options.tab_shipping" },
+            { "value": "custom", "label": "t:options.tab_custom" }
+          ],
+          "default": "auto"
+        },
+        { "type": "richtext", "id": "content", "label": "t:labels.content", "info": "t:info.tab_content" },
+        { "type": "page", "id": "page", "label": "t:labels.page_content" }
+      ]
+    },
+    {
+      "type": "complementary",
+      "name": "t:names.complementary",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.complementary" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Pairs well with" },
+        { "type": "range", "id": "limit", "label": "t:labels.products_to_show", "min": 1, "max": 6, "step": 1, "default": 3 }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:names.custom_liquid",
+      "settings": [{ "type": "liquid", "id": "custom_liquid", "label": "t:labels.custom_liquid" }]
+    }
+  ]
+}
+{% endschema %}

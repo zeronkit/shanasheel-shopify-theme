@@ -1,0 +1,19 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  CSS variables for one colour scheme. Derived tones use color-mix, so any colour works.
+  Params: id, bg, gradient (optional), text, accent, button, label
+{%- endcomment -%}
+.color-{{ id }} {
+  --st-bg: {{ bg }};
+  --st-bg-gradient: {% if gradient != blank %}{{ gradient }}{% else %}{{ bg }}{% endif %};
+  --st-text: {{ text }};
+  --st-accent: {{ accent }};
+  --st-button: {{ button }};
+  --st-button-label: {{ label }};
+  --st-line: color-mix(in srgb, {{ text }} 22%, transparent);
+  --st-muted: color-mix(in srgb, {{ text }} 82%, {{ bg }});
+  --st-tint: color-mix(in srgb, {{ text }} 6%, transparent);
+  --st-soft: color-mix(in srgb, {{ text }} 5%, {{ bg }});
+  background: var(--st-bg-gradient);
+  color: var(--st-text);
+}

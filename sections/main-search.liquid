@@ -1,0 +1,169 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign current_type = 'all'
+  if search.types.size == 1
+    assign current_type = search.types.first
+  endif
+  assign encoded_terms = search.terms | url_encode
+  assign base_url = routes.search_url | append: '?q=' | append: encoded_terms | append: '&options%5Bprefix%5D=last'
+-%}
+{%- liquid
+  # A shopper's "Show" choice is kept in a hidden cart attribute, because Liquid cannot read URL parameters.
+  assign per_page = section.settings.per_page
+  assign chosen = cart.attributes['_st_per_page'] | plus: 0
+  if section.settings.show_per_page and chosen >= 8 and chosen <= 48
+    assign per_page = chosen
+  endif
+-%}
+<section class="st-section st-search-page color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    <header class="st-search-hero">
+      <p class="st-eyebrow">{{ 'search.title' | t }}</p>
+      <h1 class="st-h2">
+        {%- if search.performed -%}
+          {{ 'search.results_for' | t: terms: search.terms }}
+        {%- else -%}
+          {{ 'search.page_heading' | t }}
+        {%- endif -%}
+      </h1>
+      {% render 'search-form', id: 'MainSearch', predictive: settings.predictive_search, value: search.terms %}
+      {%- if section.settings.show_rooms and search.performed == false -%}
+        {%- assign rooms_label = 'search.browse_rooms' | t -%}
+        {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, limit: 8 %}
+      {%- endif -%}
+    </header>
+
+    {%- if search.performed -%}
+      <nav class="st-tabs" aria-label="{{ 'search.tabs_label' | t }}">
+        <a href="{{ base_url }}"{% if current_type == 'all' %} aria-current="page"{% endif %}>
+          {{ 'search.tab_all' | t }}{% if current_type == 'all' %} <span class="st-count">{{ search.results_count }}</span>{% endif %}
+        </a>
+        <a href="{{ base_url }}&amp;type=product"{% if current_type == 'product' %} aria-current="page"{% endif %}>
+          {{ 'search.tab_products' | t }}{% if current_type == 'product' %} <span class="st-count">{{ search.results_count }}</span>{% endif %}
+        </a>
+        <a href="{{ base_url }}&amp;type=article"{% if current_type == 'article' %} aria-current="page"{% endif %}>
+          {{ 'search.tab_articles' | t }}{% if current_type == 'article' %} <span class="st-count">{{ search.results_count }}</span>{% endif %}
+        </a>
+        <a href="{{ base_url }}&amp;type=page"{% if current_type == 'page' %} aria-current="page"{% endif %}>
+          {{ 'search.tab_pages' | t }}{% if current_type == 'page' %} <span class="st-count">{{ search.results_count }}</span>{% endif %}
+        </a>
+      </nav>
+
+      <div class="st-search-block" data-st-search-collections data-terms="{{ search.terms | escape }}" hidden>
+        <h2 class="st-field__label">{{ 'search.matching_collections' | t }}</h2>
+        <ul class="st-chips" role="list" data-st-search-collections-list></ul>
+      </div>
+
+      {%- paginate search.results by per_page -%}
+        <st-facets class="st-facets" data-section-id="{{ section.id }}">
+          {%- liquid
+            assign clear_url = base_url
+            if current_type != 'all'
+              assign clear_url = clear_url | append: '&type=' | append: current_type
+            endif
+          -%}
+          {% render 'facets',
+            filters: search.filters,
+            sort_options: search.sort_options,
+            sort_by: search.sort_by,
+            default_sort: search.default_sort_by,
+            count: search.results_count,
+            section_id: section.id,
+            clear_url: clear_url,
+            enable_filtering: section.settings.enable_filtering,
+            enable_sorting: section.settings.enable_sorting,
+            show_colour_bar: section.settings.enable_filtering,
+            terms: search.terms,
+            search_type: current_type,
+            scheme: section.settings.color_scheme,
+            show_per_page: section.settings.show_per_page,
+            per_page: per_page
+          %}
+          <div class="st-facets__results" data-st-results>
+            {%- if search.results_count > 0 -%}
+              <ul class="st-grid st-grid--{{ section.settings.columns }} st-grid--m2" role="list">
+                {%- for item in search.results -%}
+                  <li>
+                    {%- case item.object_type -%}
+                      {%- when 'product' -%}
+                        {% render 'product-card', product: item %}
+                      {%- when 'article' -%}
+                        {% render 'article-card', article: item %}
+                      {%- when 'page' -%}
+                        <article class="st-text-card">
+                          <p class="st-eyebrow">{{ 'search.page' | t }}</p>
+                          <h3 class="st-h4"><a class="st-card__link" href="{{ item.url }}">{{ item.title | escape }}</a></h3>
+                          <p class="st-small st-muted">{{ item.content | strip_html | truncatewords: 20 }}</p>
+                        </article>
+                    {%- endcase -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <div class="st-no-results">
+                <div>
+                  <p class="st-h3">{{ 'search.no_results_title' | t: terms: search.terms }}</p>
+                  <p class="st-no-results__hint">{{ 'search.no_results_hint' | t }}</p>
+                </div>
+                {% render 'search-discovery', id: 'NoResults', show_products: false, heading_tag: 'h2' %}
+                {%- liquid
+                  assign suggested = section.settings.suggested_collection
+                  if suggested == blank
+                    assign suggested_products = collections.all.products | sort: 'published_at' | reverse
+                  else
+                    assign suggested_products = suggested.products
+                  endif
+                -%}
+                {%- if suggested_products.size > 0 -%}
+                  <div class="st-search-block">
+                    <h2 class="st-field__label">{{ 'search.you_may_like' | t }}</h2>
+                    <ul class="st-grid st-grid--4 st-grid--m2" role="list">
+                      {%- for product in suggested_products limit: 4 -%}
+                        <li>{% render 'product-card', product: product %}</li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            {%- assign shown = paginate.current_offset | plus: search.results.size -%}
+            {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown %}
+          </div>
+        </st-facets>
+      {%- endpaginate -%}
+    {%- else -%}
+      {% render 'search-discovery', id: 'SearchStart', show_products: true, heading_tag: 'h2' %}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.search_results",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["search"] },
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "t:labels.products_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:labels.pagination_style",
+      "options": [
+        { "value": "numbered", "label": "t:options.pagination_numbered" },
+        { "value": "load_more", "label": "t:options.pagination_load_more" },
+        { "value": "infinite", "label": "t:options.pagination_infinite" }
+      ],
+      "default": "load_more"
+    },
+    { "type": "checkbox", "id": "show_per_page", "label": "t:labels.show_per_page", "default": true, "info": "t:info.show_per_page" },
+    { "type": "range", "id": "columns", "label": "t:labels.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "enable_filtering", "label": "t:labels.enable_filtering", "default": true, "info": "t:info.filters" },
+    { "type": "checkbox", "id": "enable_sorting", "label": "t:labels.enable_sorting", "default": true },
+    { "type": "collection", "id": "suggested_collection", "label": "t:labels.suggested_collection", "info": "t:info.suggested_collection" },
+    { "type": "paragraph", "content": "t:info.search_popular_where" },
+    { "type": "checkbox", "id": "show_rooms", "label": "t:labels.show_rooms_search", "default": true },
+    { "type": "link_list", "id": "rooms_menu", "label": "t:labels.rooms_menu", "info": "t:info.rooms_menu" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,69 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Care and assembly block of the product page.
+  Params: block, product
+{%- endcomment -%}
+{%- assign care_heading = 'products.tabs.care' | t -%}
+{%- liquid
+  capture care_body
+    if product.metafields.shanasheel.care != blank
+      echo product.metafields.shanasheel.care | metafield_tag
+    else
+      capture from_care
+        render 'description-part', description: product.description, want: 'care'
+      endcapture
+      if from_care != blank
+        echo from_care
+      elsif block.settings.care_text != blank
+        echo block.settings.care_text
+      else
+        echo 'products.care.default_html' | t
+      endif
+    endif
+  endcapture
+  capture assembly_body
+    if product.metafields.shanasheel.assembly != blank
+      echo product.metafields.shanasheel.assembly | metafield_tag
+    else
+      capture from_assembly
+        render 'description-part', description: product.description, want: 'assembly'
+      endcapture
+      if from_assembly != blank
+        echo from_assembly
+      else
+        echo block.settings.assembly_text
+      endif
+    endif
+  endcapture
+  assign level = product.metafields.shanasheel.assembly_level.value | default: block.settings.level | downcase | strip
+  # The guide metafield can be a file (has a url) or a plain url.
+  assign guide_field = product.metafields.shanasheel.assembly_guide.value
+  assign guide_url = guide_field.url | default: guide_field | default: block.settings.guide_url
+-%}
+<div class="st-spec st-care" {{ block.shopify_attributes }}>
+  <h2 class="st-h4 st-spec__heading">{{ block.settings.heading | escape }}</h2>
+  <div class="st-care__cols">
+    <div class="st-care__col">
+      <h3 class="st-care__title">{{ care_heading }}</h3>
+      <div class="st-rte st-small">{{ care_body }}</div>
+    </div>
+    {%- if assembly_body != blank or level == 'ready' or level == 'easy' or level == 'required' or guide_url != blank -%}
+      <div class="st-care__col">
+        <h3 class="st-care__title">{{ 'products.assembly.title' | t }}</h3>
+        {%- if level == 'ready' or level == 'easy' or level == 'required' -%}
+          <p class="st-care__level st-care__level--{{ level }}">
+            {%- if level == 'ready' -%}{% render 'icon', name: 'check' %}{%- else -%}{% render 'icon', name: 'cube' %}{%- endif -%}
+            {%- assign level_key = 'products.assembly.' | append: level -%}
+            {{ level_key | t }}
+          </p>
+        {%- endif -%}
+        {%- if assembly_body != blank -%}<div class="st-rte st-small">{{ assembly_body }}</div>{%- endif -%}
+        {%- if guide_url != blank -%}
+          <a class="st-link-button" href="{{ guide_url }}" target="_blank" rel="noopener">
+            {% render 'icon', name: 'link' %} {{ 'products.assembly.guide' | t }}<span class="st-visually-hidden"> {{ 'general.new_window' | t }}</span>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>

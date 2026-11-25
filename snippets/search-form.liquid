@@ -1,0 +1,31 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: id (unique), predictive (boolean), value (optional current terms)
+{%- endcomment -%}
+<form action="{{ routes.search_url }}" method="get" role="search" class="st-search-form">
+  <label class="st-visually-hidden" for="{{ id }}">{{ 'search.label' | t }}</label>
+  {%- if predictive -%}<st-predictive-search class="st-predictive" data-url="{{ routes.predictive_search_url }}">{%- endif -%}
+  <div class="st-search-form__field">
+    <input
+      class="st-input st-search-form__input"
+      type="search"
+      id="{{ id }}"
+      name="q"
+      value="{{ value | escape }}"
+      placeholder="{{ 'search.placeholder' | t }}"
+      autocomplete="off"
+      {% if predictive %}
+        role="combobox"
+        aria-expanded="false"
+        aria-controls="{{ id }}-results"
+        aria-autocomplete="list"
+      {% endif %}
+    >
+    <input type="hidden" name="options[prefix]" value="last">
+    <button type="submit" class="st-icon-button" aria-label="{{ 'search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+  </div>
+  {%- if predictive -%}
+      <div class="st-predictive__results" id="{{ id }}-results" data-st-results hidden></div>
+    </st-predictive-search>
+  {%- endif -%}
+</form>

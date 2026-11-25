@@ -1,0 +1,14 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<div class="st-block" {{ block.shopify_attributes }}>
+  {{ block.settings.custom_liquid }}
+</div>
+
+{% schema %}
+{
+  "name": "t:names.custom_liquid",
+  "settings": [
+    { "type": "liquid", "id": "custom_liquid", "label": "t:labels.custom_liquid", "info": "t:info.custom_liquid" }
+  ],
+  "presets": [{ "name": "t:names.custom_liquid" }]
+}
+{% endschema %}

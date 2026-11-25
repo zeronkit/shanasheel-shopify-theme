@@ -1,0 +1,123 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign words = article.content | strip_html | split: ' ' | size
+  assign minutes = words | divided_by: 200 | at_least: 1
+  assign blog_title = blog.title
+-%}
+<article class="st-article sha color-{{ section.settings.color_scheme }}">
+  <div class="sha-spread">
+    <header class="sha-spread__text">
+      <a class="sha-back" href="{{ blog.url }}">{% render 'icon', name: 'back' %}{{ 'blogs.back_to' | t: blog: blog_title }}</a>
+      {%- if article.tags.size > 0 -%}<p class="sha-spread__tag">{{ article.tags.first | escape }}</p>{%- endif -%}
+      <h1 class="sha-spread__title">{{ article.title | escape }}</h1>
+      {%- if article.excerpt != blank -%}<p class="sha-spread__dek">{{ article.excerpt | strip_html | truncatewords: 30 }}</p>{%- endif -%}
+    </header>
+    {%- if article.image -%}
+      <div class="sha-spread__media">
+        {% render 'image', image: article.image, sizes: '(min-width: 990px) 55vw, 100vw', eager: true %}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="st-wrap sha-body">
+    <aside class="sha-rail">
+      <dl>
+        <div><dt>{{ 'blogs.published' | t }}</dt><dd>{{ article.published_at | time_tag: format: 'date' }}</dd></div>
+        {%- if section.settings.show_reading_time -%}<div><dt>{{ 'blogs.reading' | t }}</dt><dd>{{ 'blogs.read_time' | t: count: minutes }}</dd></div>{%- endif -%}
+        {%- if section.settings.show_author and article.author != blank -%}<div><dt>{{ 'blogs.by' | t }}</dt><dd>{{ article.author | escape }}</dd></div>{%- endif -%}
+      </dl>
+      {%- if article.tags.size > 0 -%}
+        <ul class="sha-tags" role="list" aria-label="{{ 'blogs.tags' | t }}">
+          {%- for tag in article.tags -%}
+            <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </aside>
+    <div class="sha-main">
+    <div class="st-rte st-article__content sha-content{% if section.settings.drop_cap %} st-article__content--drop{% endif %}">{{ article.content }}</div>
+
+    {%- if section.settings.show_pager -%}
+      {%- if blog.previous_article or blog.next_article -%}
+        <nav class="st-article__pager" aria-label="{{ 'blogs.more_stories' | t }}">
+          {%- if blog.previous_article -%}
+            <a href="{{ blog.previous_article.url }}" rel="prev">
+              <span class="st-small st-muted">{{ 'blogs.previous' | t }}</span>
+              <span class="st-strong">{{ blog.previous_article.title | escape }}</span>
+            </a>
+          {%- endif -%}
+          {%- if blog.next_article -%}
+            <a class="st-article__next" href="{{ blog.next_article.url }}" rel="next">
+              <span class="st-small st-muted">{{ 'blogs.next' | t }}</span>
+              <span class="st-strong">{{ blog.next_article.title | escape }}</span>
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if blog.comments_enabled? -%}
+      <section class="st-comments" aria-labelledby="Comments-{{ section.id }}">
+        <h2 class="st-h3" id="Comments-{{ section.id }}">{{ 'blogs.comments.title' | t: count: article.comments_count }}</h2>
+        {%- paginate article.comments by 20 -%}
+          <ul class="st-comments__list" role="list">
+            {%- for comment in article.comments -%}
+              <li class="st-comment">
+                <div class="st-rte">{{ comment.content }}</div>
+                <p class="st-small st-muted">{{ comment.author | escape }} &middot; {{ comment.created_at | time_tag: format: 'date' }}</p>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+
+        {%- form 'new_comment', article, class: 'st-form' -%}
+          <h3 class="st-h4">{{ 'blogs.comments.leave' | t }}</h3>
+          {%- if form.posted_successfully? -%}
+            <p class="st-notice st-notice--success" role="status">
+              {%- if blog.moderated? -%}{{ 'blogs.comments.moderated' | t }}{%- else -%}{{ 'blogs.comments.posted' | t }}{%- endif -%}
+            </p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="st-notice st-notice--error" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="st-form__row">
+            <div class="st-field">
+              <label class="st-field__label" for="CommentAuthor">{{ 'blogs.comments.name' | t }}</label>
+              <input class="st-input" type="text" id="CommentAuthor" name="comment[author]" value="{{ form.author }}" autocomplete="name" required>
+            </div>
+            <div class="st-field">
+              <label class="st-field__label" for="CommentEmail">{{ 'blogs.comments.email' | t }}</label>
+              <input class="st-input" type="email" id="CommentEmail" name="comment[email]" value="{{ form.email }}" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="st-field">
+            <label class="st-field__label" for="CommentBody">{{ 'blogs.comments.message' | t }}</label>
+            <textarea class="st-input" id="CommentBody" name="comment[body]" rows="5" required>{{ form.body }}</textarea>
+          </div>
+          {%- if blog.moderated? -%}<p class="st-small st-muted">{{ 'blogs.comments.moderation_note' | t }}</p>{%- endif -%}
+          <button type="submit" class="st-button st-button--primary">{{ 'blogs.comments.post' | t }}</button>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+  </div>
+  <script type="application/ld+json">
+    {{ article | structured_data }}
+  </script>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "t:names.blog_post",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_author", "label": "t:labels.show_author", "default": true },
+    { "type": "checkbox", "id": "show_reading_time", "label": "t:labels.show_reading_time", "default": true },
+    { "type": "checkbox", "id": "drop_cap", "label": "t:labels.drop_cap", "default": true },
+    { "type": "checkbox", "id": "show_pager", "label": "t:labels.show_pager", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

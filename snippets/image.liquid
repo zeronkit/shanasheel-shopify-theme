@@ -1,0 +1,21 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Responsive image that honours the merchant's focal point.
+  Params: image (required), sizes, class, alt, eager (boolean), max (max width, default 2400)
+{%- endcomment -%}
+{%- liquid
+  assign max = max | default: 2400
+  assign focal = image.presentation.focal_point | default: '50% 50%'
+  assign position = 'object-position: ' | append: focal
+  assign alt_text = alt | default: image.alt
+  assign sizes = sizes | default: '100vw'
+  assign widths = '240, 360, 480, 640, 800, 960, 1200, 1500, 1800, 2400'
+  if eager
+    assign loading = 'eager'
+    assign priority = 'high'
+  else
+    assign loading = 'lazy'
+    assign priority = 'auto'
+  endif
+-%}
+{{ image | image_url: width: max | image_tag: widths: widths, sizes: sizes, loading: loading, fetchpriority: priority, class: class, alt: alt_text, style: position }}

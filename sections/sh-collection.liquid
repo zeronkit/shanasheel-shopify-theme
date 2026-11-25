@@ -1,0 +1,325 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Collection as a showroom: title and a numbered room index beside a stacked image collage,
+  then a slim toolbar and a three column grid with one editorial tile placed between the products.
+{%- endcomment -%}
+{%- liquid
+  # A shopper's "Show" choice is kept in a hidden cart attribute, because Liquid cannot read URL parameters.
+  assign per_page = section.settings.per_page
+  assign chosen = cart.attributes['_st_per_page'] | plus: 0
+  if section.settings.show_per_page and chosen >= 8 and chosen <= 48
+    assign per_page = chosen
+  endif
+  assign eyebrow = section.settings.eyebrow
+  if eyebrow == blank
+    assign eyebrow = 'collections.eyebrow' | t
+  endif
+  assign img1 = collection.image | default: collection.products.first.featured_media.preview_image
+  assign img2 = collection.products[1].featured_media.preview_image
+  assign img3 = collection.products[2].featured_media.preview_image
+  assign room_no = 0
+-%}
+{%- liquid
+  assign t_tile_eyebrow = 'sh_collection.tile_eyebrow' | t
+  if section.settings.tile_eyebrow != blank
+    assign t_tile_eyebrow = section.settings.tile_eyebrow
+  endif
+  assign t_tile_title = 'sh_collection.tile_title' | t
+  if section.settings.tile_title != blank
+    assign t_tile_title = section.settings.tile_title
+  endif
+  assign t_tile_text = 'sh_collection.tile_text' | t
+  if section.settings.tile_text != blank
+    assign t_tile_text = section.settings.tile_text
+  endif
+  assign t_tile_button = 'sh_collection.tile_button' | t
+  if section.settings.tile_button != blank
+    assign t_tile_button = section.settings.tile_button
+  endif
+-%}
+<section class="shc color-{{ section.settings.color_scheme }}">
+  <header class="shc-head">
+    <div class="st-wrap shc-head__grid">
+      <div class="shc-head__text">
+        {%- if section.settings.show_breadcrumb -%}
+          <nav class="shc-crumbs" aria-label="{{ 'general.breadcrumb' | t }}">
+            <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+            <span aria-hidden="true">/</span>
+            <a href="{{ routes.collections_url }}">{{ 'collections.all_title' | t }}</a>
+          </nav>
+        {%- endif -%}
+        <p class="shc-head__eyebrow">{{ eyebrow | escape }}</p>
+        <h1 class="shc-head__title">{{ collection.title | escape }}</h1>
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="shc-head__desc">{{ collection.description }}</div>
+        {%- endif -%}
+        <p class="shc-head__count">{{ 'collections.product_count' | t: count: collection.products_count }}</p>
+
+        {%- if section.settings.show_rooms -%}
+          <nav class="shc-index" aria-label="{{ 'collections.rooms_label' | t }}">
+            <ol role="list">
+              {%- if section.settings.rooms_menu != blank and section.settings.rooms_menu.links.size > 0 -%}
+                {%- for link in section.settings.rooms_menu.links limit: 8 -%}
+                  <li><a href="{{ link.url }}"{% if link.url == collection.url %} aria-current="page"{% endif %}><span class="shc-index__no">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>{{ link.title | escape }}</a></li>
+                {%- endfor -%}
+              {%- else -%}
+                {%- for c in collections limit: 40 -%}
+                  {%- if room_no < 8 and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' -%}
+                    {%- assign room_no = room_no | plus: 1 -%}
+                    <li><a href="{{ c.url }}"{% if c.url == collection.url %} aria-current="page"{% endif %}><span class="shc-index__no">{{ room_no | prepend: '0' | slice: -2, 2 }}</span>{{ c.title | escape }}</a></li>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            </ol>
+          </nav>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_image and img1 -%}
+        <div class="shc-collage" aria-hidden="true">
+          <div class="shc-collage__a">{% render 'image', image: img1, sizes: '(min-width: 990px) 28vw, 60vw', eager: true, alt: '' %}</div>
+          {%- if img2 -%}<div class="shc-collage__b">{% render 'image', image: img2, sizes: '(min-width: 990px) 16vw, 35vw', eager: true, alt: '' %}</div>{%- endif -%}
+          {%- if img3 -%}<div class="shc-collage__c">{% render 'image', image: img3, sizes: '(min-width: 990px) 14vw, 30vw', alt: '' %}</div>{%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </header>
+
+  <div class="st-wrap shc-body">
+    {%- paginate collection.products by per_page -%}
+      <st-facets class="st-facets shc-facets" data-section-id="{{ section.id }}">
+        {%- assign clear_url = collection.url | append: '?sort_by=' | append: collection.sort_by -%}
+        {% render 'facets',
+          filters: collection.filters,
+          sort_options: collection.sort_options,
+          sort_by: collection.sort_by,
+          default_sort: collection.default_sort_by,
+          count: collection.products_count,
+          section_id: section.id,
+          clear_url: clear_url,
+          enable_filtering: section.settings.enable_filtering,
+          enable_sorting: section.settings.enable_sorting,
+          show_colour_bar: section.settings.show_colour_bar,
+          scheme: section.settings.color_scheme,
+          show_per_page: section.settings.show_per_page,
+          per_page: per_page
+        %}
+
+        <div class="st-facets__results" data-st-results>
+          {%- if collection.products.size > 0 -%}
+            <ul class="shc-grid shc-grid--{{ section.settings.columns }} shc-grid--m{{ section.settings.columns_mobile }}" role="list">
+              {%- for product in collection.products -%}
+                <li>{% render 'product-card', product: product, eager: forloop.first %}</li>
+                {%- if section.settings.tile_show and forloop.index == section.settings.tile_position and paginate.current_page == 1 -%}
+                  <li class="shc-tile">
+                    <p class="shc-tile__eyebrow">{{ t_tile_eyebrow | escape }}</p>
+                    <p class="shc-tile__title">{{ t_tile_title | escape }}</p>
+                    {%- if t_tile_text != blank -%}<p class="shc-tile__text">{{ t_tile_text | escape }}</p>{%- endif -%}
+                    {%- if section.settings.tile_link != blank -%}
+                      <a class="shc-tile__link" href="{{ section.settings.tile_link }}">{{ t_tile_button | escape }} {% render 'icon', name: 'arrow' %}</a>
+                    {%- endif -%}
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="shc-empty">
+              <p>{{ 'collections.empty' | t }}</p>
+              <a href="{{ clear_url }}" data-st-facet-link>{{ 'collections.clear_all' | t }}</a>
+            </div>
+          {%- endif -%}
+          {%- assign shown = paginate.current_offset | plus: collection.products.size -%}
+          {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown %}
+        </div>
+      </st-facets>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection: showroom",
+  "class": "st-shopify-section",
+  "enabled_on": {
+    "templates": [
+      "collection"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:labels.banner"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:labels.show_description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:labels.show_collection_image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "t:labels.show_breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rooms",
+      "label": "t:labels.show_rooms",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "rooms_menu",
+      "label": "t:labels.rooms_menu",
+      "info": "t:info.rooms_menu"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.products"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "t:labels.products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:labels.pagination_style",
+      "options": [
+        {
+          "value": "numbered",
+          "label": "t:options.pagination_numbered"
+        },
+        {
+          "value": "load_more",
+          "label": "t:options.pagination_load_more"
+        },
+        {
+          "value": "infinite",
+          "label": "t:options.pagination_infinite"
+        }
+      ],
+      "default": "load_more"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_per_page",
+      "label": "t:labels.show_per_page",
+      "default": true,
+      "info": "t:info.show_per_page"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:labels.columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:labels.columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "t:labels.enable_filtering",
+      "default": true,
+      "info": "t:info.filters"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_colour_bar",
+      "label": "t:labels.show_colour_bar",
+      "default": false,
+      "info": "t:info.colour_bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "t:labels.enable_sorting",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Story tile"
+    },
+    {
+      "type": "checkbox",
+      "id": "tile_show",
+      "label": "Show a story tile between products",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tile_position",
+      "label": "Place it after product",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "tile_eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "tile_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "tile_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "tile_button",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "tile_link",
+      "label": "Link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+{%- comment -%} Arabic text uses Cairo (SIL Open Font License), clear on every screen. Latin text keeps the theme fonts. {%- endcomment -%}
+{%- if request.locale.iso_code == 'ar' -%}
+  {{ 'cairo-arabic-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  {% style %}
+    @font-face { font-family: "Sh Arabic"; src: url("{{ 'cairo-arabic-400.woff2' | asset_url }}") format("woff2"); font-weight: 100 500; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011; }
+    @font-face { font-family: "Sh Arabic"; src: url("{{ 'cairo-arabic-700.woff2' | asset_url }}") format("woff2"); font-weight: 600 900; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011; }
+    :root {
+      --st-font-script: "Sh Arabic";
+      --st-font-heading: "Sh Arabic", {{ settings.type_heading_font.family | default: 'Arvo' }}, serif;
+      --st-font-body: "Sh Arabic", {{ settings.type_body_font.family | default: 'Nunito Sans' }}, sans-serif;
+      --st-font-heading-family: "Sh Arabic", {{ settings.type_heading_font.family | default: 'Arvo' }};
+    }
+    html[lang="ar"] body, html[lang="ar"] input, html[lang="ar"] textarea, html[lang="ar"] select, html[lang="ar"] button { font-family: var(--st-font-body); letter-spacing: 0; }
+    html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] h4, html[lang="ar"] .st-h1, html[lang="ar"] .st-h2, html[lang="ar"] .st-h3, html[lang="ar"] .st-h4 { font-family: var(--st-font-heading); letter-spacing: 0; line-height: 1.35; }
+    html[lang="ar"] [class*="eyebrow"], html[lang="ar"] .st-button, html[lang="ar"] [class*="uppercase"] { letter-spacing: 0; }
+  {% endstyle %}
+{%- endif -%}

@@ -1,0 +1,90 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Shop the room block: a room photo with product hotspots and a numbered list.
+  Params: block, product
+{%- endcomment -%}
+{%- liquid
+  assign room_image = block.settings.image | default: product.metafields.shanasheel.room_image.value
+  if room_image == blank
+    if product.media.size > 1
+      assign room_image = product.media[1].preview_image
+    else
+      assign room_image = product.featured_media.preview_image
+    endif
+  endif
+  assign room_products = product.metafields.shanasheel.room_products.value
+  assign spot_count = 0
+  assign room_list = ''
+-%}
+<div class="st-spec st-room" {{ block.shopify_attributes }}>
+  <div class="st-room__intro">
+    <h2 class="st-h4 st-spec__heading">{{ block.settings.heading | escape }}</h2>
+    {%- if block.settings.text != blank -%}<p class="st-muted">{{ block.settings.text }}</p>{%- endif -%}
+  </div>
+  {%- capture spots -%}
+    {%- for i in (1..4) -%}
+      {%- liquid
+        assign key_product = 'product_' | append: i
+        assign key_x = 'x_' | append: i
+        assign key_y = 'y_' | append: i
+        assign index0 = i | minus: 1
+        assign spot = block.settings[key_product]
+        if spot == blank and room_products != blank
+          for rp in room_products offset: index0 limit: 1
+            assign spot = rp
+          endfor
+        endif
+        # With nothing chosen, the room shows at least this product.
+        if spot == blank and i == 1 and room_products == blank
+          assign spot = product
+        endif
+      -%}
+      {%- if spot != blank -%}
+        {%- assign spot_count = spot_count | plus: 1 -%}
+        {%- assign spot_x = block.settings[key_x] -%}
+        {%- assign spot_y = block.settings[key_y] -%}
+        <details class="st-spot{% if spot_x > 55 %} st-spot--flip{% endif %}" name="Room-{{ block.id }}" style="--x: {{ spot_x }}%; --y: {{ spot_y }}%;">
+          <summary class="st-spot__dot">
+            <span aria-hidden="true">{{ spot_count }}</span>
+            <span class="st-visually-hidden">{{ 'products.room.spot' | t: title: spot.title }}</span>
+          </summary>
+          <div class="st-spot__card">
+            {%- if spot.featured_media -%}
+              {% render 'image', image: spot.featured_media.preview_image, sizes: '64px', max: 200, class: 'st-spot__img', alt: '' %}
+            {%- endif -%}
+            <div class="st-spot__text">
+              <a class="st-spot__title" href="{{ spot.url }}">{{ spot.title | escape }}</a>
+              {% render 'price', product: spot %}
+            </div>
+          </div>
+        </details>
+        {%- capture room_list -%}
+          {{ room_list }}
+          <li class="st-mini">
+            <a class="st-mini__link" href="{{ spot.url }}">
+              <span class="st-room__num" aria-hidden="true">{{ spot_count }}</span>
+              <span class="st-mini__title">{{ spot.title | escape }}</span>
+            </a>
+            {% render 'price', product: spot %}
+          </li>
+        {%- endcapture -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <div class="st-room__layout">
+    <div class="st-room__stage">
+      {%- if room_image != blank -%}
+        {% render 'image', image: room_image, sizes: '(min-width: 990px) 60vw, 100vw', class: 'st-room__img' %}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'st-placeholder st-room__img' }}
+      {%- endif -%}
+      {{ spots }}
+    </div>
+    {%- if block.settings.show_list and room_list != blank -%}
+      <div class="st-room__aside">
+        <p class="st-field__label">{{ 'products.room.list_label' | t }}</p>
+        <ol class="st-mini-list st-room__list" role="list">{{ room_list }}</ol>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

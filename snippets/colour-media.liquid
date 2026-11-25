@@ -1,0 +1,51 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Finds the first two media positions for one colour and outputs them as "first,second" (0 when none).
+  The variant's featured image starts the colour's group, so this works in every language.
+  Alt text is used only when the variants have no images of their own.
+  A medium belongs to a colour when its alt text names it after "in", for example
+  "Linen sofa in sage green" or "Armchair in oat, close-up". Without such alt texts the variant's featured media and the one after it are used.
+  Params: product, colour (lowercase), featured (variant featured media, optional),
+          markers (",3,7,11," list of variant featured media positions, optional)
+{%- endcomment -%}
+{%- liquid
+  assign first = 0
+  assign second = 0
+  assign marker_key = ',' | append: featured.position | append: ','
+  assign marker_count = markers | remove_first: ',' | split: ',' | size
+  if featured and marker_count > 1 and markers contains marker_key
+    assign first = featured.position
+    assign next_position = featured.position | plus: 1
+    assign next_key = ',' | append: next_position | append: ','
+    if product.media.size >= next_position
+      unless markers contains next_key
+        assign second = next_position
+      endunless
+    endif
+  endif
+  if first == 0 and colour != blank
+    for media in product.media limit: 40
+      assign alt = media.alt | downcase | strip
+      if alt contains ' in '
+        # The colour is the text after the last "in", up to a comma, dash or bracket.
+        assign alt_colour = alt | split: ' in ' | last | split: ',' | first | split: ' -' | first | split: ' –' | first | split: ' (' | first | strip
+        if alt_colour == colour
+          if first == 0
+            assign first = media.position
+          else
+            assign second = media.position
+            break
+          endif
+        endif
+      endif
+    endfor
+  endif
+  if first == 0 and featured
+    assign first = featured.position
+    assign next_position = featured.position | plus: 1
+    if product.media.size >= next_position
+      assign second = next_position
+    endif
+  endif
+-%}
+{{- first }},{{ second -}}

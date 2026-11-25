@@ -1,0 +1,25 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Image tile in the navigator.
+  Params: url, title, collection, count, current
+  Uses the collection image, or the first product image when the collection has none.
+{%- endcomment -%}
+{%- liquid
+  assign image = collection.featured_image
+  if image == blank
+    assign image = collection.products.first.featured_media.preview_image
+  endif
+-%}
+<a class="st-nav__tile" href="{{ url }}"{% if current %} aria-current="page"{% endif %}>
+  <span class="st-nav__tile-media">
+    {%- if image -%}
+      {% render 'image', image: image, sizes: '(min-width: 990px) 200px, 45vw', max: 600, alt: '' %}
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'st-placeholder' }}
+    {%- endif -%}
+  </span>
+  <span class="st-nav__tile-title">{{ title | escape }}</span>
+  {%- if count -%}
+    <span class="st-nav__tile-count">{{ 'collections.product_count' | t: count: count }}</span>
+  {%- endif -%}
+</a>

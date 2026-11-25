@@ -1,0 +1,19 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: article, sizes
+{%- endcomment -%}
+{%- assign sizes = sizes | default: '(min-width: 990px) 33vw, 100vw' -%}
+<article class="st-text-card st-article-card">
+  {%- if article.image -%}
+    <div class="st-article-card__media">
+      {% render 'image', image: article.image, sizes: sizes, max: 1200, alt: '' %}
+    </div>
+  {%- endif -%}
+  <p class="st-eyebrow">{{ article.published_at | time_tag: format: 'date' }}</p>
+  <h3 class="st-h4"><a class="st-card__link" href="{{ article.url }}">{{ article.title | escape }}</a></h3>
+  {%- if article.excerpt != blank -%}
+    <div class="st-small st-muted">{{ article.excerpt | strip_html | truncatewords: 24 }}</div>
+  {%- else -%}
+    <p class="st-small st-muted">{{ article.content | strip_html | truncatewords: 24 }}</p>
+  {%- endif -%}
+</article>

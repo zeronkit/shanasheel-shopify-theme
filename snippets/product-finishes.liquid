@@ -1,0 +1,96 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Fabrics and finishes block of the product page.
+  Params: block, product, section_id, picker_style ('chips' | 'dropdown' | 'none'), colour_names (array)
+{%- endcomment -%}
+{%- liquid
+  assign finish_names = block.settings.option_names | downcase | replace: ', ', ',' | split: ','
+  assign finish_option = nil
+  for option in product.options_with_values
+    assign option_name = option.name | downcase | strip
+    if finish_names contains option_name
+      assign finish_option = option
+      break
+    endif
+  endfor
+  assign entries = product.metafields.shanasheel.finishes.value
+  # A finish tile can select its value when the picker shows that option as radio buttons.
+  assign linkable = false
+  if finish_option != blank and picker_style != 'none'
+    assign finish_name = finish_option.name | downcase | strip
+    if picker_style != 'dropdown' or finish_option.values.first.swatch != blank or colour_names contains finish_name
+      assign linkable = true
+    endif
+  endif
+-%}
+{%- if finish_option != blank or entries != blank -%}
+  <div class="st-finishes" data-st-swap="finishes-{{ block.id }}" {{ block.shopify_attributes }}>
+    <div class="st-finishes__head">
+      <p class="st-field__label">{{ block.settings.heading | escape }}</p>
+      {%- if finish_option != blank -%}
+        <span class="st-small st-muted">{{ finish_option.selected_value | escape }}</span>
+      {%- endif -%}
+    </div>
+    {%- if block.settings.text != blank -%}
+      <p class="st-small st-muted">{{ block.settings.text }}</p>
+    {%- endif -%}
+    <ul class="st-finishes__list" role="list">
+      {%- if finish_option != blank -%}
+        {%- for value in finish_option.values -%}
+          {%- liquid
+            assign input_id = section_id | append: '-option-' | append: finish_option.position | append: '-' | append: forloop.index
+            assign value_key = value | downcase | strip
+            assign finish_image = nil
+            assign finish_note = ''
+            for entry in entries
+              assign entry_name = entry.name.value | default: entry.label.value | default: entry.title.value | downcase | strip
+              if entry_name == value_key
+                assign finish_image = entry.image.value
+                assign finish_note = entry.note.value | default: entry.description.value
+                break
+              endif
+            endfor
+          -%}
+          {%- capture tile_inner -%}
+            <span class="st-finish__chip">
+              {%- if finish_image != blank -%}
+                {{ finish_image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '', sizes: '96px', widths: '120, 240' }}
+              {%- else -%}
+                {% render 'swatch', value: value, size: 'large' %}
+              {%- endif -%}
+            </span>
+            <span class="st-finish__name">{{ value | escape }}</span>
+            {%- if finish_note != blank -%}<span class="st-finish__note">{{ finish_note | escape }}</span>{%- endif -%}
+            {%- unless value.available -%}<span class="st-visually-hidden">{{ 'products.unavailable_short' | t }}</span>{%- endunless -%}
+          {%- endcapture -%}
+          <li>
+            {%- if linkable -%}
+              <label class="st-finish{% if value.selected %} is-selected{% endif %}{% unless value.available %} is-out{% endunless %}" for="{{ input_id }}">{{ tile_inner }}</label>
+            {%- else -%}
+              <div class="st-finish{% if value.selected %} is-selected{% endif %}{% unless value.available %} is-out{% endunless %}">{{ tile_inner }}</div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for entry in entries limit: 12 -%}
+          {%- assign entry_name = entry.name.value | default: entry.label.value | default: entry.title.value -%}
+          {%- assign finish_note = entry.note.value | default: entry.description.value -%}
+          <li>
+            <div class="st-finish">
+              <span class="st-finish__chip"{% if entry.color.value != blank %} style="background-color: {{ entry.color.value }};"{% endif %}>
+                {%- if entry.image.value != blank -%}
+                  {{ entry.image.value | image_url: width: 240 | image_tag: loading: 'lazy', alt: '', sizes: '96px', widths: '120, 240' }}
+                {%- endif -%}
+              </span>
+              <span class="st-finish__name">{{ entry_name | escape }}</span>
+              {%- if finish_note != blank -%}<span class="st-finish__note">{{ finish_note | escape }}</span>{%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    {%- if block.settings.sample_url != blank -%}
+      <a class="st-link-button st-finishes__sample" href="{{ block.settings.sample_url }}">{% render 'icon', name: 'tag' %} {{ block.settings.sample_label | escape }}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

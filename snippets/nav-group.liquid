@@ -1,0 +1,15 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  A text group in the navigator: a link with its child links listed below.
+  Params: link
+{%- endcomment -%}
+<div class="st-nav__group">
+  <a class="st-nav__group-title" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+  {%- if link.links.size > 0 -%}
+    <ul role="list">
+      {%- for child in link.links -%}
+        <li><a href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title | escape }}</a></li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>

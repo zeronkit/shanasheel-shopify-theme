@@ -1,0 +1,9 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  A length in centimetres with its inch value, for the cm / in switch in sections/home-dimensions.
+  Params: cm (number)
+{%- endcomment -%}
+{%- if cm != blank -%}
+  {%- assign inches = cm | times: 1.0 | divided_by: 2.54 | round: 1 -%}
+  <span class="st-u st-u--cm">{{ 'sections.home.value_cm' | t: value: cm }}</span><span class="st-u st-u--in">{{ 'sections.home.value_in' | t: value: inches }}</span>
+{%- endif -%}

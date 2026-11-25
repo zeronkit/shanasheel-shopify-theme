@@ -1,0 +1,46 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Splits a product description at its <h3> headings.
+  Params:
+    description: product.description
+    want: 'main' (everything except the moved sections), 'dimensions', 'materials', 'care', 'assembly', 'shipping' or 'fit'
+    moved: comma list of keys that have their own tab (used with want: 'main')
+  Heading words decide the key: dimensions, measurements -> dimensions, assembly -> assembly, shipping, returns, delivery -> shipping, care, washing -> care,
+  material, fabric, composition -> materials, fit, sizing -> fit.
+{%- endcomment -%}
+{%- liquid
+  assign parts = description | split: '<h3'
+  assign moved_keys = moved | default: '' | split: ','
+  for part in parts
+    if forloop.first
+      if want == 'main'
+        echo part
+      endif
+      continue
+    endif
+    assign heading_html = part | split: '</h3>' | first
+    assign heading = heading_html | split: '>' | last | strip_html | strip | downcase
+    assign key = 'other'
+    if heading contains 'dimension' or heading contains 'measurement'
+      assign key = 'dimensions'
+    elsif heading contains 'assembly'
+      assign key = 'assembly'
+    elsif heading contains 'shipping' or heading contains 'return' or heading contains 'delivery'
+      assign key = 'shipping'
+    elsif heading contains 'care' or heading contains 'washing'
+      assign key = 'care'
+    elsif heading contains 'material' or heading contains 'fabric' or heading contains 'composition'
+      assign key = 'materials'
+    elsif heading contains 'fit' or heading contains 'sizing'
+      assign key = 'fit'
+    endif
+    if want == 'main'
+      unless moved_keys contains key
+        echo '<h3' | append: part
+      endunless
+    elsif want == key
+      assign body = part | remove_first: heading_html | remove_first: '</h3>'
+      echo body
+    endif
+  endfor
+-%}

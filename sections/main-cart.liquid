@@ -1,0 +1,204 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Cart page: lines on the start side, a soft summary panel with delivery notes on the end side.
+  An empty cart shows rooms to start from and a few pieces, so it is never a dead end.
+{%- endcomment -%}
+{%- liquid
+  assign form_id = 'CartForm-' | append: section.id
+  assign empty_heading = section.settings.empty_heading
+  if empty_heading == blank
+    assign empty_heading = 'cart.empty' | t
+  endif
+-%}
+{%- liquid
+  assign t_assurance_1 = 'sh_cart.assurance_1' | t
+  if section.settings.assurance_1 != blank
+    assign t_assurance_1 = section.settings.assurance_1
+  endif
+  assign t_assurance_2 = 'sh_cart.assurance_2' | t
+  if section.settings.assurance_2 != blank
+    assign t_assurance_2 = section.settings.assurance_2
+  endif
+  assign t_assurance_3 = 'sh_cart.assurance_3' | t
+  if section.settings.assurance_3 != blank
+    assign t_assurance_3 = section.settings.assurance_3
+  endif
+-%}
+<section class="st-section color-{{ section.settings.color_scheme }}">
+  <st-cart class="st-wrap st-cart" data-section-id="{{ section.id }}">
+    <div data-st-cart-content data-count="{{ cart.item_count }}" data-count-label="{{ 'cart.title_with_count' | t: count: cart.item_count }}">
+      <div class="st-cart__head">
+        <h1 class="st-h2">
+          {{- 'cart.title' | t -}}
+          {%- if cart.item_count > 0 %} <span class="st-count" aria-hidden="true">{{ cart.item_count }}</span>{% endif -%}
+        </h1>
+        <a class="st-link-button" href="{{ routes.all_products_collection_url }}">{% render 'icon', name: 'back' %}{{ 'cart.continue' | t }}</a>
+      </div>
+      {%- if cart.item_count > 0 -%}
+        <div class="st-cart__grid">
+          <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="st-cart__lines" novalidate>
+            {% render 'cart-lines', section_id: section.id %}
+            <noscript><button type="submit" class="st-button st-button--ghost" name="update">{{ 'cart.update' | t }}</button></noscript>
+          </form>
+          <div class="st-cart__aside">
+            {% render 'cart-summary', form_id: form_id, show_note: settings.cart_note, heading: true %}
+            {%- if section.settings.show_assurances -%}
+              {%- liquid
+                assign a1 = t_assurance_1
+                assign a2 = t_assurance_2
+                assign a3 = t_assurance_3
+              -%}
+              {%- if a1 != blank or a2 != blank or a3 != blank -%}
+                <ul class="st-assure" role="list">
+                  {%- if a1 != blank -%}<li>{% render 'icon', name: 'truck' %}<span>{{ a1 }}</span></li>{%- endif -%}
+                  {%- if a2 != blank -%}<li>{% render 'icon', name: 'cube' %}<span>{{ a2 }}</span></li>{%- endif -%}
+                  {%- if a3 != blank -%}<li>{% render 'icon', name: 'return' %}<span>{{ a3 }}</span></li>{%- endif -%}
+                </ul>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="st-cart-empty">
+          <div class="st-cart-empty__intro">
+            <svg viewBox="0 0 160 100" width="160" height="100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M30 52c0-8 6-14 14-14h72c8 0 14 6 14 14v8H30z"/>
+              <path d="M22 60h116v18H22z"/>
+              <path d="M22 60c-6 0-10 4-10 10v8h10M138 60c6 0 10 4 10 10v8h-10"/>
+              <path d="M34 78v10M126 78v10"/>
+              <path d="M80 38v22" opacity="0.5"/>
+            </svg>
+            <h2 class="st-h3">{{ empty_heading | escape }}</h2>
+            {%- if section.settings.empty_text != blank -%}
+              <div class="st-rte st-muted">{{ section.settings.empty_text }}</div>
+            {%- endif -%}
+            <a class="st-button st-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+
+          {%- if section.settings.show_empty_rooms -%}
+            {%- liquid
+              assign room_handles = ''
+              assign room_count = 0
+              for c in collections limit: 40
+                if room_count < 3 and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage'
+                  assign room_handles = room_handles | append: c.handle | append: ','
+                  assign room_count = room_count | plus: 1
+                endif
+              endfor
+              assign room_handles = room_handles | split: ','
+            -%}
+            {%- if room_handles.size > 0 -%}
+              <div class="st-cart-empty__block">
+                <h2 class="st-h4">{{ 'cart.empty_rooms' | t }}</h2>
+                <ul class="st-grid st-grid--3 st-grid--m2" role="list">
+                  {%- for handle in room_handles -%}
+                    <li>{% render 'collection-card', collection: collections[handle], sizes: '(min-width: 750px) 30vw, 50vw', placeholder_index: forloop.index %}</li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if section.settings.show_empty_products -%}
+            {%- liquid
+              if section.settings.empty_collection != blank
+                assign picks = section.settings.empty_collection.products
+              else
+                assign picks = collections.all.products | sort: 'published_at' | reverse
+              endif
+            -%}
+            {%- if picks.size > 0 -%}
+              <div class="st-cart-empty__block">
+                <h2 class="st-h4">{{ 'search.you_may_like' | t }}</h2>
+                <ul class="st-grid st-grid--4 st-grid--m2" role="list">
+                  {%- for product in picks limit: 4 -%}
+                    <li>{% render 'product-card', product: product %}</li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </st-cart>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.cart",
+  "class": "st-shopify-section",
+  "enabled_on": {
+    "templates": [
+      "cart"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:labels.delivery_notes"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_assurances",
+      "label": "t:labels.show_delivery_notes",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "assurance_1",
+      "label": "t:labels.delivery_note_1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "assurance_2",
+      "label": "t:labels.delivery_note_2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "assurance_3",
+      "label": "t:labels.delivery_note_3"
+    },
+    {
+      "type": "header",
+      "content": "t:labels.empty_cart"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "t:labels.heading",
+      "default": "Your cart is empty"
+    },
+    {
+      "type": "richtext",
+      "id": "empty_text",
+      "label": "t:labels.text",
+      "default": "<p>Start with a room. Every piece is chosen to live well with the rest.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_empty_rooms",
+      "label": "t:labels.show_empty_rooms",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_empty_products",
+      "label": "t:labels.show_empty_products",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "empty_collection",
+      "label": "t:labels.collection",
+      "info": "t:info.empty_collection"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,155 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Room scene hero: a framed room photo with product pins beside a calm copy panel.
+  Pins are native <details> elements, so they work without JavaScript.
+{%- endcomment -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign image = section.settings.image
+  if image == blank and section.settings.image_collection != blank
+    assign image = section.settings.image_collection.featured_image
+  endif
+  if image == blank
+    for candidate in collections.all.products limit: 10
+      if candidate.featured_media
+        assign image = candidate.featured_media.preview_image
+        break
+      endif
+    endfor
+  endif
+  # Pins without a product take store products in order, so the scene is never empty.
+  assign fallback = collections.all.products
+  assign fallback_index = 0
+-%}
+<section class="st-room-hero st-room-hero--{{ section.settings.height }} st-room-hero--media-{{ section.settings.media_side }} color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap st-room-hero__grid">
+    <div class="st-room-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2 class="st-display st-room-hero__title">{{ section.settings.heading }}</h2>{%- endif -%}
+      {%- if section.settings.text != blank -%}<div class="st-rte st-text--large">{{ section.settings.text }}</div>{%- endif -%}
+      {%- if section.settings.button_label != blank or section.settings.button_2_label != blank -%}
+        <div class="st-room-hero__actions">
+          {%- if section.settings.button_label != blank -%}
+            <a class="st-button st-button--primary" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label | escape }} {% render 'icon', name: 'arrow' %}</a>
+          {%- endif -%}
+          {%- if section.settings.button_2_label != blank -%}
+            <a class="st-button st-button--ghost" href="{{ section.settings.button_2_link | default: routes.collections_url }}">{{ section.settings.button_2_label | escape }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <figure class="st-room-hero__scene">
+      <div class="st-room-hero__media">
+        {%- if image != blank -%}
+          {% render 'image', image: image, sizes: '(min-width: 990px) 62vw, 100vw', eager: section.settings.eager, class: 'st-room-hero__img' %}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'st-placeholder st-room-hero__img' }}
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign spot_product = block.settings.product
+            if spot_product == blank
+              assign spot_product = fallback[fallback_index]
+              assign fallback_index = fallback_index | plus: 1
+            endif
+            assign spot_class = ''
+            if block.settings.x > 55
+              assign spot_class = spot_class | append: ' st-spot--to-start'
+            endif
+            if block.settings.y > 55
+              assign spot_class = spot_class | append: ' st-spot--up'
+            endif
+          -%}
+          {%- if spot_product != blank -%}
+            <details class="st-spot{{ spot_class }}" style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%;" {{ block.shopify_attributes }}>
+              <summary class="st-spot__pin">
+                <span class="st-visually-hidden">{{ 'sections.home.hotspot_show' | t: product: spot_product.title }}</span>
+                {% render 'icon', name: 'plus' %}
+              </summary>
+              <div class="st-spot__card">
+                <div class="st-spot__thumb">
+                  {%- if spot_product.featured_media -%}
+                    {% render 'image', image: spot_product.featured_media.preview_image, sizes: '96px', max: 240, alt: '' %}
+                  {%- endif -%}
+                </div>
+                <div class="st-spot__body">
+                  <a class="st-spot__link" href="{{ spot_product.url }}">{{ block.settings.label | default: spot_product.title | escape }}</a>
+                  {% render 'price', product: spot_product %}
+                </div>
+              </div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- if section.settings.scene_label != blank -%}
+        <figcaption class="st-room-hero__caption">{% render 'icon', name: 'pin' %}{{ section.settings.scene_label | escape }}</figcaption>
+      {%- endif -%}
+    </figure>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.home_hero",
+  "class": "st-shopify-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+    { "type": "collection", "id": "image_collection", "label": "t:labels.image_collection", "info": "t:info.image_collection" },
+    { "type": "checkbox", "id": "eager", "label": "t:labels.load_first", "default": true, "info": "t:info.load_first" },
+    { "type": "text", "id": "scene_label", "label": "t:labels.scene_label", "default": "The reading corner" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Autumn at home" },
+    { "type": "inline_richtext", "id": "heading", "label": "t:labels.heading", "default": "Rooms that ask you to stay a while" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Solid wood, natural fabrics and pieces sized for real homes. Open the pins to shop the room.</p>" },
+    { "type": "text", "id": "button_label", "label": "t:labels.button_label", "default": "Shop the room" },
+    { "type": "url", "id": "button_link", "label": "t:labels.link" },
+    { "type": "text", "id": "button_2_label", "label": "t:labels.button_2_label", "default": "Browse by room" },
+    { "type": "url", "id": "button_2_link", "label": "t:labels.button_2_link" },
+    {
+      "type": "select",
+      "id": "media_side",
+      "label": "t:labels.media_side",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "end"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:labels.height",
+      "options": [
+        { "value": "short", "label": "t:options.short" },
+        { "value": "tall", "label": "t:options.tall" }
+      ],
+      "default": "tall"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "t:names.hotspot",
+      "settings": [
+        { "type": "product", "id": "product", "label": "t:labels.product" },
+        { "type": "text", "id": "label", "label": "t:labels.title_override" },
+        { "type": "range", "id": "x", "label": "t:labels.hotspot_x", "min": 4, "max": 96, "step": 1, "unit": "%", "default": 30 },
+        { "type": "range", "id": "y", "label": "t:labels.hotspot_y", "min": 4, "max": 96, "step": 1, "unit": "%", "default": 60, "info": "t:info.hotspot_position" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.home_hero",
+      "blocks": [
+        { "type": "hotspot", "settings": { "x": 28, "y": 66 } },
+        { "type": "hotspot", "settings": { "x": 62, "y": 40 } },
+        { "type": "hotspot", "settings": { "x": 80, "y": 74 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

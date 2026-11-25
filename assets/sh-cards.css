@@ -1,0 +1,259 @@
+/* Shanasheel: sh-cards. Shared UI: carved walnut rails, arched windows, glass tiles. */
+:root {
+  --sh-walnut: #3A2619;
+  --sh-sand: #F4EDE2;
+  --sh-turq: #8A4F2B;
+  --sh-amber: #C9A36A;
+  --sh-ink: #241913;
+  --sh-rail: 1px solid color-mix(in srgb, #3A2619 55%, transparent);
+  --sh-ui-font: "Nunito Sans", var(--st-font-body-family, sans-serif);
+}
+
+/* Product card: wooden rail frame with an arched shanasheel window */
+.st-card {
+  position: relative;
+  padding: 0.5rem 0.5rem 0.85rem;
+  background: color-mix(in srgb, var(--sh-sand) 55%, transparent);
+  border: var(--sh-rail);
+  border-radius: 4px;
+  box-shadow: inset 0 -3px 0 var(--sh-walnut);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.st-card:hover { box-shadow: inset 0 -3px 0 var(--sh-turq), 0 6px 18px -12px var(--sh-ink); transform: translateY(-2px); }
+.st-card__media {
+  border-radius: 50% 50% 3px 3px / 22% 22% 0 0;
+  overflow: hidden;
+  border: 1px solid var(--sh-walnut);
+  background: var(--sh-sand);
+  isolation: isolate;
+  position: relative;
+}
+.st-card__media::after {
+  /* inner mullion line, like a carved window frame */
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in srgb, var(--sh-sand) 70%, transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+.st-card__badges { z-index: 3; inset-block-start: auto; inset-block-end: 0.6rem; }
+.st-card__body { padding-inline: 0.25rem; padding-block-start: 0.75rem; gap: 0.35rem; }
+.st-card__title { font-family: "Arvo", var(--st-font-heading-family, serif); font-size: 1rem; line-height: 1.3; color: var(--sh-ink); }
+.st-card__link { color: inherit; text-decoration: none; }
+.st-card__link:hover { color: var(--sh-turq); }
+.st-card__vendor { font-family: var(--sh-ui-font); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.6875rem; color: color-mix(in srgb, var(--sh-walnut) 75%, transparent); }
+.st-card__price, .st-card__price .st-price { color: var(--sh-turq); font-weight: 700; font-family: var(--sh-ui-font); }
+.st-card__price .st-price__was { color: color-mix(in srgb, var(--sh-ink) 55%, transparent); font-weight: 400; }
+
+/* Finish swatches: small square glass tiles */
+.st-swatch-row { gap: 0.35rem; }
+.st-card__swatch { padding: 2px; border: 1px solid transparent; border-radius: 3px; background: none; cursor: pointer; line-height: 0; }
+.st-card__swatch[aria-pressed="true"] { border-color: var(--sh-walnut); }
+.st-card__swatch:focus-visible { outline: 2px solid var(--sh-turq); outline-offset: 1px; }
+.st-card .st-swatch, .st-swatch--small {
+  border-radius: 2px;
+  inline-size: 0.9rem;
+  block-size: 0.9rem;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sh-ink) 35%, transparent), inset 2px 2px 0 color-mix(in srgb, #fff 45%, transparent);
+}
+.st-card__more { font-family: var(--sh-ui-font); font-size: 0.75rem; color: var(--sh-walnut); }
+.st-size { border-radius: 2px; border-color: color-mix(in srgb, var(--sh-walnut) 35%, transparent); font-family: var(--sh-ui-font); }
+
+/* Quick add: rectangular walnut button */
+.sh-card__quick { margin-block-start: 0.5rem; }
+.sh-card__quick .st-button, .sh-card__quick-btn {
+  inline-size: 100%;
+  min-block-size: 2.5rem;
+  background: var(--sh-walnut);
+  color: var(--sh-sand);
+  border: 2px solid var(--sh-walnut);
+  border-radius: 4px;
+}
+.sh-card__quick .st-button:hover, .sh-card__quick-btn:hover { background: var(--sh-turq); border-color: var(--sh-turq); color: #fff; }
+
+/* Collection card: arched window over a walnut sill */
+.st-ccard { border: var(--sh-rail); border-radius: 4px; padding: 0.5rem; background: color-mix(in srgb, var(--sh-sand) 55%, transparent); }
+.st-ccard__media { border-radius: 50% 50% 3px 3px / 18% 18% 0 0; overflow: hidden; border: 1px solid var(--sh-walnut); }
+.st-ccard__title {
+  font-family: "Arvo", var(--st-font-heading-family, serif);
+  margin-block-start: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--sh-walnut);
+  color: var(--sh-sand);
+  border-radius: 3px;
+}
+.st-ccard__title .st-card__link { color: inherit; }
+.st-ccard:hover .st-ccard__title { background: var(--sh-turq); }
+.st-ccard__count { font-family: var(--sh-ui-font); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+[dir="rtl"] .st-ccard__title .st-icon { transform: scaleX(-1); }
+
+/* Buttons: rectangular, 2px solid, uppercase Nunito, hover fills turquoise */
+.st-button, .st-link-button.st-button, button.st-button {
+  font-family: var(--sh-ui-font);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 2px solid var(--sh-walnut);
+  border-radius: 4px;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.st-button--primary { background: var(--sh-walnut); color: var(--sh-sand); }
+.st-button--ghost { background: transparent; color: var(--sh-walnut); }
+.st-button:hover, .st-button:focus-visible { background: var(--sh-turq); border-color: var(--sh-turq); color: #fff; }
+.st-button:focus-visible { outline: 2px solid var(--sh-amber); outline-offset: 2px; }
+.st-button--text { border-color: transparent; background: none; }
+
+/* Links */
+.st-rte a, .st-link-button:not(.st-button) { color: var(--sh-turq); text-decoration-color: var(--sh-amber); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.st-rte a:hover, .st-link-button:not(.st-button):hover { color: var(--sh-walnut); }
+
+/* Inputs and selects */
+.st-input, .st-select, .st-field input, .st-field select, .st-field textarea, .st-search-form__input, .st-newsletter__field input {
+  border: 1px solid color-mix(in srgb, var(--sh-walnut) 60%, transparent);
+  border-block-end-width: 2px;
+  border-radius: 4px;
+  background: #fffaf2;
+  color: var(--sh-ink);
+  font-family: var(--sh-ui-font);
+}
+.st-input:focus, .st-select:focus, .st-field input:focus, .st-field select:focus, .st-field textarea:focus, .st-search-form__input:focus {
+  outline: 2px solid var(--sh-turq);
+  outline-offset: 1px;
+  border-color: var(--sh-turq);
+}
+
+/* Badges: amber tag with a notched end */
+.st-badge {
+  font-family: var(--sh-ui-font);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  background: var(--sh-amber);
+  color: var(--sh-ink);
+  border-radius: 2px;
+  padding: 0.3rem 0.9rem 0.3rem 0.55rem;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 0.4rem) 50%, 100% 100%, 0 100%);
+}
+[dir="rtl"] .st-badge { padding: 0.3rem 0.55rem 0.3rem 0.9rem; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0.4rem 50%); }
+.st-badge--accent { background: var(--sh-turq); color: #fff; }
+.st-badge--muted { background: var(--sh-walnut); color: var(--sh-sand); }
+
+/* Quantity selector: one walnut-railed box */
+.st-qty { border: 2px solid var(--sh-walnut); border-radius: 4px; background: #fffaf2; overflow: hidden; }
+.st-qty__btn { color: var(--sh-walnut); border-radius: 0; }
+.st-qty__btn:hover { background: var(--sh-turq); color: #fff; }
+.st-qty__input { border: 0; border-inline: 1px solid color-mix(in srgb, var(--sh-walnut) 30%, transparent); font-family: var(--sh-ui-font); font-weight: 700; color: var(--sh-ink); }
+
+/* Pagination: square wooden tiles */
+.st-pagination a, .st-pagination span[aria-current], .st-pagination li > span {
+  border: 1px solid color-mix(in srgb, var(--sh-walnut) 35%, transparent);
+  border-radius: 4px;
+  font-family: var(--sh-ui-font);
+  color: var(--sh-walnut);
+}
+.st-pagination a:hover { background: var(--sh-turq); border-color: var(--sh-turq); color: #fff; }
+.st-pagination [aria-current] { background: var(--sh-walnut); color: var(--sh-sand); border-color: var(--sh-walnut); }
+
+@media (prefers-reduced-motion: reduce) {
+  .st-card, .st-button { transition: none; }
+  .st-card:hover { transform: none; }
+}
+
+/* Sizing pass: card buttons are compact, one line */
+.st-card .st-button,
+.sh-card__quick-btn {
+  min-block-size: 2.3rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  inline-size: auto;
+}
+.st-button {
+  min-block-size: 2.6rem;
+}
+
+/* ===== Uniform cards: every card in a row has the same width, height and inner rhythm,
+   whatever information a product has (long title, colours, sizes, sale price). ===== */
+.st-grid > li,
+.st-grid > .st-grid__item,
+.st-shelf__track > * {
+  display: flex;
+}
+.st-card {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+}
+.st-card__media {
+  aspect-ratio: 4 / 5;
+  flex: 0 0 auto;
+}
+.st-card__media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.st-card__body {
+  display: grid;
+  grid-template-rows: auto auto 2rem;
+  align-content: start;
+  gap: 0.4rem;
+  flex: 1 1 auto;
+  padding-block-start: 0.7rem;
+}
+.st-card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-block-size: calc(1.3em * 2);
+}
+.st-card__vendor {
+  display: none;
+}
+.st-card__price {
+  white-space: nowrap;
+}
+.st-card__colours,
+.st-card__sizes,
+.st-swatch-row {
+  min-block-size: 2rem;
+  max-block-size: 2rem;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+.st-card__more {
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+.sh-card__quick {
+  margin-block-start: auto;
+  padding-block-start: 0.6rem;
+}
+.sh-card__quick form,
+.sh-card__quick .sh-card__quick-btn {
+  inline-size: 100%;
+}
+.sh-card__quick .sh-card__quick-btn {
+  justify-content: center;
+}
+
+/* Phone: every two-column product grid stacks title and price so names are never cut */
+@media (max-width: 749px) {
+  .st-grid .st-card__body { display: flex; flex-direction: column; align-items: stretch; gap: 0.3rem; }
+  .st-grid .st-card__title { font-size: 0.9rem; }
+  .st-grid .st-card__price { white-space: normal; font-size: 0.85rem; }
+  .st-grid .st-card__sizes { display: none; }
+  .st-grid .sh-card__quick-btn { font-size: 0.62rem; letter-spacing: 0.06em; padding-inline: 0.4rem; white-space: nowrap; }
+}
+html .st-grid .st-card__body { padding-inline: 0.9rem; padding-block-end: 0.9rem; }

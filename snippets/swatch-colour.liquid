@@ -1,0 +1,35 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Outputs a CSS colour for a common colour word, or nothing when the word is unknown.
+  Used only when an option value has no native Shopify swatch. Param: word (lowercase)
+{%- endcomment -%}
+{%- case word -%}
+  {%- when 'black' -%}#151515
+  {%- when 'white', 'optic white' -%}#FAFAF7
+  {%- when 'ivory', 'pearl', 'off white', 'off-white' -%}#F3EDE0
+  {%- when 'cream', 'ecru', 'natural', 'oatmeal' -%}#E8DCC4
+  {%- when 'sand', 'beige', 'stone' -%}#CFC0A4
+  {%- when 'tan', 'camel' -%}#B48A5A
+  {%- when 'khaki' -%}#A89A6E
+  {%- when 'brown', 'chocolate', 'tortoise', 'tortoiseshell' -%}#6B4630
+  {%- when 'grey', 'gray', 'grey marl', 'gray marl', 'marl' -%}#9A9A98
+  {%- when 'charcoal', 'graphite' -%}#3E3F42
+  {%- when 'silver' -%}#C3C6CB
+  {%- when 'gold' -%}#C9A445
+  {%- when 'red', 'scarlet' -%}#B3261E
+  {%- when 'burgundy', 'wine', 'maroon' -%}#6E1F2B
+  {%- when 'pink', 'rose' -%}#E59BB1
+  {%- when 'blush' -%}#EBC2BA
+  {%- when 'orange', 'rust' -%}#C8642E
+  {%- when 'yellow', 'mustard' -%}#D9AE2B
+  {%- when 'green', 'emerald' -%}#2F7A4B
+  {%- when 'olive' -%}#6B6B3A
+  {%- when 'sage', 'mint' -%}#A7B79B
+  {%- when 'blue', 'mid blue', 'denim' -%}#3C64A8
+  {%- when 'sky blue', 'light blue', 'sky' -%}#9CC4E4
+  {%- when 'navy' -%}#1F2A44
+  {%- when 'indigo' -%}#2E3567
+  {%- when 'cobalt' -%}#1E4DB7
+  {%- when 'stonewash', 'stone wash', 'light wash' -%}#8FA6BF
+  {%- when 'purple', 'lilac', 'lavender' -%}#8E6FB3
+{%- endcase -%}

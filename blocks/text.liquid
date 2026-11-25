@@ -1,0 +1,27 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<div class="st-block st-rte st-text--{{ block.settings.style }} st-align-{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {{ block.settings.text }}
+</div>
+
+{% schema %}
+{
+  "name": "t:names.text",
+  "settings": [
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Pick a piece, then build the rest of the look around it.</p>" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:labels.style",
+      "options": [
+        { "value": "body", "label": "t:options.body" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "eyebrow", "label": "t:options.eyebrow" }
+      ],
+      "default": "body"
+    },
+    { "type": "text_alignment", "id": "alignment", "label": "t:labels.alignment", "default": "left" }
+  ],
+  "presets": [{ "name": "t:names.text" }]
+}
+{% endschema %}

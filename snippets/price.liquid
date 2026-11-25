@@ -1,0 +1,54 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: product (required), variant (optional; when blank the card style "from" price is used), class
+{%- endcomment -%}
+{%- liquid
+  if variant != blank
+    assign target = variant
+    assign price = variant.price
+    assign compare = variant.compare_at_price
+    assign varies = false
+  else
+    assign target = product.selected_or_first_available_variant
+    assign price = product.price
+    assign compare = product.compare_at_price
+    assign varies = product.price_varies
+  endif
+  assign on_sale = false
+  if compare > price
+    assign on_sale = true
+  endif
+  if settings.currency_code_enabled
+    assign price_display = price | money_with_currency
+    assign compare_display = compare | money_with_currency
+  else
+    assign price_display = price | money
+    assign compare_display = compare | money
+  endif
+-%}
+<div class="st-price{% if on_sale %} st-price--sale{% endif %} {{ class }}">
+  {%- if on_sale -%}
+    <span class="st-visually-hidden">{{ 'products.price.sale' | t }}</span>
+    <span class="st-price__now">
+      {%- if varies %}{{ 'products.price.from' | t: price: price_display }}{% else %}{{ price_display }}{% endif -%}
+    </span>
+    <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
+    <s class="st-price__was">{{ compare_display }}</s>
+  {%- else -%}
+    <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
+    <span class="st-price__now">
+      {%- if varies %}{{ 'products.price.from' | t: price: price_display }}{% else %}{{ price_display }}{% endif -%}
+    </span>
+  {%- endif -%}
+  {%- if target.unit_price_measurement -%}
+    <span class="st-price__unit">
+      <span class="st-visually-hidden">{{ 'products.price.unit' | t }}</span>
+      {{ target.unit_price | money -}}
+      <span aria-hidden="true">/</span><span class="st-visually-hidden">&nbsp;{{ 'general.per' | t }}&nbsp;</span>
+      {%- if target.unit_price_measurement.reference_value != 1 -%}
+        {{- target.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{- target.unit_price_measurement.reference_unit -}}
+    </span>
+  {%- endif -%}
+</div>

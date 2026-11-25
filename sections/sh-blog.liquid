@@ -1,0 +1,131 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Journal as a magazine: a walnut masthead with topics, the newest story as a wide cover,
+  then the rest as numbered index rows with a small framed photo.
+{%- endcomment -%}
+{%- liquid
+  assign t_eyebrow = 'sh_blog.eyebrow' | t
+  if section.settings.eyebrow != blank
+    assign t_eyebrow = section.settings.eyebrow
+  endif
+  assign t_intro = 'sh_blog.intro_html' | t
+  if section.settings.intro != blank
+    assign t_intro = section.settings.intro
+  endif
+-%}
+<section class="shb color-{{ section.settings.color_scheme }}">
+  <header class="shb-mast">
+    <div class="st-wrap shb-mast__inner">
+      <div>
+        {%- if t_eyebrow != blank -%}<p class="shb-mast__eyebrow">{{ t_eyebrow | escape }}</p>{%- endif -%}
+        <h1 class="shb-mast__title">{{ blog.title | escape }}</h1>
+      </div>
+      {%- if t_intro != blank -%}<div class="shb-mast__intro">{{ t_intro }}</div>{%- endif -%}
+    </div>
+    {%- if section.settings.show_tags and blog.all_tags.size > 0 -%}
+      <nav class="st-wrap shb-topics" aria-label="{{ 'blogs.tags' | t }}">
+        <a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blogs.all' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </header>
+
+  <div class="st-wrap shb-body">
+    {%- paginate blog.articles by section.settings.per_page -%}
+      {%- if blog.articles.size == 0 -%}
+        <p class="shb-empty">{{ 'blogs.empty' | t }}</p>
+      {%- else -%}
+        {%- for article in blog.articles -%}
+          {%- assign words = article.content | strip_html | split: ' ' | size -%}
+          {%- assign mins = words | divided_by: 200 | at_least: 1 -%}
+          {%- if forloop.first and paginate.current_page == 1 -%}
+            <article class="shb-cover">
+              <a class="shb-cover__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+                {%- if article.image -%}{% render 'image', image: article.image, sizes: '(min-width: 990px) 60vw, 100vw', eager: true, alt: '' %}{%- endif -%}
+              </a>
+              <div class="shb-cover__card">
+                <p class="shb-meta">{{ article.published_at | time_tag: format: 'date' }}<span>{{ 'blogs.read_time' | t: count: mins }}</span></p>
+                <h2 class="shb-cover__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+                <p class="shb-cover__text">{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+                <a class="shb-cover__more" href="{{ article.url }}">{{ 'blogs.read_more' | t }} {% render 'icon', name: 'arrow' %}</a>
+              </div>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- liquid
+          assign skip = 0
+          if paginate.current_page == 1
+            assign skip = 1
+          endif
+        -%}
+        {%- if blog.articles.size > skip -%}
+          <ol class="shb-list" role="list">
+          {%- for article in blog.articles offset: skip -%}
+            {%- assign words = article.content | strip_html | split: ' ' | size -%}
+            {%- assign mins = words | divided_by: 200 | at_least: 1 -%}
+            <li class="shb-row">
+              <span class="shb-row__no" aria-hidden="true">{{ forloop.index | plus: paginate.current_offset | plus: skip | prepend: '0' | slice: -2, 2 }}</span>
+              <div class="shb-row__text">
+                <p class="shb-meta">{{ article.published_at | time_tag: format: 'date' }}<span>{{ 'blogs.read_time' | t: count: mins }}</span>{%- if article.tags.size > 0 -%}<span>{{ article.tags.first | escape }}</span>{%- endif -%}</p>
+                <h2 class="shb-row__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+                <p class="shb-row__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+              </div>
+              <a class="shb-row__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+                {%- if article.image -%}{% render 'image', image: article.image, sizes: '(min-width: 750px) 220px, 30vw', alt: '' %}{%- endif -%}
+              </a>
+            </li>
+          {%- endfor -%}
+          </ol>
+        {%- endif -%}
+      {%- endif -%}
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Journal: magazine",
+  "class": "st-shopify-section",
+  "enabled_on": {
+    "templates": [
+      "blog"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "t:labels.intro"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:labels.show_tags",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "t:labels.posts_per_page",
+      "min": 3,
+      "max": 24,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:labels.color_scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

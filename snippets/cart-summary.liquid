@@ -1,0 +1,48 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Order level discounts, subtotal and checkout buttons.
+  Params: form_id, show_note, heading (boolean, shows an order summary title)
+{%- endcomment -%}
+<div class="st-summary">
+  {%- if heading -%}<h2 class="st-h4 st-summary__heading">{{ 'cart.summary' | t }}</h2>{%- endif -%}
+  {%- if show_note -%}
+    <details class="st-fold st-summary__note"{% if cart.note != blank %} open{% endif %}>
+      <summary class="st-fold__summary"><span>{{ 'cart.note' | t }}</span>{% render 'icon', name: 'plus' %}</summary>
+      <label class="st-visually-hidden" for="{{ form_id }}-note">{{ 'cart.note' | t }}</label>
+      <textarea class="st-input" id="{{ form_id }}-note" name="note" form="{{ form_id }}" rows="3" data-st-note>{{ cart.note }}</textarea>
+    </details>
+  {%- endif -%}
+
+  {%- if cart.cart_level_discount_applications.size > 0 -%}
+    <ul class="st-summary__discounts" role="list">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <li class="st-discount">
+          <span>{{ discount.title | escape }}</span>
+          <span>-{{ discount.total_allocated_amount | money }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  <p class="st-summary__total">
+    <span>{{ 'cart.subtotal' | t }}</span>
+    <span>{{ cart.total_price | money_with_currency }}</span>
+  </p>
+  <p class="st-small st-muted">
+    {%- if cart.duties_included and cart.taxes_included -%}
+      {{ 'cart.duties_taxes_included' | t }}
+    {%- elsif cart.taxes_included -%}
+      {{ 'cart.taxes_included' | t }}
+    {%- else -%}
+      {{ 'cart.taxes_at_checkout' | t }}
+    {%- endif -%}
+  </p>
+
+  <button type="submit" name="checkout" form="{{ form_id }}" class="st-button st-button--primary st-button--full">
+    {{ 'cart.checkout' | t }}
+  </button>
+
+  {%- if additional_checkout_buttons -%}
+    <div class="st-summary__extra">{{ content_for_additional_checkout_buttons }}</div>
+  {%- endif -%}
+</div>

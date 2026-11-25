@@ -1,0 +1,198 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Dimensions and materials: a measured drawing of one piece beside two tables.
+  The cm / in switch is two radio buttons and CSS (:has), so it needs no JavaScript.
+  Without :has support the default unit stays visible.
+{%- endcomment -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign product = section.settings.product
+  if product == blank
+    for candidate in collections.all.products limit: 20
+      if candidate.featured_media
+        assign product = candidate
+        break
+      endif
+    endfor
+  endif
+  assign image = section.settings.image | default: product.featured_media.preview_image
+  assign measures = section.blocks | where: 'type', 'measure'
+  assign materials = section.blocks | where: 'type', 'material'
+  assign width_block = nil
+  assign height_block = nil
+  for block in measures
+    if block.settings.axis == 'width' and width_block == nil
+      assign width_block = block
+    elsif block.settings.axis == 'height' and height_block == nil
+      assign height_block = block
+    endif
+  endfor
+  assign unit_name = 'units-' | append: section.id
+-%}
+<section class="st-section st-dims st-dims--unit-{{ section.settings.default_unit }} st-dims--media-{{ section.settings.media_side }} color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap st-dims__grid">
+    <figure class="st-dims__figure">
+      <div class="st-dims__plinth">
+        <div class="st-dims__media">
+          {%- if image != blank -%}
+            {% render 'image', image: image, sizes: '(min-width: 990px) 45vw, 100vw', max: 1600 %}
+          {%- else -%}
+            {{ 'product-2' | placeholder_svg_tag: 'st-placeholder' }}
+          {%- endif -%}
+        </div>
+        {%- if width_block -%}
+          <span class="st-dims__rule st-dims__rule--x" aria-hidden="true">
+            <span class="st-dims__tag">{% render 'home-unit', cm: width_block.settings.value_cm %}</span>
+          </span>
+        {%- endif -%}
+        {%- if height_block -%}
+          <span class="st-dims__rule st-dims__rule--y" aria-hidden="true">
+            <span class="st-dims__tag">{% render 'home-unit', cm: height_block.settings.value_cm %}</span>
+          </span>
+        {%- endif -%}
+      </div>
+      {%- if product != blank -%}
+        <figcaption class="st-dims__caption">
+          <a class="st-link-button" href="{{ product.url }}">{{ product.title | escape }} {% render 'icon', name: 'arrow' %}</a>
+        </figcaption>
+      {%- endif -%}
+    </figure>
+
+    <div class="st-dims__info">
+      {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2 class="st-h2">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+      {%- if section.settings.text != blank -%}<div class="st-rte st-muted">{{ section.settings.text }}</div>{%- endif -%}
+
+      {%- if section.settings.show_unit_toggle and measures.size > 0 -%}
+        <fieldset class="st-dims__units">
+          <legend class="st-visually-hidden">{{ 'sections.home.units' | t }}</legend>
+          <label class="st-dims__unit">
+            <input type="radio" name="{{ unit_name }}" value="cm"{% if section.settings.default_unit == 'cm' %} checked{% endif %}>
+            <span>{{ 'sections.home.unit_cm' | t }}</span>
+          </label>
+          <label class="st-dims__unit">
+            <input type="radio" name="{{ unit_name }}" value="in"{% if section.settings.default_unit == 'in' %} checked{% endif %}>
+            <span>{{ 'sections.home.unit_in' | t }}</span>
+          </label>
+        </fieldset>
+      {%- endif -%}
+
+      {%- if measures.size > 0 -%}
+        <table class="st-dims__table">
+          <caption class="st-dims__caption-head">{{ 'sections.home.dimensions' | t }}</caption>
+          <tbody>
+            {%- for block in measures -%}
+              <tr {{ block.shopify_attributes }}>
+                <th scope="row">{{ block.settings.label | escape }}</th>
+                <td>{% render 'home-unit', cm: block.settings.value_cm %}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      {%- endif -%}
+
+      {%- if materials.size > 0 -%}
+        <table class="st-dims__table st-dims__table--materials">
+          <caption class="st-dims__caption-head">{{ 'sections.home.materials' | t }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ 'sections.home.part' | t }}</th>
+              <th scope="col">{{ 'sections.home.material' | t }}</th>
+              <th scope="col">{{ 'sections.home.finish' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for block in materials -%}
+              <tr {{ block.shopify_attributes }}>
+                <th scope="row">{{ block.settings.part | escape }}</th>
+                <td>{{ block.settings.material | escape }}</td>
+                <td>{{ block.settings.finish | escape }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.home_dimensions",
+  "class": "st-shopify-section",
+  "max_blocks": 14,
+  "settings": [
+    { "type": "product", "id": "product", "label": "t:labels.product" },
+    { "type": "image_picker", "id": "image", "label": "t:labels.image_override", "info": "t:info.dimensions_image" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Measure twice" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Dimensions and materials" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Every piece is listed with its outer size and what it is made of, so you know it fits before it arrives.</p>" },
+    {
+      "type": "select",
+      "id": "default_unit",
+      "label": "t:labels.default_unit",
+      "options": [
+        { "value": "cm", "label": "t:options.unit_cm" },
+        { "value": "in", "label": "t:options.unit_in" }
+      ],
+      "default": "cm"
+    },
+    { "type": "checkbox", "id": "show_unit_toggle", "label": "t:labels.show_unit_toggle", "default": true },
+    {
+      "type": "select",
+      "id": "media_side",
+      "label": "t:labels.media_side",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-6" }
+  ],
+  "blocks": [
+    {
+      "type": "measure",
+      "name": "t:names.measure",
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.measure_label", "default": "Width" },
+        { "type": "number", "id": "value_cm", "label": "t:labels.value_cm", "default": 210, "info": "t:info.value_cm" },
+        {
+          "type": "select",
+          "id": "axis",
+          "label": "t:labels.diagram_axis",
+          "options": [
+            { "value": "none", "label": "t:options.axis_none" },
+            { "value": "width", "label": "t:options.axis_width" },
+            { "value": "height", "label": "t:options.axis_height" }
+          ],
+          "default": "none"
+        }
+      ]
+    },
+    {
+      "type": "material",
+      "name": "t:names.material_row",
+      "settings": [
+        { "type": "text", "id": "part", "label": "t:labels.part", "default": "Frame" },
+        { "type": "text", "id": "material", "label": "t:labels.material", "default": "Solid oak" },
+        { "type": "text", "id": "finish", "label": "t:labels.finish", "default": "Hard wax oil" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.home_dimensions",
+      "blocks": [
+        { "type": "measure", "settings": { "label": "Width", "value_cm": 210, "axis": "width" } },
+        { "type": "measure", "settings": { "label": "Depth", "value_cm": 95, "axis": "none" } },
+        { "type": "measure", "settings": { "label": "Height", "value_cm": 82, "axis": "height" } },
+        { "type": "measure", "settings": { "label": "Seat height", "value_cm": 45, "axis": "none" } },
+        { "type": "material", "settings": { "part": "Frame", "material": "Solid oak", "finish": "Hard wax oil" } },
+        { "type": "material", "settings": { "part": "Cover", "material": "Washed linen", "finish": "Removable, machine wash at 30" } },
+        { "type": "material", "settings": { "part": "Cushions", "material": "Feather and foam", "finish": "Plump weekly" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

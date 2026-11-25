@@ -1,0 +1,100 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  One contact form field.
+  Params: form_id, type (name | email | phone | order | topic | message | consent), id, form, label, placeholder,
+          width (half | full), required, options (topic list), consent_text, attributes
+{%- endcomment -%}
+{%- liquid
+  assign label_text = label
+  if label_text == blank
+    case type
+      when 'name'
+        assign label_text = 'contact.name' | t
+      when 'email'
+        assign label_text = 'contact.email' | t
+      when 'phone'
+        assign label_text = 'contact.phone' | t
+      when 'order'
+        assign label_text = 'contact.order' | t
+      when 'topic'
+        assign label_text = 'contact.topic' | t
+      when 'message'
+        assign label_text = 'contact.message' | t
+    endcase
+  endif
+  assign consent_label = consent_text
+  if consent_label == blank
+    assign consent_label = 'contact.consent_default' | t
+  endif
+  assign has_error = false
+  if type == 'email' and form.errors contains 'email'
+    assign has_error = true
+  endif
+-%}
+<div class="st-field st-contact__field st-contact__field--{{ width | default: 'full' }}" {{ attributes }}>
+  {%- case type -%}
+    {%- when 'consent' -%}
+      <label class="st-contact__consent" for="{{ id }}">
+        <input type="checkbox" id="{{ id }}" name="contact[{{ 'contact.consent' | t }}]" value="{{ 'contact.consent_yes' | t }}"{% if required %} required{% endif %}>
+        <span>{{ consent_label }}{% if required %} <span aria-hidden="true">*</span>{% endif %}</span>
+      </label>
+    {%- else -%}
+      <label class="st-field__label" for="{{ id }}">
+        {{- label_text | escape -}}
+        {%- if required %} <span aria-hidden="true">*</span>{% endif -%}
+      </label>
+      {%- case type -%}
+        {%- when 'message' -%}
+          <textarea class="st-input" id="{{ id }}" name="contact[body]" rows="6" placeholder="{{ placeholder | escape }}"{% if required %} required{% endif %}>{{ form.body }}</textarea>
+        {%- when 'topic' -%}
+          {%- assign topics = options | split: ',' -%}
+          <div class="st-select">
+            <select id="{{ id }}" name="contact[{{ label_text | escape }}]"{% if required %} required{% endif %}>
+              <option value="">{{ placeholder | default: label_text | escape }}</option>
+              {%- for topic in topics -%}
+                {%- assign topic_text = topic | strip -%}
+                {%- if topic_text != blank -%}
+                  <option value="{{ topic_text | escape }}">{{ topic_text | escape }}</option>
+                {%- endif -%}
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'down' %}
+          </div>
+        {%- else -%}
+          {%- liquid
+            assign input_type = 'text'
+            assign input_name = 'contact[' | append: label_text | append: ']'
+            assign autocomplete = 'off'
+            assign value = ''
+            case type
+              when 'name'
+                assign input_name = 'contact[name]'
+                assign autocomplete = 'name'
+                assign value = form.name
+              when 'email'
+                assign input_type = 'email'
+                assign input_name = 'contact[email]'
+                assign autocomplete = 'email'
+                assign value = form.email
+              when 'phone'
+                assign input_type = 'tel'
+                assign input_name = 'contact[phone]'
+                assign autocomplete = 'tel'
+                assign value = form.phone
+            endcase
+          -%}
+          <input
+            class="st-input"
+            type="{{ input_type }}"
+            id="{{ id }}"
+            name="{{ input_name | escape }}"
+            value="{{ value | escape }}"
+            placeholder="{{ placeholder | escape }}"
+            autocomplete="{{ autocomplete }}"
+            {% if type == 'email' %}spellcheck="false" autocapitalize="off"{% endif %}
+            {% if required %}required{% endif %}
+            {% if has_error %}aria-invalid="true" aria-describedby="{{ form_id }}-errors"{% endif %}
+          >
+      {%- endcase -%}
+  {%- endcase -%}
+</div>

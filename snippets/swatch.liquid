@@ -1,0 +1,76 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Decorative colour chip for a product option value or filter value.
+  Order: native Shopify swatch (colour or image), then the colour name (whole name, pattern words,
+  first word, last word), then a neutral chip with the first letter.
+  Params: value (required), size ('small' | 'large')
+{%- endcomment -%}
+{%- liquid
+  assign style = ''
+  assign letter = ''
+  if value.swatch.image
+    assign swatch_url = value.swatch.image | image_url: width: 96
+    assign style = 'background-image: url(' | append: swatch_url | append: ');'
+  elsif value.swatch.color
+    assign style = 'background-color: ' | append: value.swatch.color | append: ';'
+  else
+    assign name = value.label | default: value | downcase | strip
+    # Colour words in the shopper's language are mapped to English first (see "colour_map" in the locale files).
+    assign colour_map = 'products.colour_map' | t | split: ','
+    for pair in colour_map
+      assign pair_parts = pair | split: ':'
+      assign pair_key = pair_parts[0] | strip | downcase
+      if pair_key == name
+        assign name = pair_parts[1] | strip
+        break
+      endif
+    endfor
+    assign words = name | split: ' '
+    if name contains 'black and white' or name contains 'black/white' or name contains 'monochrome'
+      assign style = 'background: linear-gradient(135deg, #151515 50%, #FAFAF7 50%);'
+    elsif name contains 'stripe'
+      capture base
+        render 'swatch-colour', word: words.first
+      endcapture
+      assign base = base | strip | default: '#3C64A8'
+      assign style = 'background: repeating-linear-gradient(90deg, ' | append: base | append: ' 0 3px, #FAFAF7 3px 6px);'
+    elsif name contains 'floral' or name contains 'flower'
+      assign style = 'background: radial-gradient(circle at 30% 30%, #E59BB1 0 22%, transparent 24%), radial-gradient(circle at 70% 65%, #D9AE2B 0 20%, transparent 22%), #2F5D50;'
+    elsif name contains 'multi' or name contains 'rainbow' or name contains 'print'
+      capture base
+        render 'swatch-colour', word: words.first
+      endcapture
+      assign base = base | strip
+      if base != blank
+        assign style = 'background: radial-gradient(circle at 35% 35%, #FAFAF7 0 14%, transparent 16%), radial-gradient(circle at 70% 70%, #FAFAF7 0 12%, transparent 14%), ' | append: base | append: ';'
+      else
+        assign style = 'background: conic-gradient(#B3261E, #D9AE2B, #2F7A4B, #3C64A8, #8E6FB3, #B3261E);'
+      endif
+    else
+      capture colour
+        render 'swatch-colour', word: name
+      endcapture
+      assign colour = colour | strip
+      if colour == blank
+        capture colour
+          render 'swatch-colour', word: words.first
+        endcapture
+        assign colour = colour | strip
+      endif
+      if colour == blank
+        capture colour
+          render 'swatch-colour', word: words.last
+        endcapture
+        assign colour = colour | strip
+      endif
+      if colour != blank
+        assign style = 'background-color: ' | append: colour | append: ';'
+      else
+        assign letter = name | slice: 0 | upcase
+      endif
+    endif
+  endif
+-%}
+<span class="st-swatch st-swatch--{{ size | default: 'small' }}{% if letter != blank %} st-swatch--none{% endif %}" style="{{ style }}" title="{{ value.label | default: value | escape }}" aria-hidden="true">
+  {{- letter -}}
+</span>

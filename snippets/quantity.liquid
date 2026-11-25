@@ -1,0 +1,19 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: id, name, value, min, line (cart line index, optional), label (optional accessible label)
+{%- endcomment -%}
+<st-quantity class="st-qty">
+  <button type="button" class="st-qty__btn" data-step="-1" aria-label="{{ 'products.quantity_down' | t }}">{% render 'icon', name: 'minus' %}</button>
+  <input
+    class="st-qty__input"
+    type="number"
+    inputmode="numeric"
+    id="{{ id }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    min="{{ min | default: 0 }}"
+    {% if line %}data-line="{{ line }}"{% endif %}
+    {% if label %}aria-label="{{ label | escape }}"{% endif %}
+  >
+  <button type="button" class="st-qty__btn" data-step="1" aria-label="{{ 'products.quantity_up' | t }}">{% render 'icon', name: 'plus' %}</button>
+</st-quantity>

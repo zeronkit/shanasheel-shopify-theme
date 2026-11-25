@@ -1,0 +1,91 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  404: an empty wall with a picture frame hanging a little crooked, a floor lamp and a low sideboard,
+  drawn in SVG. The frame settles once when motion is allowed. Then a search field, rooms and new pieces.
+{%- endcomment -%}
+{%- liquid
+  assign auto_list = ''
+  assign auto_count = 0
+  for c in collections limit: 30
+    if c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' and auto_count < 6
+      assign auto_list = auto_list | append: c.handle | append: ','
+      assign auto_count = auto_count | plus: 1
+    endif
+  endfor
+  assign auto_handles = auto_list | split: ','
+  assign picks = collections.all.products | sort: 'published_at' | reverse
+  assign show_rooms = false
+  if auto_handles.size > 0 or section.settings.rooms_menu.links.size > 0
+    assign show_rooms = true
+  endif
+  assign heading = section.settings.heading
+  if heading == blank
+    assign heading = 'not_found.title' | t
+  endif
+-%}
+<section class="st-section color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap st-404">
+    <div class="st-404__top">
+      <div class="st-404__art" aria-hidden="true">
+        <svg viewBox="0 0 320 300" width="320" height="300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="160" cy="26" r="4" fill="currentColor" stroke="none"/>
+          <g class="st-404__frame">
+            <path d="M160 26l-46 40M160 26l46 40" opacity="0.6"/>
+            <rect x="96" y="66" width="128" height="104" rx="6" fill="var(--st-bg)"/>
+            <rect x="108" y="78" width="104" height="80" rx="3" opacity="0.45"/>
+            <text x="160" y="134" text-anchor="middle" font-size="40" font-weight="700" fill="currentColor" stroke="none" style="font-family: var(--st-font-heading); letter-spacing: -0.03em">404</text>
+          </g>
+          <g class="st-404__lamp">
+            <path d="M262 132h36l-8-30h-20z" fill="currentColor" fill-opacity="0.18"/>
+            <path d="M280 132v122M266 254h28"/>
+          </g>
+          <path d="M28 214h176v40H28z" fill="var(--st-bg)"/>
+          <path d="M116 214v40M28 234h176" opacity="0.5"/>
+          <path d="M40 254v14M192 254v14"/>
+          <path d="M60 214v-22a10 10 0 0 1 20 0v22" opacity="0.7"/>
+          <path d="M12 268h296" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="st-404__copy">
+        <p class="st-eyebrow">404</p>
+        <h1 class="st-h1">{{ heading | escape }}</h1>
+        <p class="st-text--large st-muted">{{ 'not_found.text' | t }}</p>
+        {% render 'search-form', id: 'NotFoundSearch', predictive: false %}
+        <a class="st-button st-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }} {% render 'icon', name: 'arrow' %}</a>
+      </div>
+    </div>
+
+    {%- if show_rooms -%}
+      <div class="st-search-block">
+        <h2 class="st-field__label" id="NotFoundCollections-{{ section.id }}">{{ 'not_found.collections' | t }}</h2>
+        {%- assign rooms_label = 'not_found.collections' | t -%}
+        {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, limit: 8, modifier: 'st-roomnav--wrap' %}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_products and picks.size > 0 -%}
+      <div class="st-search-block">
+        <h2 class="st-h3">{{ 'search.you_may_like' | t }}</h2>
+        <ul class="st-grid st-grid--4 st-grid--m2" role="list">
+          {%- for product in picks limit: 4 -%}
+            <li>{% render 'product-card', product: product %}</li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.not_found",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["404"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:labels.heading" },
+    { "type": "link_list", "id": "rooms_menu", "label": "t:labels.rooms_menu", "info": "t:info.rooms_menu" },
+    { "type": "checkbox", "id": "show_products", "label": "t:labels.show_empty_products", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

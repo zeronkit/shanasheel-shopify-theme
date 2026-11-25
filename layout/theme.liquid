@@ -1,0 +1,101 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign lang = request.locale.iso_code | split: '-' | first
+  assign dir = 'ltr'
+  assign rtl_languages = 'ar,he,fa,ur,ps,yi' | split: ','
+  if rtl_languages contains lang
+    assign dir = 'rtl'
+  endif
+-%}
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ dir }}" data-zk="ZK-SHANASHEEL-EC94D65D2EC8" data-motion="{{ settings.animations }}">
+  <head>
+    <meta charset="utf-8">
+    <!-- Shanasheel by ZeronKit (https://zeronkit.com). Signature ZK-SHANASHEEL-EC94D65D2EC8 -->
+    <meta name="generator" content="Shanasheel by ZeronKit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_schemes.first.settings.background }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags.first }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} | {{ shop.name }}{% endunless -%}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+    {% render 'theme-styles' %}
+
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'pages.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-header.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-footer.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-cards.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-home.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-product.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-collection.css' | asset_url | stylesheet_tag }}
+    {{ 'sh-pages.css' | asset_url | stylesheet_tag }}
+    {%- render 'sh-arabic-font' -%}
+    <script src="{{ 'theme.js' | asset_url }}" type="module"></script>
+    <script type="application/json" id="st-config">
+      {
+        "routes": {
+          "root": {{ routes.root_url | json }},
+          "cart": {{ routes.cart_url | json }},
+          "cartAdd": {{ routes.cart_add_url | json }},
+          "cartChange": {{ routes.cart_change_url | json }},
+          "search": {{ routes.predictive_search_url | json }},
+          "searchPage": {{ routes.search_url | json }}
+        },
+        "cartType": {{ settings.cart_type | json }},
+        "modules": {
+          "facets": {{ 'facets.js' | asset_url | json }},
+          "product": {{ 'product.js' | asset_url | json }},
+          "search": {{ 'search.js' | asset_url | json }},
+          "navigator": {{ 'navigator.js' | asset_url | json }},
+          "header": {{ 'header.js' | asset_url | json }},
+          "motion": {{ 'motion.js' | asset_url | json }},
+          "cards": {{ 'cards.js' | asset_url | json }},
+          "slider": {{ 'slider.js' | asset_url | json }}
+        },
+        "strings": {
+          "added": {{ 'cart.added' | t | json }},
+          "error": {{ 'general.error' | t | json }},
+          "unavailable": {{ 'products.unavailable' | t | json }},
+          "recentTitle": {{ 'search.recent' | t | json }},
+          "recentClear": {{ 'search.recent_clear' | t | json }}
+        }
+      }
+    </script>
+
+    {{ content_for_header }}
+    <script>document.documentElement.classList.replace('no-js', 'js');</script>
+  </head>
+
+  <body class="st-body color-{{ settings.body_scheme }} st-bg-{{ settings.background_style }} st-cards-{{ settings.card_style }} st-buttons-{{ settings.button_style }} st-space-{{ settings.spacing }} st-type-{{ settings.type_scale }}">
+    <a class="st-skip" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="st-main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- if settings.cart_type == 'drawer' and request.page_type != 'cart' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
+
+    <div class="st-visually-hidden" role="status" aria-live="polite" id="st-live"></div>
+  </body>
+</html>

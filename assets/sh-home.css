@@ -1,0 +1,221 @@
+/* Shanasheel: home page. Bold colour bands, arched windows, lattice dividers between sections. */
+:root {
+  --shm-walnut: #3A2619;
+  --shm-sand: #F4EDE2;
+  --shm-turq: #8A4F2B;
+  --shm-amber: #EADFCC;
+  --shm-lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='0 0 16 8'%3E%3Cpath d='M0 4 L4 0 L8 4 L12 0 L16 4 M0 4 L4 8 L8 4 L12 8 L16 4' fill='none' stroke='%233B2416' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+
+/* Hero: headline on a walnut panel, image in a tall arched window */
+:not(.st-rooms__grid) > .st-room:not(li) {
+  gap: 0;
+}
+:not(.st-rooms__grid) > .st-room:not(li) .st-display {
+  font-family: var(--st-font-heading-family, "Arvo", serif);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+:not(.st-rooms__grid) > .st-room:not(li) .st-display em,
+:not(.st-rooms__grid) > .st-room:not(li) .st-display i {
+  color: var(--shm-amber);
+  font-style: normal;
+}
+:not(.st-rooms__grid) > .st-room:not(li) .st-eyebrow {
+  letter-spacing: 0.2em;
+  color: var(--shm-amber);
+}
+:not(.st-rooms__grid) > .st-room:not(li) [class*="media"],
+:not(.st-rooms__grid) > .st-room:not(li) picture,
+:not(.st-rooms__grid) > .st-room:not(li) > div:last-child img {
+  border-radius: 999px 999px 6px 6px;
+  overflow: hidden;
+}
+.st-spot__pin {
+  background: var(--shm-turq);
+  color: #fff;
+  border: 2px solid var(--shm-sand);
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(138, 79, 43, 0.25);
+}
+.st-spot__card {
+  border-radius: 4px;
+  border: 1px solid rgba(59, 36, 22, 0.4);
+  box-shadow: inset 0 -3px 0 var(--shm-walnut);
+}
+
+/* Shop by room: tall arched panels */
+.st-rooms__grid .st-room__media {
+  border-radius: 999px 999px 4px 4px;
+  overflow: hidden;
+  border: 1px solid rgba(59, 36, 22, 0.35);
+}
+.st-rooms__grid .st-room__tile {
+  transition: transform 0.25s ease;
+}
+.st-rooms__grid .st-room__tile:hover {
+  transform: translateY(-4px);
+}
+.st-rooms__grid .st-room__label {
+  background: #3A2619;
+  color: #F4EDE2;
+  border-radius: 3px;
+  font-family: var(--st-font-heading-family, "Arvo", serif);
+}
+
+/* Section heads: carved title with a short walnut rule */
+.st-section__head .st-h2,
+.st-shelf__intro .st-h2,
+.st-dims__info .st-h2,
+.st-journey__intro .st-h2 {
+  font-family: var(--st-font-heading-family, "Arvo", serif);
+  font-weight: 700;
+}
+.st-section__head .st-eyebrow::before,
+.st-shelf__intro .st-eyebrow::before {
+  content: "";
+  display: inline-block;
+  inline-size: 28px;
+  block-size: 3px;
+  background: currentColor;
+  vertical-align: middle;
+  margin-inline-end: 0.6rem;
+}
+
+/* Product shelf: a wooden shelf board under the row */
+.st-shelf__board::after {
+  content: "";
+  display: block;
+  block-size: 12px;
+  margin-block-start: 0.75rem;
+  background: var(--shm-walnut);
+  border-radius: 2px;
+  box-shadow: 0 5px 0 #2A1B12;
+}
+
+/* Room tiles and other reveal items stay visible even when the reveal script has not run (theme editor) */
+html .st-rooms .st-reveal:not(.is-in),
+html .st-materials .st-reveal:not(.is-in),
+html .st-journey .st-reveal:not(.is-in),
+html.st-motion-ready .st-rooms .st-reveal:not(.is-in),
+html.st-motion-ready .st-materials .st-reveal:not(.is-in),
+html.st-motion-ready .st-journey .st-reveal:not(.is-in) {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero copy sits on a walnut plank, square corners, not a rounded sand card */
+section .st-room-hero__grid > .st-room-hero__copy,
+.st-room-hero__grid .st-room-hero__copy {
+  border-radius: 0;
+  background: #3A2619;
+  background-color: #3A2619;
+  color: #F4EDE2;
+  border-block-start: 6px solid #C9A36A;
+}
+.st-room-hero__grid .st-room-hero__copy,
+.st-room-hero__grid .st-room-hero__copy .st-display,
+.st-room-hero__grid .st-room-hero__copy .st-rte,
+.st-room-hero__grid .st-room-hero__copy .st-eyebrow {
+  color: #F4EDE2;
+}
+.st-room-hero__title em {
+  color: #C9A36A;
+  font-style: normal;
+}
+.st-room-hero__copy .st-button--primary {
+  background: #8A4F2B;
+  border-color: #8A4F2B;
+  color: #fff;
+}
+.st-room-hero__copy .st-button--ghost {
+  border-color: #F4EDE2;
+  color: #F4EDE2;
+}
+.st-room-hero__media,
+.st-room-hero__scene {
+  border-radius: 999px 999px 4px 4px;
+  overflow: hidden;
+}
+
+/* Materials, dimensions, delivery and newsletter take their colours from the section colour scheme.
+   Only shapes are styled here, so text always matches its background. */
+.st-material {
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 4px;
+}
+.st-material__swatch {
+  border-radius: 999px 999px 4px 4px;
+  border: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+.st-dims__table {
+  border-top: 3px solid currentColor;
+}
+.st-journey__count,
+.st-journey__marker {
+  background: var(--st-text);
+  color: var(--st-bg);
+  border-radius: 4px;
+  font-family: var(--st-font-heading-family, "Arvo", serif);
+}
+.st-journey__step {
+  border-inline-start: 3px solid color-mix(in srgb, currentColor 45%, transparent);
+  padding-inline-start: 1rem;
+}
+.st-letter__media img {
+  border-radius: 999px 999px 4px 4px;
+}
+
+/* Room label: name and product count both readable on the walnut plank */
+.st-rooms__grid .st-room__label,
+.st-rooms__grid .st-room__label a,
+.st-rooms__grid .st-room__label .st-icon {
+  color: #F4EDE2;
+}
+.st-rooms__grid .st-room__count {
+  color: #D8BC86;
+  font-family: var(--st-font-body-family, "Nunito Sans", sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  opacity: 1;
+}
+
+/* Phone: the hero scene keeps soft corners so its label is not cut by the arch */
+@media (max-width: 749px) {
+  .st-room-hero__media,
+  .st-room-hero__scene {
+    border-radius: 24px;
+  }
+}
+
+/* Delivery steps: fixed readable colours for the step label and marker on any scheme */
+.st-journey .st-journey__steps .st-journey__count {
+  display: inline-block;
+  justify-self: start;
+  padding: 0.3rem 0.65rem;
+  background: #3A2619;
+  color: #F4EDE2;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.st-journey .st-journey__steps .st-journey__marker {
+  background: #8A4F2B;
+  color: #F4EDE2;
+}
+.st-journey .st-journey__steps .st-h4 { color: #2B2019; }
+.st-journey .st-journey__steps .st-muted { color: #4A3A2E; opacity: 1; }
+
+/* Materials on the copper band: the name stays light on hover, with a brass underline */
+.st-material .st-card__link,
+.st-material:hover .st-card__link,
+.st-material .st-card__link:hover,
+.st-material .st-card__link:focus-visible { color: #F4EDE2 !important; text-decoration-color: #D8BC86; text-underline-offset: 4px; }
+.st-material:hover .st-card__link { text-decoration: underline; text-decoration-thickness: 2px; }
+
+/* Breathing room: text never sits on a frame line */
+html .st-materials__list .st-material { padding: 1.25rem 1.25rem 1.5rem !important; }
+html .st-journey .st-journey__steps .st-journey__step { padding-inline-start: 1.25rem !important; padding-inline-end: 0.75rem; }
+html .st-shelf .st-card__body { padding-inline: 0.9rem !important; padding-block-end: 0.9rem; }
+html .st-dims__tag { padding: 0.35rem 0.7rem !important; }

@@ -1,0 +1,270 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Contact form. Uses Shopify's own contact form, so messages go to the store's sender email.
+  Field blocks can be added, removed and reordered. An email field is always present, because
+  Shopify needs it to send the message.
+{%- endcomment -%}
+{%- if section.settings.enabled -%}
+  {%- liquid
+    assign has_email_block = false
+    for block in section.blocks
+      if block.type == 'email'
+        assign has_email_block = true
+      endif
+    endfor
+    assign form_id = 'ContactForm-' | append: section.id
+    assign success_text = section.settings.success_message
+    if success_text == blank
+      assign success_text = 'contact.success' | t
+    endif
+    assign button_text = section.settings.button_label
+    if button_text == blank
+      assign button_text = 'contact.send' | t
+    endif
+  -%}
+  <section class="st-section st-contact color-{{ section.settings.color_scheme }}" aria-labelledby="ContactTitle-{{ section.id }}">
+    <div class="st-wrap st-contact__grid st-contact__grid--{{ section.settings.layout }}">
+      <div class="st-contact__main">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="st-h3" id="ContactTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+        {%- else -%}
+          <h2 class="st-visually-hidden" id="ContactTitle-{{ section.id }}">{{ 'contact.title' | t }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="st-rte st-muted">{{ section.settings.intro }}</div>
+        {%- endif -%}
+
+        {%- form 'contact', id: form_id, class: 'st-form st-contact__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="st-notice st-notice--success" role="status">
+              {% render 'icon', name: 'check' %}
+              {{ success_text | escape }}
+            </p>
+          {%- elsif form.errors -%}
+            <div class="st-notice st-notice--error" role="alert" id="{{ form_id }}-errors">
+              <div>
+                <p class="st-strong">{{ 'contact.error_heading' | t }}</p>
+                {{ form.errors | default_errors }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="st-contact__fields">
+            {%- unless has_email_block -%}
+              {%- assign email_id = form_id | append: '-email' -%}
+              {% render 'contact-field', type: 'email', id: email_id, form: form, form_id: form_id, width: 'full', required: true %}
+            {%- endunless -%}
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign field_id = form_id | append: '-' | append: block.id
+                assign required = block.settings.required
+                if block.type == 'email'
+                  assign required = true
+                endif
+              -%}
+              {% render 'contact-field',
+                type: block.type,
+                id: field_id,
+                form: form,
+                form_id: form_id,
+                label: block.settings.label,
+                placeholder: block.settings.placeholder,
+                width: block.settings.width,
+                required: required,
+                options: block.settings.options,
+                consent_text: block.settings.text,
+                attributes: block.shopify_attributes
+              %}
+            {%- endfor -%}
+          </div>
+          <p class="st-small st-muted">{{ 'contact.required_note' | t }}</p>
+          <button type="submit" class="st-button st-button--primary">
+            {{- button_text | escape -}}
+          </button>
+        {%- endform -%}
+      </div>
+
+      {%- if section.settings.layout == 'form_info' -%}
+        <aside class="st-contact__info" aria-label="{{ 'contact.info_label' | t }}">
+          {%- if section.settings.info_image != blank or section.settings.info_heading != blank -%}
+            <div class="st-contact__visit">
+              {%- if section.settings.info_image != blank -%}
+                <div class="st-arch{% if section.settings.info_image_shape == 'arch' %} st-arch--tall{% endif %}">
+                  {% render 'image', image: section.settings.info_image, sizes: '(min-width: 990px) 30vw, 90vw', max: 1200 %}
+                </div>
+              {%- endif -%}
+              {%- if section.settings.info_heading != blank -%}
+                <h3 class="st-h4">{{ section.settings.info_heading | escape }}</h3>
+              {%- endif -%}
+              {%- if section.settings.info_text != blank -%}
+                <div class="st-rte st-muted">{{ section.settings.info_text }}</div>
+              {%- endif -%}
+              {%- if section.settings.info_button_label != blank and section.settings.info_button_link != blank -%}
+                <a class="st-button st-button--ghost" href="{{ section.settings.info_button_link }}">{{ section.settings.info_button_label | escape }}</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_email != blank -%}
+            <div class="st-contact__info-item">
+              <p class="st-field__label">{{ 'contact.email' | t }}</p>
+              <p><a href="mailto:{{ section.settings.info_email | escape }}">{{ section.settings.info_email | escape }}</a></p>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_hours != blank -%}
+            <div class="st-contact__info-item">
+              <p class="st-field__label">{{ 'contact.hours' | t }}</p>
+              <div class="st-rte">{{ section.settings.info_hours }}</div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_address != blank -%}
+            <div class="st-contact__info-item">
+              <p class="st-field__label">{{ 'contact.address' | t }}</p>
+              <div class="st-rte">{{ section.settings.info_address }}</div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_menu.links.size > 0 -%}
+            <div class="st-contact__info-item">
+              <p class="st-field__label">{{ section.settings.info_menu.title | escape }}</p>
+              <ul class="st-contact__links" role="list">
+                {%- for link in section.settings.info_menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </aside>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.contact_form",
+  "class": "st-shopify-section",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "t:labels.show_contact_form", "default": true },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Write to us" },
+    { "type": "richtext", "id": "intro", "label": "t:labels.intro", "default": "<p>Questions about an order, delivery, assembly or fabrics? Send us a message and we will reply by email.</p>" },
+    { "type": "text", "id": "button_label", "label": "t:labels.button_label", "default": "Send message" },
+    { "type": "text", "id": "success_message", "label": "t:labels.success_message", "default": "Thanks for your message. We will get back to you as soon as we can." },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.layout",
+      "options": [
+        { "value": "form", "label": "t:options.form_only" },
+        { "value": "form_info", "label": "t:options.form_with_info" }
+      ],
+      "default": "form_info"
+    },
+    { "type": "header", "content": "t:labels.info_column" },
+    { "type": "image_picker", "id": "info_image", "label": "t:labels.image", "info": "t:info.showroom_image" },
+    {
+      "type": "select",
+      "id": "info_image_shape",
+      "label": "t:labels.image_shape",
+      "options": [
+        { "value": "arch", "label": "t:options.shape_arch" },
+        { "value": "landscape", "label": "t:options.landscape" }
+      ],
+      "default": "arch"
+    },
+    { "type": "text", "id": "info_heading", "label": "t:labels.heading", "default": "Visit the showroom" },
+    { "type": "richtext", "id": "info_text", "label": "t:labels.text", "default": "<p>Sit on the sofas, feel the fabrics and bring your room sizes. We are happy to help you plan.</p>" },
+    { "type": "text", "id": "info_button_label", "label": "t:labels.button_label" },
+    { "type": "url", "id": "info_button_link", "label": "t:labels.link" },
+    { "type": "text", "id": "info_email", "label": "t:labels.info_email" },
+    { "type": "richtext", "id": "info_hours", "label": "t:labels.info_hours", "default": "<p>Monday to Friday, 9:00 to 17:00</p>" },
+    { "type": "richtext", "id": "info_address", "label": "t:labels.info_address" },
+    { "type": "link_list", "id": "info_menu", "label": "t:labels.info_menu", "info": "t:info.info_menu" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    { "type": "paragraph", "content": "t:info.contact_form" }
+  ],
+  "blocks": [
+    {
+      "type": "name",
+      "name": "t:names.field_name",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Name" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "email",
+      "name": "t:names.field_email",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.email_required" },
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Email" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "phone",
+      "name": "t:names.field_phone",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Phone number" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "order",
+      "name": "t:names.field_order",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Order number" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder", "default": "#1001" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "topic",
+      "name": "t:names.field_topic",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Topic" },
+        { "type": "text", "id": "options", "label": "t:labels.topic_options", "info": "t:info.topic_options", "default": "Order, Delivery, Assembly, Fabric samples, Returns, Other" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder", "default": "Choose a topic" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "message",
+      "name": "t:names.field_message",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label", "default": "Message" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": true },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "full" }
+      ]
+    },
+    {
+      "type": "consent",
+      "name": "t:names.field_consent",
+      "limit": 1,
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.consent_text", "default": "I agree that my details are used to answer this message." },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": true },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "full" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.contact_form",
+      "blocks": [{ "type": "name" }, { "type": "email" }, { "type": "message" }]
+    }
+  ]
+}
+{% endschema %}

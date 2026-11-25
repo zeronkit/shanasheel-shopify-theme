@@ -1,0 +1,40 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Journal card for the blog page. The whole card is one link (the title link stretches over it).
+  Params: article, lead (boolean, the large first story), show_author, heading_tag (default h2)
+{%- endcomment -%}
+{%- liquid
+  assign heading_tag = heading_tag | default: 'h2'
+  assign words = article.content | strip_html | split: ' ' | size
+  assign minutes = words | divided_by: 200 | at_least: 1
+  if lead
+    assign sizes = '(min-width: 750px) 55vw, 100vw'
+  else
+    assign sizes = '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw'
+  endif
+-%}
+<article class="st-journal-card{% if lead %} st-journal-card--lead{% endif %}">
+  <div class="st-journal-card__media">
+    {%- if article.image -%}
+      {% render 'image', image: article.image, sizes: sizes, max: 1600, alt: '', eager: lead %}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'st-placeholder' }}
+    {%- endif -%}
+  </div>
+  <div class="st-journal-card__body">
+    <p class="st-journal-card__meta">
+      {{ article.published_at | time_tag: format: 'date' }}
+      <span>{{ 'blogs.read_time' | t: count: minutes }}</span>
+      {%- if show_author and article.author != blank %}<span>{{ article.author | escape }}</span>{% endif -%}
+    </p>
+    <{{ heading_tag }} class="st-journal-card__title {% if lead %}st-h2{% else %}st-h4{% endif %}"><a href="{{ article.url }}">{{ article.title | escape }}</a></{{ heading_tag }}>
+    <p class="st-journal-card__excerpt">
+      {%- if article.excerpt != blank -%}
+        {{ article.excerpt | strip_html | truncatewords: 28 }}
+      {%- else -%}
+        {{ article.content | strip_html | truncatewords: 28 }}
+      {%- endif -%}
+    </p>
+    {%- if lead -%}<span class="st-link-button" aria-hidden="true">{{ 'blogs.read_more' | t }} {% render 'icon', name: 'arrow' %}</span>{%- endif -%}
+  </div>
+</article>

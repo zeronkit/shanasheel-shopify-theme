@@ -1,0 +1,67 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Journal: the newest story on the first page is shown large on a soft panel, the rest sit in a grid.
+{%- endcomment -%}
+<section class="st-section st-journal color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    <header class="st-journal__head">
+      {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="st-h1">{{ blog.title | escape }}</h1>
+      {%- if section.settings.intro != blank -%}<div class="st-rte st-muted">{{ section.settings.intro }}</div>{%- endif -%}
+      {%- if section.settings.show_tags and blog.all_tags.size > 0 -%}
+        <nav aria-label="{{ 'blogs.tags' | t }}">
+          <ul class="st-rail__list st-rail__list--wrap" role="list">
+            <li><a class="st-rail__pill" href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blogs.all' | t }}</a></li>
+            {%- for tag in blog.all_tags -%}
+              <li>
+                <a class="st-rail__pill" href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </header>
+    {%- paginate blog.articles by section.settings.per_page -%}
+      {%- liquid
+        assign has_lead = false
+        if section.settings.feature_first and paginate.current_page == 1 and blog.articles.size > 0
+          assign has_lead = true
+        endif
+      -%}
+      {%- if blog.articles.size == 0 -%}
+        <div class="st-empty"><p class="st-h4">{{ 'blogs.empty' | t }}</p></div>
+      {%- else -%}
+        {%- if has_lead -%}
+          <div class="st-journal__lead">
+            {% render 'journal-card', article: blog.articles.first, lead: true, show_author: section.settings.show_author %}
+          </div>
+        {%- endif -%}
+        <ul class="st-grid st-grid--{{ section.settings.columns }} st-grid--m1" role="list">
+          {%- for article in blog.articles -%}
+            {%- if has_lead and forloop.first -%}{%- continue -%}{%- endif -%}
+            <li>{% render 'journal-card', article: article, show_author: section.settings.show_author %}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.blog_posts",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["blog"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Journal" },
+    { "type": "richtext", "id": "intro", "label": "t:labels.intro", "default": "<p>Room ideas, care guides and the makers behind our pieces.</p>" },
+    { "type": "checkbox", "id": "feature_first", "label": "t:labels.feature_first", "default": true },
+    { "type": "checkbox", "id": "show_tags", "label": "t:labels.show_tags", "default": true },
+    { "type": "checkbox", "id": "show_author", "label": "t:labels.show_author", "default": false },
+    { "type": "range", "id": "per_page", "label": "t:labels.posts_per_page", "min": 3, "max": 24, "step": 1, "default": 10 },
+    { "type": "range", "id": "columns", "label": "t:labels.columns_desktop", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

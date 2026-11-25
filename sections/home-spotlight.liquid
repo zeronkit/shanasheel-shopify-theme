@@ -1,0 +1,136 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Piece in focus: one product on a wide plinth with its buy form and short facts
+  (lead time, assembly, care). The buy logic is the shared st-product from assets/product.js.
+{%- endcomment -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign product = section.settings.product
+  if product == blank
+    for candidate in collections.all.products limit: 20
+      if candidate.available
+        assign product = candidate
+        break
+      endif
+    endfor
+  endif
+  assign variant = product.selected_or_first_available_variant
+  assign models = product.media | where: 'media_type', 'model'
+-%}
+<section class="st-section st-featured-product st-spotlight st-spotlight--media-{{ section.settings.media_side }} color-{{ section.settings.color_scheme }}">
+  {%- if product != blank -%}
+    <st-product class="st-wrap st-spotlight__grid" data-section-id="{{ section.id }}" data-url="{{ product.url }}">
+      <div class="st-spotlight__stage">
+        <div class="st-gallery" data-st-gallery>
+          <ol class="st-gallery__sheet st-gallery__sheet--rail" role="list" aria-label="{{ 'products.media.gallery' | t }}">
+            {%- for media in product.media limit: section.settings.media_limit -%}
+              <li class="st-gallery__frame" data-media-id="{{ media.id }}">
+                <div class="st-gallery__media st-gallery__media--{{ media.media_type }}">
+                  {% render 'media', media: media, title: product.title, sizes: '(min-width: 990px) 55vw, 100vw' %}
+                </div>
+              </li>
+            {%- else -%}
+              <li class="st-gallery__frame">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</li>
+            {%- endfor -%}
+          </ol>
+          {%- if models.size > 0 -%}
+            <script type="application/json" data-st-models>{{ models | json }}</script>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="st-product__info st-spotlight__info">
+        {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="st-h2">{{ product.title | escape }}</h2>
+        <div data-st-swap="price-featured">{% render 'price', product: product, variant: variant, class: 'st-price--large' %}</div>
+        {%- if section.settings.show_description and product.description != blank -%}
+          <p class="st-muted st-spotlight__text">{{ product.description | strip_html | truncatewords: 32 }}</p>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="st-spotlight__facts">
+            {%- for block in section.blocks -%}
+              <div class="st-spotlight__fact" {{ block.shopify_attributes }}>
+                <dt>{%- unless block.settings.icon == 'none' -%}{% render 'icon', name: block.settings.icon %}{%- endunless -%}{{ block.settings.label | escape }}</dt>
+                <dd>{{ block.settings.value | escape }}</dd>
+              </div>
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+        <div data-st-swap="picker-featured" data-variant-id="{{ variant.id }}" data-variant-media="{{ variant.featured_media.id }}">
+          {% render 'variant-picker', product: product, section_id: section.id, style: 'chips' %}
+        </div>
+        <div data-st-swap="buy-featured">
+          {% render 'buy-form', product: product, variant: variant, section_id: section.id, show_checkout: section.settings.show_dynamic_checkout, show_pickup: false, show_quantity: true %}
+        </div>
+        <a class="st-button st-button--text" href="{{ product.url }}">{{ 'products.view_details' | t }} {% render 'icon', name: 'arrow' %}</a>
+      </div>
+    </st-product>
+  {%- else -%}
+    <div class="st-wrap st-spotlight__grid">
+      <div class="st-spotlight__stage"><div class="st-gallery">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</div></div>
+      <div class="st-product__info st-spotlight__info">
+        <h2 class="st-h2">{{ 'products.placeholder_title' | t }}</h2>
+        <p class="st-muted">{{ 'products.placeholder_help' | t }}</p>
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:names.home_spotlight",
+  "class": "st-shopify-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "product", "id": "product", "label": "t:labels.product" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Piece in focus" },
+    { "type": "checkbox", "id": "show_description", "label": "t:labels.show_description", "default": true },
+    { "type": "range", "id": "media_limit", "label": "t:labels.media_to_show", "min": 1, "max": 10, "step": 1, "default": 3, "info": "t:info.featured_media" },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": false },
+    {
+      "type": "select",
+      "id": "media_side",
+      "label": "t:labels.media_side",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-3" }
+  ],
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "t:names.fact",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:labels.icon",
+          "options": [
+            { "value": "none", "label": "t:options.icon_none" },
+            { "value": "truck", "label": "t:options.icon_truck" },
+            { "value": "ruler", "label": "t:options.icon_ruler" },
+            { "value": "spark", "label": "t:options.icon_spark" },
+            { "value": "return", "label": "t:options.icon_return" },
+            { "value": "check", "label": "t:options.icon_check" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "label", "label": "t:labels.fact_label", "default": "Lead time" },
+        { "type": "text", "id": "value", "label": "t:labels.fact_value", "default": "Ships in 2 to 3 weeks" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.home_spotlight",
+      "blocks": [
+        { "type": "fact", "settings": { "icon": "truck", "label": "Lead time", "value": "Ships in 2 to 3 weeks" } },
+        { "type": "fact", "settings": { "icon": "ruler", "label": "Assembly", "value": "Legs screw on, no tools" } },
+        { "type": "fact", "settings": { "icon": "spark", "label": "Care", "value": "Removable, washable covers" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

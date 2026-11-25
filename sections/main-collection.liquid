@@ -1,0 +1,166 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  # A shopper's "Show" choice is kept in a hidden cart attribute, because Liquid cannot read URL parameters.
+  assign per_page = section.settings.per_page
+  assign chosen = cart.attributes['_st_per_page'] | plus: 0
+  if section.settings.show_per_page and chosen >= 8 and chosen <= 48
+    assign per_page = chosen
+  endif
+-%}
+{%- liquid
+  assign banner = section.settings.banner_style
+  assign banner_image = nil
+  if section.settings.show_image
+    assign banner_image = collection.image
+    if banner_image == blank and banner == 'image'
+      assign banner_image = collection.products.first.featured_media.preview_image
+    endif
+  endif
+  if banner == 'image' and banner_image == blank
+    assign banner = 'panel'
+  endif
+  assign eyebrow = section.settings.eyebrow
+  if eyebrow == blank
+    assign eyebrow = 'collections.eyebrow' | t
+  endif
+-%}
+<section class="st-section st-collection color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="st-crumbs" aria-label="{{ 'general.breadcrumb' | t }}">
+        <ol>
+          <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+          <li><a href="{{ routes.collections_url }}">{{ 'collections.all_title' | t }}</a></li>
+          <li aria-current="page">{{ collection.title | escape }}</li>
+        </ol>
+      </nav>
+    {%- endif -%}
+
+    <header class="st-roomhead st-roomhead--{{ banner }}{% if banner_image %} st-roomhead--has-media{% endif %}">
+      <div class="st-roomhead__intro">
+        <p class="st-eyebrow">{{ eyebrow | escape }}</p>
+        <h1 class="st-h1">{{ collection.title | escape }}</h1>
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="st-rte st-roomhead__desc">{{ collection.description }}</div>
+        {%- endif -%}
+        <p class="st-roomhead__count">{{ 'collections.product_count' | t: count: collection.products_count }}</p>
+      </div>
+      {%- if banner_image and banner != 'plain' -%}
+        <div class="st-roomhead__media{% if banner == 'panel' %} st-arch{% endif %}">
+          {%- if banner == 'image' -%}
+            {% render 'image', image: banner_image, sizes: '100vw', eager: true, alt: '' %}
+          {%- else -%}
+            {% render 'image', image: banner_image, sizes: '(min-width: 750px) 30vw, 90vw', eager: true, alt: '' %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_rooms -%}
+      {%- assign rooms_label = 'collections.rooms_label' | t -%}
+      {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, current: collection.url, limit: 10 %}
+    {%- endif -%}
+
+    {%- paginate collection.products by per_page -%}
+      <st-facets class="st-facets" data-section-id="{{ section.id }}">
+        {%- assign clear_url = collection.url | append: '?sort_by=' | append: collection.sort_by -%}
+        {% render 'facets',
+          filters: collection.filters,
+          sort_options: collection.sort_options,
+          sort_by: collection.sort_by,
+          default_sort: collection.default_sort_by,
+          count: collection.products_count,
+          section_id: section.id,
+          clear_url: clear_url,
+          enable_filtering: section.settings.enable_filtering,
+          enable_sorting: section.settings.enable_sorting,
+          show_colour_bar: section.settings.show_colour_bar,
+          scheme: section.settings.color_scheme,
+          show_per_page: section.settings.show_per_page,
+          per_page: per_page
+        %}
+
+        <div class="st-facets__results" data-st-results>
+          {%- if collection.products.size > 0 -%}
+            <ul class="st-grid st-grid--{{ section.settings.columns }} st-grid--m{{ section.settings.columns_mobile }}" role="list">
+              {%- for product in collection.products -%}
+                {%- liquid
+                  assign eager = false
+                  if forloop.index <= 2
+                    assign eager = true
+                  endif
+                -%}
+                <li>{% render 'product-card', product: product, eager: eager %}</li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <div class="st-empty">
+              <p class="st-h4">{{ 'collections.empty' | t }}</p>
+              <a class="st-link-button" href="{{ clear_url }}" data-st-facet-link>{{ 'collections.clear_all' | t }}</a>
+            </div>
+          {%- endif -%}
+          {%- assign shown = paginate.current_offset | plus: collection.products.size -%}
+          {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown %}
+        </div>
+      </st-facets>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.collection_grid",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["collection"] },
+  "settings": [
+    { "type": "header", "content": "t:labels.banner" },
+    {
+      "type": "select",
+      "id": "banner_style",
+      "label": "t:labels.banner_style",
+      "options": [
+        { "value": "panel", "label": "t:options.banner_panel" },
+        { "value": "image", "label": "t:options.banner_image" },
+        { "value": "plain", "label": "t:options.banner_plain" }
+      ],
+      "default": "panel",
+      "info": "t:info.banner_style"
+    },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "checkbox", "id": "show_description", "label": "t:labels.show_description", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "t:labels.show_collection_image", "default": true },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "t:labels.show_breadcrumb", "default": true },
+    { "type": "checkbox", "id": "show_rooms", "label": "t:labels.show_rooms", "default": true },
+    { "type": "link_list", "id": "rooms_menu", "label": "t:labels.rooms_menu", "info": "t:info.rooms_menu" },
+    { "type": "header", "content": "t:labels.products" },
+    { "type": "range", "id": "per_page", "label": "t:labels.products_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:labels.pagination_style",
+      "options": [
+        { "value": "numbered", "label": "t:options.pagination_numbered" },
+        { "value": "load_more", "label": "t:options.pagination_load_more" },
+        { "value": "infinite", "label": "t:options.pagination_infinite" }
+      ],
+      "default": "load_more"
+    },
+    { "type": "checkbox", "id": "show_per_page", "label": "t:labels.show_per_page", "default": true, "info": "t:info.show_per_page" },
+    { "type": "range", "id": "columns", "label": "t:labels.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:labels.columns_mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    { "type": "checkbox", "id": "enable_filtering", "label": "t:labels.enable_filtering", "default": true, "info": "t:info.filters" },
+    { "type": "checkbox", "id": "show_colour_bar", "label": "t:labels.show_colour_bar", "default": true, "info": "t:info.colour_bar" },
+    { "type": "checkbox", "id": "enable_sorting", "label": "t:labels.enable_sorting", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: collection, sizes, placeholder_index
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 990px) 33vw, 50vw'
+  assign card_image = collection.featured_image
+  if card_image == blank
+    assign card_image = collection.products.first.featured_media.preview_image
+  endif
+-%}
+<article class="st-ccard">
+  <div class="st-ccard__media">
+    {%- if card_image -%}
+      {% render 'image', image: card_image, sizes: sizes, max: 1500, alt: '' %}
+    {%- else -%}
+      {%- assign p_index = placeholder_index | default: 0 | modulo: 6 | plus: 1 -%}
+      {%- assign placeholder = 'collection-' | append: p_index -%}
+      {{ placeholder | placeholder_svg_tag: 'st-placeholder' }}
+    {%- endif -%}
+  </div>
+  <h3 class="st-ccard__title">
+    {%- if collection != blank -%}
+      <a class="st-card__link" href="{{ collection.url }}">{{ collection.title | escape }}</a>
+      <span class="st-ccard__count">{{ 'collections.product_count' | t: count: collection.all_products_count }}</span>
+    {%- else -%}
+      {{ 'collections.placeholder_title' | t }}
+    {%- endif -%}
+    {% render 'icon', name: 'arrow' %}
+  </h3>
+</article>

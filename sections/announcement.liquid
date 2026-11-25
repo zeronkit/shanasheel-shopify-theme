@@ -1,0 +1,110 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Announcement bar. Modes: static (side by side), fade (one message at a time) and marquee (a slow ribbon).
+  Moving modes always get a pause button and stop for reduced motion.
+{%- endcomment -%}
+{%- if section.settings.enabled and section.blocks.size > 0 -%}
+  {%- capture items -%}
+    {%- for block in section.blocks -%}
+      <li class="st-announce__item" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != 'none' -%}{% render 'icon', name: block.settings.icon %}{%- endif -%}
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
+        {%- else -%}
+          <span>{{ block.settings.text }}</span>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  <st-announce
+    class="st-announce st-announce--{{ section.settings.mode }} color-{{ section.settings.color_scheme }}"
+    data-mode="{{ section.settings.mode }}"
+    data-speed="{{ section.settings.speed }}"
+    data-id="{{ section.id }}"
+    {% if section.settings.pause_on_hover %}data-hover-pause{% endif %}
+    style="--st-marquee-duration: {{ section.blocks.size | times: section.settings.speed | times: 3 }}s;"
+  >
+    <aside class="st-wrap st-announce__inner" aria-label="{{ 'general.announcements' | t }}">
+      {%- if section.settings.mode == 'marquee' -%}
+        <div class="st-announce__viewport">
+          <ul class="st-announce__track" role="list">{{ items }}</ul>
+          <ul class="st-announce__track" role="list" aria-hidden="true">{{ items | replace: '<a ', '<a tabindex="-1" ' }}</ul>
+        </div>
+      {%- else -%}
+        <ul class="st-announce__list" role="list">{{ items }}</ul>
+      {%- endif -%}
+      {%- if section.settings.mode != 'static' and section.blocks.size > 1 or section.settings.mode == 'marquee' -%}
+        <button type="button" class="st-announce__control" data-st-announce-pause aria-pressed="false" aria-label="{{ 'general.pause_announcements' | t }}">
+          <svg class="st-icon" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+        </button>
+      {%- endif -%}
+      {%- if section.settings.dismissible -%}
+        <button type="button" class="st-announce__control" data-st-announce-close aria-label="{{ 'general.close_announcements' | t }}">
+          {% render 'icon', name: 'close' %}
+        </button>
+      {%- endif -%}
+    </aside>
+  </st-announce>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.announcement",
+  "class": "st-shopify-section st-announce-section",
+  "enabled_on": { "groups": ["header"] },
+  "max_blocks": 6,
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "t:labels.show_announcement", "default": true },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "t:labels.announcement_mode",
+      "options": [
+        { "value": "static", "label": "t:options.mode_static" },
+        { "value": "fade", "label": "t:options.mode_fade" },
+        { "value": "marquee", "label": "t:options.mode_marquee" }
+      ],
+      "default": "fade"
+    },
+    { "type": "range", "id": "speed", "label": "t:labels.announcement_speed", "min": 3, "max": 12, "step": 1, "unit": "s", "default": 5, "info": "t:info.announcement_speed" },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "t:labels.pause_on_hover", "default": true },
+    { "type": "checkbox", "id": "dismissible", "label": "t:labels.dismissible", "default": false, "info": "t:info.dismissible" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-2" },
+    { "type": "paragraph", "content": "t:info.announcement" }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "t:names.message",
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text", "default": "Free 30-day returns" },
+        { "type": "url", "id": "link", "label": "t:labels.link" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:labels.icon",
+          "options": [
+            { "value": "none", "label": "t:options.icon_none" },
+            { "value": "truck", "label": "t:options.icon_truck" },
+            { "value": "return", "label": "t:options.icon_return" },
+            { "value": "spark", "label": "t:options.icon_spark" },
+            { "value": "tag", "label": "t:options.icon_tag" },
+            { "value": "gift", "label": "t:options.icon_gift" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.announcement",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free standard delivery over 100", "icon": "truck" } },
+        { "type": "message", "settings": { "text": "Free 30-day returns", "icon": "return" } },
+        { "type": "message", "settings": { "text": "New season: shop new arrivals", "icon": "spark" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

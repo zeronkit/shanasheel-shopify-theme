@@ -1,0 +1,62 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Product form: selling plans, quantity, add to cart, accelerated checkout,
+  Shop Pay Installments banner and pickup availability.
+  Params: product, variant, section_id, show_checkout, show_pickup, show_quantity
+{%- endcomment -%}
+{%- assign form_id = 'ProductForm-' | append: section_id -%}
+<st-product-form>
+  {%- form 'product', product, id: form_id, class: 'st-buy', novalidate: 'novalidate' -%}
+    <input type="hidden" name="id" value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+
+    {%- if product.selling_plan_groups.size > 0 and variant.selling_plan_allocations.size > 0 -%}
+      <fieldset class="st-plans">
+        <legend class="st-field__label">{{ 'products.purchase_options' | t }}</legend>
+        {%- unless product.requires_selling_plan -%}
+          <label class="st-plans__row">
+            <input type="radio" name="selling_plan" value="" checked>
+            <span>{{ 'products.one_time' | t }}</span>
+            <span class="st-plans__price">{{ variant.price | money }}</span>
+          </label>
+        {%- endunless -%}
+        {%- for allocation in variant.selling_plan_allocations -%}
+          <label class="st-plans__row">
+            <input type="radio" name="selling_plan" value="{{ allocation.selling_plan.id }}" {% if product.requires_selling_plan and forloop.first %}checked{% endif %}>
+            <span>{{ allocation.selling_plan.name | escape }}</span>
+            <span class="st-plans__price">{{ allocation.price | money }}</span>
+          </label>
+        {%- endfor -%}
+      </fieldset>
+    {%- endif -%}
+
+    <div class="st-buy__row">
+      {%- if show_quantity -%}
+        {%- assign qty_id = 'Quantity-' | append: section_id -%}
+        <div class="st-field st-buy__qty">
+          <label class="st-visually-hidden" for="{{ qty_id }}">{{ 'products.quantity' | t }}</label>
+          {% render 'quantity', id: qty_id, name: 'quantity', value: 1, min: 1 %}
+        </div>
+      {%- endif -%}
+      <button type="submit" name="add" class="st-button st-button--primary st-buy__add" {% unless variant.available %}disabled{% endunless %}>
+        {%- if variant.available -%}
+          {{ 'products.add_to_cart' | t }}
+        {%- elsif variant == blank -%}
+          {{ 'products.unavailable' | t }}
+        {%- else -%}
+          {{ 'products.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+
+    {%- if show_checkout -%}
+      <div class="st-buy__checkout">{{ form | payment_button }}</div>
+    {%- endif -%}
+
+    <div class="st-buy__terms">{{ form | payment_terms }}</div>
+    <p class="st-buy__error" role="alert" hidden data-st-error></p>
+  {%- endform -%}
+</st-product-form>
+
+{%- if show_pickup and variant.available -%}
+  <st-pickup class="st-pickup" data-url="{{ routes.root_url | append: '/variants/' | replace: '//', '/' }}{{ variant.id }}/?section_id=pickup-availability"></st-pickup>
+{%- endif -%}

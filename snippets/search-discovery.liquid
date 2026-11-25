@@ -1,0 +1,44 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  What a shopper sees before typing: popular searches, recent searches (filled by search.js) and new products.
+  Params: id (unique), show_products (boolean), heading_tag
+{%- endcomment -%}
+{%- liquid
+  assign popular = settings.search_popular | split: ','
+  assign heading_tag = heading_tag | default: 'h2'
+-%}
+{%- if popular.size > 0 -%}
+  <div class="st-search-block">
+    <{{ heading_tag }} class="st-field__label">{{ 'search.popular' | t }}</{{ heading_tag }}>
+    <ul class="st-chips" role="list">
+      {%- for term in popular -%}
+        {%- assign clean = term | strip -%}
+        {%- if clean != blank -%}
+          <li><a class="st-pill" href="{{ routes.search_url }}?q={{ clean | url_encode }}&amp;options%5Bprefix%5D=last">{{ clean | escape }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
+
+<div class="st-search-block" data-st-recent hidden>
+  <div class="st-recent__head">
+    <{{ heading_tag }} class="st-field__label">{{ 'search.recent' | t }}</{{ heading_tag }}>
+    <button type="button" class="st-link-button" data-st-recent-clear>{{ 'search.recent_clear' | t }}</button>
+  </div>
+  <ul class="st-chips" role="list" data-st-recent-list></ul>
+</div>
+
+{%- if show_products -%}
+  {%- assign newest = collections.all.products | sort: 'published_at' | reverse -%}
+  {%- if newest.size > 0 -%}
+    <div class="st-search-block">
+      <{{ heading_tag }} class="st-field__label">{{ 'search.new_in' | t }}</{{ heading_tag }}>
+      <ul class="st-grid st-grid--4 st-grid--m2" role="list">
+        {%- for product in newest limit: 4 -%}
+          <li>{% render 'product-card', product: product, sizes: '(min-width: 990px) 22vw, 50vw' %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endif -%}

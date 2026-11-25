@@ -1,0 +1,167 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Product gallery (mosaic, stack or sheet) with colour filtering and a lightbox.
+  When colour filtering is on, only the selected colour's media are shown:
+  1. media from the colour variant's featured image up to the next variant's featured image
+     (works in every language, because it uses the variants, not text),
+  2. otherwise media whose alt text names the colour after "in" ("Sofa in sage green", "Armchair in oat, close-up"),
+  3. otherwise everything.
+  Params: product, variant, section_id, layout ('mosaic' | 'stack' | 'sheet'), colour_filter (boolean)
+{%- endcomment -%}
+{%- liquid
+  assign note_lines = product.metafields.shanasheel.image_notes.value | newline_to_br | split: '<br />'
+  assign models = product.media | where: 'media_type', 'model'
+  assign locale_colour_names = 'products.option_names.colour' | t
+  assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ','
+  assign colour_index = -1
+  for option in product.options_with_values
+    assign option_name = option.name | downcase | strip
+    if option.values.first.swatch != blank or colour_names contains option_name
+      assign colour_index = forloop.index0
+      break
+    endif
+  endfor
+
+  assign selected = ''
+  assign markers = ''
+  if colour_filter and colour_index >= 0
+    assign selected = variant.options[colour_index] | downcase | strip
+    for v in product.variants limit: 250
+      if v.featured_media
+        assign marker_key = '|' | append: v.featured_media.position | append: ':'
+        unless markers contains marker_key
+          assign v_colour = v.options[colour_index] | downcase | strip
+          assign markers = markers | append: marker_key | append: v_colour
+        endunless
+      endif
+    endfor
+  endif
+  assign marker_list = markers | split: '|'
+
+  # Count matches to decide which rule applies.
+  assign alt_hits = 0
+  assign group_hits = 0
+  if selected != blank
+    for media in product.media
+      assign alt_colour = ''
+      assign alt_lower = media.alt | downcase | strip
+      if alt_lower contains ' in '
+        assign alt_colour = alt_lower | split: ' in ' | last | split: ',' | first | split: ' -' | first | split: ' –' | first | split: ' (' | first | strip
+      endif
+      if alt_colour == selected
+        assign alt_hits = alt_hits | plus: 1
+      endif
+      assign group = ''
+      assign best = 0
+      for marker in marker_list
+        assign marker_parts = marker | split: ':'
+        assign marker_position = marker_parts[0] | plus: 0
+        if marker_position > best and marker_position <= media.position
+          assign best = marker_position
+          assign group = marker_parts[1]
+        endif
+      endfor
+      if group == selected
+        assign group_hits = group_hits | plus: 1
+      endif
+    endfor
+  endif
+  assign rule = 'all'
+  if group_hits > 0
+    assign rule = 'group'
+    assign visible_total = group_hits
+  elsif alt_hits > 0
+    assign rule = 'alt'
+    assign visible_total = alt_hits
+  else
+    assign visible_total = product.media.size
+  endif
+  assign shown = 0
+-%}
+<div class="st-gallery" data-st-gallery data-colour-filter="{% if colour_filter and colour_index >= 0 %}true{% else %}false{% endif %}">
+  {%- if product.media.size > 0 -%}
+    <ol class="st-gallery__sheet" role="list" aria-label="{{ 'products.media.gallery' | t }}">
+      {%- for media in product.media -%}
+        {%- liquid
+          assign line = note_lines[forloop.index0] | strip
+          assign alt_colour = ''
+          assign alt_lower = media.alt | downcase | strip
+          if alt_lower contains ' in '
+            assign alt_colour = alt_lower | split: ' in ' | last | split: ',' | first | split: ' -' | first | split: ' –' | first | split: ' (' | first | strip
+          endif
+          assign group = ''
+          assign best = 0
+          for marker in marker_list
+            assign marker_parts = marker | split: ':'
+            assign marker_position = marker_parts[0] | plus: 0
+            if marker_position > best and marker_position <= media.position
+              assign best = marker_position
+              assign group = marker_parts[1]
+            endif
+          endfor
+          assign visible = true
+          if rule == 'alt' and alt_colour != selected
+            assign visible = false
+          elsif rule == 'group' and group != selected
+            assign visible = false
+          endif
+          if visible
+            assign shown = shown | plus: 1
+          endif
+          # Wide frames: every frame in a stack, the first of each group of three in the mosaic.
+          assign mosaic_step = shown | modulo: 3
+          if layout == 'stack' or shown == 1 or layout == 'mosaic' and mosaic_step == 1
+            assign sizes = '(min-width: 990px) 55vw, 100vw'
+          else
+            assign sizes = '(min-width: 990px) 28vw, 100vw'
+          endif
+          assign eager = false
+          if visible and shown == 1
+            assign eager = true
+          endif
+        -%}
+        <li
+          class="st-gallery__frame"
+          data-media-id="{{ media.id }}"
+          data-alt-colour="{{ alt_colour | escape }}"
+          data-group="{{ group | escape }}"
+          id="Media-{{ section_id }}-{{ media.id }}"
+          {% unless visible %}hidden{% endunless %}
+        >
+          <figure class="st-gallery__figure">
+            <div class="st-gallery__media st-gallery__media--{{ media.media_type }}">
+              {%- if media.media_type == 'image' -%}
+                <button type="button" class="st-gallery__zoom" data-st-zoom aria-label="{{ 'products.media.zoom' | t }}">
+                  {% render 'media', media: media, title: product.title, sizes: sizes, eager: eager %}
+                </button>
+              {%- else -%}
+                {% render 'media', media: media, title: product.title, sizes: sizes, eager: eager %}
+              {%- endif -%}
+            </div>
+            <figcaption class="st-gallery__caption">
+              <span class="st-gallery__count" aria-hidden="true" data-st-count>
+                {{- shown | prepend: '0' | slice: -2, 2 }} / {{ visible_total | prepend: '0' | slice: -2, 2 -}}
+              </span>
+              {%- if line != blank -%}
+                <span class="st-gallery__model">{{ line | escape }}</span>
+              {%- endif -%}
+            </figcaption>
+          </figure>
+        </li>
+      {%- endfor -%}
+    </ol>
+    {%- if models.size > 0 -%}
+      <script type="application/json" data-st-models>{{ models | json }}</script>
+    {%- endif -%}
+  {%- else -%}
+    <div class="st-gallery__frame">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</div>
+  {%- endif -%}
+</div>
+
+<dialog class="st-lightbox" id="Lightbox-{{ section_id }}" aria-label="{{ 'products.media.gallery' | t }}">
+  <div class="st-lightbox__track" data-st-lightbox-track tabindex="0"></div>
+  <p class="st-lightbox__count" data-st-lightbox-count aria-live="polite"></p>
+  <button type="button" class="st-icon-button st-lightbox__nav st-lightbox__nav--prev" data-st-lightbox-step="-1" aria-label="{{ 'products.media.previous' | t }}">{% render 'icon', name: 'back' %}</button>
+  <button type="button" class="st-icon-button st-lightbox__nav st-lightbox__nav--next" data-st-lightbox-step="1" aria-label="{{ 'products.media.next' | t }}">{% render 'icon', name: 'chevron' %}</button>
+  <button type="button" class="st-icon-button st-lightbox__close" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+</dialog>

@@ -1,0 +1,42 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<div
+  class="st-block st-group st-group--{{ block.settings.direction }} st-group--{{ block.settings.align }}{% if block.settings.color_scheme != blank and block.settings.use_scheme %} color-{{ block.settings.color_scheme }} st-group--boxed{% endif %}"
+  style="--gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:names.group",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:labels.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "t:labels.vertical_alignment",
+      "options": [
+        { "value": "start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.middle" },
+        { "value": "end", "label": "t:options.bottom" }
+      ],
+      "default": "start"
+    },
+    { "type": "range", "id": "gap", "label": "t:labels.gap", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 16 },
+    { "type": "checkbox", "id": "use_scheme", "label": "t:labels.use_own_scheme", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-3" }
+  ],
+  "presets": [{ "name": "t:names.group" }]
+}
+{% endschema %}

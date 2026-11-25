@@ -1,0 +1,75 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Option pickers. The selected option value ids are sent back to Shopify and the
+  section is re-rendered server side, so availability is always exact.
+  Params: product, section_id, style ('chips' | 'dropdown')
+{%- endcomment -%}
+{%- assign locale_colour_names = 'products.option_names.colour' | t -%}
+{%- assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ',' -%}
+{%- unless product.has_only_default_variant -%}
+  <div class="st-picker" data-st-picker>
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign has_swatch = false
+        assign option_name = option.name | downcase | strip
+        if option.values.first.swatch != blank or colour_names contains option_name
+          assign has_swatch = true
+        endif
+        assign field_id = section_id | append: '-option-' | append: option.position
+      -%}
+      {%- if style == 'dropdown' and has_swatch == false -%}
+        <div class="st-field">
+          <label class="st-field__label" for="{{ field_id }}">{{ option.name | escape }}</label>
+          <div class="st-select">
+            <select id="{{ field_id }}" data-st-option>
+              {%- for value in option.values -%}
+                <option
+                  value="{{ value | escape }}"
+                  data-option-value-id="{{ value.id }}"
+                  data-product-url="{{ value.product_url }}"
+                  {% if value.selected %}selected{% endif %}
+                >
+                  {{ value | escape }}{% unless value.available %} ({{ 'products.unavailable_short' | t }}){% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'down' %}
+          </div>
+        </div>
+      {%- else -%}
+        <fieldset class="st-options{% if has_swatch %} st-options--swatch{% endif %}"{% if has_swatch %} data-st-colour-option{% endif %}>
+          <legend class="st-field__label">
+            {{ option.name | escape }}<span class="st-options__current">{{ option.selected_value | escape }}</span>
+          </legend>
+          <div class="st-options__list">
+            {%- for value in option.values -%}
+              {%- assign input_id = field_id | append: '-' | append: forloop.index -%}
+              <input
+                class="st-options__input"
+                type="radio"
+                id="{{ input_id }}"
+                name="{{ field_id }}"
+                value="{{ value | escape }}"
+                data-st-option
+                data-option-value-id="{{ value.id }}"
+                data-product-url="{{ value.product_url }}"
+                {% if value.selected %}checked{% endif %}
+              >
+              <label class="st-chip{% unless value.available %} st-chip--out{% endunless %}" for="{{ input_id }}">
+                {%- if has_swatch -%}
+                  {% render 'swatch', value: value, size: 'large' %}
+                  <span class="st-visually-hidden">{{ value | escape }}</span>
+                {%- else -%}
+                  {{ value | escape }}
+                {%- endif -%}
+                {%- unless value.available -%}
+                  <span class="st-visually-hidden">{{ 'products.unavailable_short' | t }}</span>
+                {%- endunless -%}
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endunless -%}

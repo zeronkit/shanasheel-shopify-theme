@@ -1,0 +1,200 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Toolbar, colour bar, active filters and the filter drawer.
+  Params: show_per_page, per_page, search_type (search only), filters, sort_options, sort_by, default_sort, count, section_id, clear_url,
+          enable_filtering, enable_sorting, show_colour_bar, terms (search only), scheme
+{%- endcomment -%}
+{%- liquid
+  assign form_id = 'FacetsForm-' | append: section_id
+  assign active_count = 0
+  for filter in filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: filter.active_values.size
+    endif
+  endfor
+  assign locale_colour_names = 'products.option_names.colour' | t
+  assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ','
+  assign colour_filter = nil
+  for filter in filters
+    if filter.presentation == 'swatch'
+      assign colour_filter = filter
+      break
+    endif
+    assign label = filter.label | downcase | strip
+    if colour_names contains label
+      assign colour_filter = filter
+    endif
+  endfor
+-%}
+<div class="st-facets__head" data-st-facets-head>
+  <div class="st-toolbar">
+    {%- if enable_filtering and filters.size > 0 -%}
+      <button type="button" class="st-button st-button--ghost st-toolbar__filter" data-st-open="Filters-{{ section_id }}" aria-haspopup="dialog">
+        {% render 'icon', name: 'filter' %}
+        {{ 'collections.filter' | t }}
+        {%- if active_count > 0 %} <span class="st-count">{{ active_count }}</span>{% endif -%}
+      </button>
+    {%- endif -%}
+    <p class="st-toolbar__count st-small st-muted" role="status">{{ 'collections.product_count' | t: count: count }}</p>
+    {%- if show_per_page -%}
+      <div class="st-field st-toolbar__sort st-toolbar__show st-js-only">
+        <label class="st-field__label" for="Show-{{ section_id }}">{{ 'collections.show' | t }}</label>
+        <div class="st-select">
+          <select id="Show-{{ section_id }}" data-st-per-page>
+            {%- for n in (1..4) -%}
+              {%- assign option_value = n | times: 12 -%}
+              <option value="{{ option_value }}"{% if option_value == per_page %} selected{% endif %}>{{ 'collections.per_page' | t: number: option_value }}</option>
+            {%- endfor -%}
+          </select>
+          {% render 'icon', name: 'down' %}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if enable_sorting -%}
+      <div class="st-field st-toolbar__sort">
+        <label class="st-field__label" for="Sort-{{ section_id }}">{{ 'collections.sort_by' | t }}</label>
+        <div class="st-select">
+          <select id="Sort-{{ section_id }}" name="sort_by" form="{{ form_id }}" data-st-facet-input>
+            {%- assign current_sort = sort_by | default: default_sort -%}
+            {%- for option in sort_options -%}
+              <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+          {% render 'icon', name: 'down' %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if enable_filtering and show_colour_bar and colour_filter and colour_filter.values.size > 1 -%}
+    <nav class="st-colourbar" aria-label="{{ 'collections.shop_by_colour' | t }}">
+      <ul class="st-colourbar__list" role="list">
+        {%- for value in colour_filter.values -%}
+          {%- if value.count > 0 or value.active -%}
+            <li>
+              <a
+                class="st-colourbar__item{% if value.active %} is-active{% endif %}"
+                href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
+                data-st-facet-link
+                {% if value.active %}aria-current="true"{% endif %}
+              >
+                {% render 'swatch', value: value, size: 'large' %}
+                <span>{{ value.label | escape }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+
+  {%- if active_count > 0 -%}
+    <ul class="st-active-filters" role="list">
+      {%- for filter in filters -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            <li>
+              <a class="st-pill" href="{{ filter.url_to_remove }}" data-st-facet-link>
+                {{ filter.min_value.value | default: 0 | money }} - {{ filter.max_value.value | default: filter.range_max | money }}
+                {% render 'icon', name: 'close' %}<span class="st-visually-hidden">{{ 'collections.remove_filter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- else -%}
+          {%- for value in filter.active_values -%}
+            <li>
+              <a class="st-pill" href="{{ value.url_to_remove }}" data-st-facet-link>
+                {{ filter.label | escape }}: {{ value.label | escape }}
+                {% render 'icon', name: 'close' %}<span class="st-visually-hidden">{{ 'collections.remove_filter' | t }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+      <li><a class="st-link-button" href="{{ clear_url }}" data-st-facet-link>{{ 'collections.clear_all' | t }}</a></li>
+    </ul>
+  {%- endif -%}
+</div>
+
+{%- if enable_filtering and filters.size > 0 -%}
+  <dialog class="st-drawer st-drawer--start color-{{ scheme }}" id="Filters-{{ section_id }}" aria-labelledby="FiltersTitle-{{ section_id }}">
+    <div class="st-drawer__head">
+      <h2 class="st-h4" id="FiltersTitle-{{ section_id }}">{{ 'collections.filter' | t }}</h2>
+      <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <form id="{{ form_id }}" class="st-drawer__body st-facets__form" data-st-facets-form>
+      {%- if terms != blank -%}
+        <input type="hidden" name="q" value="{{ terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+        {%- if search_type != blank and search_type != 'all' -%}<input type="hidden" name="type" value="{{ search_type | escape }}">{%- endif -%}
+      {%- endif -%}
+      {%- for filter in filters -%}
+        {%- assign filter_id = section_id | append: '-filter-' | append: forloop.index -%}
+        <details class="st-fold" id="{{ filter_id }}"{% if forloop.index <= 2 or filter.active_values.size > 0 %} open{% endif %}>
+          <summary class="st-fold__summary">
+            <span>{{ filter.label | escape }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</span>
+            {% render 'icon', name: 'plus' %}
+          </summary>
+          <div class="st-fold__body">
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <fieldset class="st-price-range">
+                  <legend class="st-visually-hidden">{{ filter.label | escape }}</legend>
+                  <div class="st-field">
+                    <label class="st-field__label" for="{{ filter_id }}-min">{{ 'collections.from' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="st-input" type="number" inputmode="decimal" id="{{ filter_id }}-min" name="{{ filter.min_value.param_name }}" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" placeholder="0"
+                      {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %} data-st-facet-input>
+                  </div>
+                  <div class="st-field">
+                    <label class="st-field__label" for="{{ filter_id }}-max">{{ 'collections.to' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="st-input" type="number" inputmode="decimal" id="{{ filter_id }}-max" name="{{ filter.max_value.param_name }}" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" placeholder="{{ filter.range_max | divided_by: 100.0 }}"
+                      {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %} data-st-facet-input>
+                  </div>
+                </fieldset>
+              {%- else -%}
+                <fieldset>
+                  <legend class="st-visually-hidden">{{ filter.label | escape }}</legend>
+                  <ul class="st-checks{% if filter.presentation == 'swatch' %} st-checks--swatch{% endif %}" role="list">
+                    {%- for value in filter.values -%}
+                      {%- assign value_id = filter_id | append: '-' | append: forloop.index -%}
+                      <li>
+                        <input type="checkbox" class="st-check__input" id="{{ value_id }}" name="{{ value.param_name }}" value="{{ value.value }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          data-st-facet-input>
+                        <label class="st-check" for="{{ value_id }}">
+                          {%- if filter.presentation == 'swatch' -%}
+                            {% render 'swatch', value: value, size: 'small' %}
+                          {%- elsif filter.presentation == 'image' and value.image -%}
+                            {{ value.image | image_url: width: 64 | image_tag: class: 'st-check__img', alt: '', loading: 'lazy' }}
+                          {%- endif -%}
+                          <span>{{ value.label | escape }}</span>
+                          <span class="st-muted">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </fieldset>
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- endfor -%}
+      <div class="st-drawer__actions">
+        <a class="st-button st-button--ghost" href="{{ clear_url }}" data-st-facet-link>{{ 'collections.clear_all' | t }}</a>
+        <button type="submit" class="st-button st-button--primary" data-st-apply>{{ 'collections.show_results' | t }}</button>
+      </div>
+    </form>
+  </dialog>
+{%- elsif enable_sorting -%}
+  <form id="{{ form_id }}" data-st-facets-form>
+    {%- if terms != blank -%}
+      <input type="hidden" name="q" value="{{ terms | escape }}">
+      <input type="hidden" name="options[prefix]" value="last">
+        {%- if search_type != blank and search_type != 'all' -%}<input type="hidden" name="type" value="{{ search_type | escape }}">{%- endif -%}
+    {%- endif -%}
+  </form>
+{%- endif -%}

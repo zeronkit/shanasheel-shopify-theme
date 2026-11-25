@@ -1,0 +1,215 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  The "plinth" card: the photo sits on a soft base with the price below,
+  sizes in stock are listed under the title, colours come from native swatch data.
+  Params: product, sizes (image sizes attribute), eager (boolean), placeholder_index
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+  assign locale_size_names = 'products.option_names.size' | t
+  assign size_names = settings.size_option_names | append: ',' | append: locale_size_names | downcase | replace: ', ', ',' | split: ',' | compact
+  assign locale_colour_names = 'products.option_names.colour' | t
+  assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ',' | compact
+  assign size_option = nil
+  assign colour_option = nil
+  for option in product.options_with_values
+    assign option_name = option.name | downcase | strip
+    for name in size_names
+      if option_name == name
+        assign size_option = option
+      endif
+    endfor
+    if option.values.first.swatch != blank
+      assign colour_option = option
+    else
+      for name in colour_names
+        if option_name == name
+          assign colour_option = option
+        endif
+      endfor
+    endif
+  endfor
+  # Images for the colour shown first, from alt texts such as "Sofa in navy".
+  assign card_variant = product.selected_or_first_available_variant
+  assign card_colour = ''
+  if colour_option
+    assign colour_index = colour_option.position | minus: 1
+    assign card_colour = card_variant.options[colour_index] | downcase | strip
+  endif
+  # Positions where a variant's own image starts, for example ",1,5,9,".
+  assign markers = ','
+  for v in product.variants limit: 100
+    if v.featured_media
+      assign marker_key = ',' | append: v.featured_media.position | append: ','
+      unless markers contains marker_key
+        assign markers = markers | append: v.featured_media.position | append: ','
+      endunless
+    endif
+  endfor
+  capture card_positions
+    render 'colour-media', product: product, colour: card_colour, featured: card_variant.featured_media, markers: markers
+  endcapture
+  assign card_positions = card_positions | strip | split: ','
+  assign first_position = card_positions[0] | plus: 0
+  assign second_position = card_positions[1] | plus: 0
+  assign card_image = product.featured_media.preview_image
+  assign card_image_alt = nil
+  if first_position > 0
+    assign index = first_position | minus: 1
+    assign card_image = product.media[index].preview_image
+    if second_position > 0
+      assign index = second_position | minus: 1
+      assign card_image_alt = product.media[index].preview_image
+    endif
+  elsif product.media[1] != blank
+    assign card_image_alt = product.media[1].preview_image
+  endif
+  assign is_new = false
+  if settings.new_badge_days > 0 and product.published_at
+    assign age_seconds = 'now' | date: '%s' | minus: 0
+    assign published_seconds = product.published_at | date: '%s' | minus: 0
+    assign age_days = age_seconds | minus: published_seconds | divided_by: 86400
+    if age_days <= settings.new_badge_days
+      assign is_new = true
+    endif
+  endif
+-%}
+{%- if product != blank -%}
+  <article class="st-card" data-st-card>
+    <div class="st-card__media{% if settings.card_show_secondary and card_image_alt %} st-card__media--swap{% endif %}">
+      {%- if card_image -%}
+        {% render 'image', image: card_image, sizes: sizes, class: 'st-card__img', eager: eager, max: 1200 %}
+        {%- if settings.card_show_secondary -%}
+          {%- if card_image_alt -%}
+            {% render 'image', image: card_image_alt, sizes: sizes, class: 'st-card__img st-card__img--alt', alt: '', max: 1200 %}
+          {%- else -%}
+            <img class="st-card__img st-card__img--alt" alt="" width="600" height="800" hidden>
+          {%- endif -%}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}
+      {%- endif -%}
+
+      <div class="st-card__badges">
+        {%- if product.available == false -%}
+          <span class="st-badge st-badge--muted">{{ 'products.sold_out' | t }}</span>
+        {%- elsif product.compare_at_price > product.price -%}
+          <span class="st-badge st-badge--accent">{{ 'products.price.sale' | t }}</span>
+        {%- endif -%}
+        {%- if is_new -%}
+          <span class="st-badge">{{ 'products.new' | t }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="st-card__body">
+      {%- if settings.card_show_vendor -%}
+        <p class="st-card__vendor">{{ product.vendor | escape }}</p>
+      {%- endif -%}
+      <h3 class="st-card__title">
+        <a class="st-card__link" href="{{ product.url }}">{{ product.title | escape }}</a>
+      </h3>
+      <div class="st-card__price">{% render 'price', product: product %}</div>
+
+      {%- if settings.card_show_swatches and colour_option -%}
+        <div class="st-card__colours">
+          <span class="st-visually-hidden">{{ 'products.colours_count' | t: count: colour_option.values.size }}:</span>
+          <ul class="st-swatch-row" role="list">
+            {%- for value in colour_option.values limit: 6 -%}
+              {%- liquid
+                assign value_colour = value | downcase | strip
+                capture value_positions
+                  render 'colour-media', product: product, colour: value_colour, featured: value.variant.featured_media, markers: markers
+                endcapture
+                assign value_positions = value_positions | strip | split: ','
+                assign value_first = value_positions[0] | plus: 0
+                assign value_second = value_positions[1] | plus: 0
+                assign value_srcset = ''
+                assign value_alt_srcset = ''
+                if value_first > 0
+                  assign index = value_first | minus: 1
+                  assign img = product.media[index].preview_image
+                  capture value_srcset
+                    echo img | image_url: width: 360 | append: ' 360w, '
+                    echo img | image_url: width: 600 | append: ' 600w, '
+                    echo img | image_url: width: 900 | append: ' 900w'
+                  endcapture
+                endif
+                if value_second > 0
+                  assign index = value_second | minus: 1
+                  assign img = product.media[index].preview_image
+                  capture value_alt_srcset
+                    echo img | image_url: width: 360 | append: ' 360w, '
+                    echo img | image_url: width: 600 | append: ' 600w, '
+                    echo img | image_url: width: 900 | append: ' 900w'
+                  endcapture
+                endif
+              -%}
+              <li>
+                {%- if value_srcset != blank -%}
+                  <button
+                    type="button"
+                    class="st-card__swatch"
+                    data-st-card-swatch
+                    data-srcset="{{ value_srcset | strip }}"
+                    data-alt-srcset="{{ value_alt_srcset | strip }}"
+                    data-url="{{ value.variant.url | default: product.url }}"
+                    aria-pressed="{% if value_colour == card_colour %}true{% else %}false{% endif %}"
+                  >
+                    {% render 'swatch', value: value, size: 'small' %}
+                    <span class="st-visually-hidden">{{ 'products.show_colour' | t: colour: value }}</span>
+                  </button>
+                {%- else -%}
+                  {% render 'swatch', value: value, size: 'small' %}
+                  <span class="st-visually-hidden">{{ value | escape }}</span>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if colour_option.values.size > 6 -%}
+            <span class="st-card__more" aria-hidden="true">+{{ colour_option.values.size | minus: 6 }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if settings.card_show_sizes and size_option and product.available -%}
+        <p class="st-card__sizes">
+          <span class="st-visually-hidden">{{ 'products.sizes_label' | t }}</span>
+          {%- for value in size_option.values -%}
+            {%- if value.available -%}
+              <span class="st-size">{{ value | escape }}</span>
+            {%- else -%}
+              <span class="st-size st-size--out"><s>{{ value | escape }}</s><span class="st-visually-hidden"> {{ 'products.unavailable_short' | t }}</span></span>
+            {%- endif -%}
+          {%- endfor -%}
+        </p>
+      {%- endif -%}
+
+      {%- if product.available -%}
+        <div class="sh-card__quick">
+          {%- if product.has_only_default_variant -%}
+            {%- form 'product', product -%}
+              <input type="hidden" name="id" value="{{ card_variant.id }}">
+              <button type="submit" class="st-button st-button--primary sh-card__quick-btn">
+                {{ 'products.add_to_cart' | t }}<span class="st-visually-hidden">: {{ product.title | escape }}</span>
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <a class="st-button st-button--ghost sh-card__quick-btn" href="{{ product.url }}" tabindex="-1" aria-hidden="true">{{ 'products.view_details' | t }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </article>
+{%- else -%}
+  <article class="st-card">
+    <div class="st-card__media">
+      {%- assign p_index = placeholder_index | default: 0 | modulo: 4 | plus: 1 -%}
+      {%- assign placeholder = 'product-' | append: p_index -%}
+      {{ placeholder | placeholder_svg_tag: 'st-placeholder' }}
+    </div>
+    <div class="st-card__body">
+      <h3 class="st-card__title">{{ 'products.placeholder_title' | t }}</h3>
+    </div>
+  </article>
+{%- endif -%}

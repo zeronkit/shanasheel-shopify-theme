@@ -1,0 +1,46 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign tag = block.settings.tag | default: 'h2'
+-%}
+<{{ tag }} class="st-block st-block-heading st-{{ block.settings.size }} st-align-{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {{- block.settings.heading -}}
+</{{ tag }}>
+
+{% schema %}
+{
+  "name": "t:names.heading",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "t:labels.heading", "default": "Made to be worn together" },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:labels.size",
+      "options": [
+        { "value": "display", "label": "t:options.display" },
+        { "value": "h1", "label": "t:options.large" },
+        { "value": "h2", "label": "t:options.medium" },
+        { "value": "h3", "label": "t:options.small" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:labels.html_tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "default": "left"
+    }
+  ],
+  "presets": [{ "name": "t:names.heading" }]
+}
+{% endschema %}

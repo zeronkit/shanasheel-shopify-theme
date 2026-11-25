@@ -1,0 +1,25 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign networks = 'instagram,tiktok,facebook,pinterest,youtube,snapchat,twitter' | split: ','
+-%}
+<ul class="st-social" role="list">
+  {%- for network in networks -%}
+    {%- liquid
+      assign key = 'social_' | append: network | append: '_link'
+      assign url = settings[key]
+      assign icon = network
+      assign label_key = 'social.' | append: network
+      if network == 'twitter'
+        assign icon = 'x'
+      endif
+    -%}
+    {%- if url != blank -%}
+      <li>
+        <a class="st-icon-button" href="{{ url }}" rel="noopener" target="_blank">
+          {% render 'icon', name: icon %}
+          <span class="st-visually-hidden">{{ label_key | t }} ({{ 'general.new_window' | t }})</span>
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

@@ -1,0 +1,86 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Material library: arched swatches of the woods, fabrics and stones the store works with.
+  Each swatch shows an image or, without one, its colour. A swatch without a link points to all products.
+{%- endcomment -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+<section class="st-section st-materials st-materials--{{ section.settings.shape }} color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    <div class="st-section__head st-section__head--stack">
+      {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2 class="st-h2">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+      {%- if section.settings.text != blank -%}<div class="st-rte st-muted">{{ section.settings.text }}</div>{%- endif -%}
+    </div>
+    <ul class="st-materials__list" role="list" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <li class="st-material st-reveal" style="--st-i: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
+          <div class="st-material__swatch" style="--swatch: {{ block.settings.colour }};">
+            {%- if block.settings.image != blank -%}
+              {% render 'image', image: block.settings.image, sizes: '(min-width: 990px) 16vw, 45vw', max: 800, alt: '' %}
+            {%- endif -%}
+          </div>
+          <div class="st-material__body">
+            {%- if block.settings.origin != blank -%}<p class="st-material__origin">{{ block.settings.origin | escape }}</p>{%- endif -%}
+            <h3 class="st-h4">
+              <a class="st-card__link" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ block.settings.name | escape }}</a>
+            </h3>
+            {%- if block.settings.text != blank -%}<p class="st-small st-muted">{{ block.settings.text | escape }}</p>{%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.home_materials",
+  "class": "st-shopify-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Material library" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "What our pieces are made of" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>A short list of honest materials, chosen to age well and be repaired, not replaced.</p>" },
+    {
+      "type": "select",
+      "id": "shape",
+      "label": "t:labels.swatch_shape",
+      "options": [
+        { "value": "arch", "label": "t:options.shape_arch" },
+        { "value": "circle", "label": "t:options.shape_circle" },
+        { "value": "square", "label": "t:options.shape_square" }
+      ],
+      "default": "arch"
+    },
+    { "type": "range", "id": "columns", "label": "t:labels.columns_desktop", "min": 3, "max": 6, "step": 1, "default": 6 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-3" }
+  ],
+  "blocks": [
+    {
+      "type": "material",
+      "name": "t:names.material",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+        { "type": "color", "id": "colour", "label": "t:labels.swatch_colour", "default": "#B58A5C" },
+        { "type": "text", "id": "name", "label": "t:labels.material", "default": "Oak" },
+        { "type": "text", "id": "origin", "label": "t:labels.origin", "default": "Solid wood" },
+        { "type": "text", "id": "text", "label": "t:labels.text", "default": "Hard, honey toned and easy to refinish." },
+        { "type": "url", "id": "link", "label": "t:labels.link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.home_materials",
+      "blocks": [
+        { "type": "material", "settings": { "colour": "#B58A5C", "name": "Oak", "origin": "Solid wood", "text": "Hard, honey toned and easy to refinish." } },
+        { "type": "material", "settings": { "colour": "#5C3F2B", "name": "Walnut", "origin": "Solid wood", "text": "Deep brown grain that warms with light." } },
+        { "type": "material", "settings": { "colour": "#D9CFC0", "name": "Linen", "origin": "Woven fabric", "text": "Cool to touch, softer with every wash." } },
+        { "type": "material", "settings": { "colour": "#8E8A80", "name": "Boucle wool", "origin": "Woven fabric", "text": "Looped yarn with a soft, nubby feel." } },
+        { "type": "material", "settings": { "colour": "#C9A46A", "name": "Rattan", "origin": "Natural cane", "text": "Light, strong and woven by hand." } },
+        { "type": "material", "settings": { "colour": "#E3D6C4", "name": "Travertine", "origin": "Stone", "text": "Pitted, sealed stone for table tops." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

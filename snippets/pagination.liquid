@@ -1,0 +1,44 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: paginate, style ('numbered' | 'load_more' | 'infinite'), shown (items shown up to this page)
+  Load more and infinite scroll are enhancements: without JavaScript the button is a link to the next page.
+{%- endcomment -%}
+{%- if paginate.pages > 1 -%}
+  {%- if style == 'load_more' or style == 'infinite' -%}
+    {%- liquid
+      assign shown = shown | default: paginate.current_offset | plus: 0
+      assign percent = shown | times: 100 | divided_by: paginate.items
+    -%}
+    <div class="st-load-more" data-st-load-more data-mode="{{ style }}">
+      <p class="st-small st-muted" role="status">{{ 'collections.showing' | t: shown: shown, total: paginate.items }}</p>
+      <span class="st-load-more__bar" aria-hidden="true"><span style="inline-size: {{ percent }}%;"></span></span>
+      {%- if paginate.next -%}
+        <a class="st-button st-button--ghost" href="{{ paginate.next.url }}" data-st-more>{{ 'collections.load_more' | t }}</a>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <nav class="st-pagination" aria-label="{{ 'general.pagination.label' | t }}">
+      <ul role="list">
+        {%- if paginate.previous -%}
+          <li><a href="{{ paginate.previous.url }}" class="st-pagination__step" data-st-facet-link>{% render 'icon', name: 'back' %}<span class="st-visually-hidden">{{ 'general.pagination.previous' | t }}</span></a></li>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          <li>
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" data-st-facet-link>
+                <span class="st-visually-hidden">{{ 'general.pagination.page' | t: number: part.title }}</span><span aria-hidden="true">{{ part.title }}</span>
+              </a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span aria-current="page"><span class="st-visually-hidden">{{ 'general.pagination.page' | t: number: part.title }}</span><span aria-hidden="true">{{ part.title }}</span></span>
+            {%- else -%}
+              <span>{{ part.title }}</span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+        {%- if paginate.next -%}
+          <li><a href="{{ paginate.next.url }}" class="st-pagination__step" data-st-facet-link>{% render 'icon', name: 'chevron' %}<span class="st-visually-hidden">{{ 'general.pagination.next' | t }}</span></a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,125 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Fonts, global tokens and one class per colour scheme.
+  Theme settings > Style offers ready-made choices (palette, background style, font pairing, corners,
+  spacing, type scale) that map onto these variables. "Custom" keeps the raw pickers in charge.
+{%- endcomment -%}
+{%- liquid
+  assign heading_font = settings.type_heading_font
+  assign body_font = settings.type_body_font
+  assign body_bold = body_font | font_modify: 'weight', 'bold'
+  assign body_italic = body_font | font_modify: 'style', 'italic'
+  assign pairing = settings.font_pairing | default: 'custom'
+
+  assign sans = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+  case pairing
+    when 'gallery'
+      assign stack_heading = 'Optima, Candara, "Gill Sans", "Gill Sans MT", "Segoe UI", system-ui, sans-serif'
+      assign stack_body = sans
+    when 'heritage'
+      assign stack_heading = 'Baskerville, "Baskerville Old Face", "Libre Baskerville", "Hoefler Text", Georgia, serif'
+      assign stack_body = sans
+    when 'studio'
+      assign stack_heading = 'Futura, "Century Gothic", "Avenir Next", Avenir, "Trebuchet MS", sans-serif'
+      assign stack_body = '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif'
+    when 'cottage'
+      assign stack_heading = 'ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", system-ui, sans-serif'
+      assign stack_body = 'Candara, "Gill Sans", "Segoe UI", system-ui, sans-serif'
+    when 'arabic'
+      assign stack_heading = '"Noto Kufi Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif'
+      assign stack_body = '"Noto Sans Arabic", "Noto Kufi Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif'
+  endcase
+
+  case settings.corner_style
+    when 'sharp'
+      assign radius = 0
+    when 'soft'
+      assign radius = 6
+    when 'round'
+      assign radius = 16
+    else
+      assign radius = settings.corner_radius
+  endcase
+
+  case settings.type_scale
+    when 'compact'
+      assign type_factor = 0.88
+    when 'bold'
+      assign type_factor = 1.16
+    else
+      assign type_factor = 1
+  endcase
+-%}
+{%- if pairing == 'custom' -%}
+  {{ heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  {{ body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+{%- endif -%}
+{% style %}
+  {%- if pairing == 'custom' %}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ body_bold | font_face: font_display: 'swap' }}
+    {{ body_italic | font_face: font_display: 'swap' }}
+  {%- endif %}
+
+  :root {
+    --st-font-script: "Noto Kufi Arabic", "Noto Sans Arabic", "Geeza Pro", Tahoma;
+    {%- if pairing == 'custom' %}
+      --st-font-heading: {{ heading_font.family }}, var(--st-font-script), {{ heading_font.fallback_families }};
+      --st-font-heading-weight: {{ heading_font.weight }};
+      --st-font-heading-style: {{ heading_font.style }};
+      --st-font-body: {{ body_font.family }}, var(--st-font-script), {{ body_font.fallback_families }};
+      --st-font-body-weight: {{ body_font.weight }};
+      --st-font-body-weight-bold: {{ body_bold.weight | default: 700 }};
+    {%- else %}
+      --st-font-heading: {{ stack_heading }};
+      --st-font-heading-weight: 700;
+      --st-font-heading-style: normal;
+      --st-font-body: {{ stack_body }};
+      --st-font-body-weight: 400;
+      --st-font-body-weight-bold: 700;
+    {%- endif %}
+    --st-heading-scale: {{ settings.heading_scale | divided_by: 100.0 | times: type_factor }};
+    --st-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+    --st-page-width: {{ settings.page_width }}px;
+    --st-radius: {{ radius }}px;
+    --st-radius-lg: {{ radius | times: 2 | plus: 4 | at_most: 32 }}px;
+    --st-button-radius: {% if settings.button_style == 'pill' %}999px{% else %}{{ radius }}px{% endif %};
+    --st-card-ratio: {{ settings.card_ratio }};
+  }
+
+  {% for scheme in settings.color_schemes -%}
+    {% render 'scheme-vars', id: scheme.id, bg: scheme.settings.background, gradient: scheme.settings.background_gradient, text: scheme.settings.text, accent: scheme.settings.accent, button: scheme.settings.button, label: scheme.settings.button_label %}
+  {% endfor %}
+
+  {%- comment -%} A ready-made palette replaces the main scheme (1) and the soft scheme (3). {%- endcomment -%}
+  {%- liquid
+    case settings.palette
+      when 'linen'
+        assign p = '#F4EFE7,#2A2520,#8C5A36,#2A2520,#F4EFE7,#E9E1D4' | split: ','
+      when 'walnut'
+        assign p = '#1E1915,#EEE6DA,#C9956A,#EEE6DA,#1E1915,#2A231D' | split: ','
+      when 'clay'
+        assign p = '#F6ECE2,#33211A,#A64B28,#A64B28,#FFF8F1,#EEDCCB' | split: ','
+      when 'moss'
+        assign p = '#E8EBE1,#1F271E,#4E6B43,#2F3F2B,#F4F6EF,#DCE1D2' | split: ','
+      when 'stone'
+        assign p = '#ECEDEA,#1D2124,#3E5C76,#1D2124,#ECEDEA,#DEE1DE' | split: ','
+      when 'chalk'
+        assign p = '#FFFFFF,#000000,#1A4D8F,#000000,#FFFFFF,#F1F1F1' | split: ','
+      when 'ochre'
+        assign p = '#F7F0DE,#2A2416,#8A600E,#2A2416,#F7F0DE,#EEE3C6' | split: ','
+      when 'slate'
+        assign p = '#22272B,#E9ECEC,#9CC1C9,#E9ECEC,#22272B,#2C3236' | split: ','
+      else
+        assign p = nil
+    endcase
+    if settings.background_style == 'dark'
+      assign p = '#1E1915,#EEE6DA,#C9956A,#EEE6DA,#1E1915,#2A231D' | split: ','
+    endif
+  -%}
+  {%- if p -%}
+    {% render 'scheme-vars', id: 'scheme-1', bg: p[0], text: p[1], accent: p[2], button: p[3], label: p[4] %}
+    {% render 'scheme-vars', id: 'scheme-3', bg: p[5], text: p[1], accent: p[2], button: p[3], label: p[4] %}
+  {%- endif -%}
+{% endstyle %}

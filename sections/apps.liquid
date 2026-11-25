@@ -1,0 +1,20 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<div class="st-section color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    {%- for block in section.blocks -%}
+      {% render block %}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.apps",
+  "class": "st-shopify-section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [{ "name": "t:names.apps" }]
+}
+{% endschema %}

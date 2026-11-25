@@ -1,0 +1,136 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "eyebrow": "type"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "picker": {
+          "type": "variant_picker",
+          "settings": {
+            "style": "chips"
+          }
+        },
+        "finishes": {
+          "type": "finishes",
+          "settings": {
+            "heading": "Fabrics and finishes",
+            "option_names": "Fabric, Finish, Material, Upholstery, Wood, Leather",
+            "sample_label": "Order free swatches"
+          }
+        },
+        "delivery": {
+          "type": "delivery",
+          "settings": {
+            "show_dates": true,
+            "stock_min_days": 3,
+            "stock_max_days": 7,
+            "order_min_days": 35,
+            "order_max_days": 56,
+            "note": "Large pieces are delivered to the room of your choice."
+          }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_dynamic_checkout": true,
+            "show_pickup": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "heading": "Pairs well with",
+            "limit": 3
+          }
+        },
+        "shipping": {
+          "type": "collapsible",
+          "settings": {
+            "heading": "Delivery and returns",
+            "source": "shipping"
+          }
+        },
+        "dimensions": {
+          "type": "dimensions",
+          "settings": {
+            "placement": "band",
+            "heading": "Dimensions and materials",
+            "show_figures": true,
+            "guide_label": "Will it fit? Measuring guide"
+          }
+        },
+        "care": {
+          "type": "care_assembly",
+          "settings": {
+            "placement": "band",
+            "heading": "Care and assembly",
+            "level": "none"
+          }
+        },
+        "room": {
+          "type": "room",
+          "settings": {
+            "placement": "band",
+            "heading": "Shop the room",
+            "text": "Everything in this photo, ready to bring home.",
+            "show_list": true
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "picker",
+        "finishes",
+        "delivery",
+        "buy",
+        "description",
+        "complementary",
+        "shipping",
+        "dimensions",
+        "care",
+        "room"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "gallery_layout": "mosaic",
+        "media_position": "start",
+        "media_ratio": "card",
+        "info_style": "panel",
+        "sticky_info": true,
+        "colour_gallery": true,
+        "band_heading": "The details"
+      }
+    },
+    "related": {
+      "type": "product-recommendations",
+      "settings": {
+        "eyebrow": "Styled together",
+        "heading": "Complete the room",
+        "layout": "rail",
+        "show_arrows": true,
+        "limit": 8,
+        "columns": 4,
+        "color_scheme": "scheme-4"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

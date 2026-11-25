@@ -1,0 +1,63 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Country/currency and language pickers. Each choice is a submit button, so it works without JavaScript.
+  Params: id (unique prefix), show_country, show_language
+{%- endcomment -%}
+{%- liquid
+  assign has_countries = false
+  if show_country and localization.available_countries.size > 1
+    assign has_countries = true
+  endif
+  assign has_languages = false
+  if show_language and localization.available_languages.size > 1
+    assign has_languages = true
+  endif
+-%}
+{%- if has_countries or has_languages -%}
+  {%- form 'localization', id: id, class: 'st-locale' -%}
+    {%- if has_countries -%}
+      <details class="st-locale__group">
+        <summary class="st-locale__summary">
+          <span class="st-visually-hidden">{{ 'localization.country_label' | t }}:</span>
+          {% render 'icon', name: 'globe' %}
+          <span>{{ localization.country.name }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})</span>
+          {% render 'icon', name: 'down' %}
+        </summary>
+        <div class="st-locale__panel">
+          <p class="st-field__label" id="{{ id }}-country">{{ 'localization.country_label' | t }}</p>
+          <ul class="st-locale__list" role="list" aria-labelledby="{{ id }}-country">
+            {%- for country in localization.available_countries -%}
+              <li>
+                <button type="submit" name="country_code" value="{{ country.iso_code }}" class="st-locale__option"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %}>
+                  <span>{{ country.name }}</span>
+                  <span class="st-muted">{{ country.currency.iso_code }} {{ country.currency.symbol }}</span>
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </details>
+    {%- endif -%}
+    {%- if has_languages -%}
+      <details class="st-locale__group">
+        <summary class="st-locale__summary">
+          <span class="st-visually-hidden">{{ 'localization.language_label' | t }}:</span>
+          <span>{{ localization.language.endonym_name | capitalize }}</span>
+          {% render 'icon', name: 'down' %}
+        </summary>
+        <div class="st-locale__panel">
+          <p class="st-field__label" id="{{ id }}-language">{{ 'localization.language_label' | t }}</p>
+          <ul class="st-locale__list" role="list" aria-labelledby="{{ id }}-language">
+            {%- for language in localization.available_languages -%}
+              <li>
+                <button type="submit" name="locale_code" value="{{ language.iso_code }}" lang="{{ language.iso_code }}" class="st-locale__option"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %}>
+                  {{ language.endonym_name | capitalize }}
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </details>
+    {%- endif -%}
+  {%- endform -%}
+{%- endif -%}

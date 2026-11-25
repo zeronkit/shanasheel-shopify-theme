@@ -1,0 +1,38 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  One room tile for sections/home-rooms.
+  Params: room (collection), image (override), title (override), index, show_count
+{%- endcomment -%}
+{%- liquid
+  assign tile_image = image
+  if tile_image == blank
+    assign tile_image = room.featured_image | default: room.products.first.featured_media.preview_image
+  endif
+  assign tile_title = title | default: room.title
+  if index == 0
+    assign sizes = '(min-width: 990px) 50vw, 100vw'
+  else
+    assign sizes = '(min-width: 990px) 25vw, 50vw'
+  endif
+-%}
+<article class="st-room__tile">
+  <div class="st-room__media">
+    {%- if tile_image != blank -%}
+      {% render 'image', image: tile_image, sizes: sizes, max: 1800, alt: '' %}
+    {%- else -%}
+      {%- assign p_index = index | modulo: 6 | plus: 1 -%}
+      {%- assign placeholder = 'collection-' | append: p_index -%}
+      {{ placeholder | placeholder_svg_tag: 'st-placeholder' }}
+    {%- endif -%}
+  </div>
+  <h3 class="st-room__label">
+    {%- if room != blank -%}
+      <a class="st-card__link" href="{{ room.url }}">{{ tile_title | escape }}</a>
+      {%- if show_count -%}<span class="st-room__count">{{ 'collections.product_count' | t: count: room.all_products_count }}</span>{%- endif -%}
+    {%- else -%}
+      {%- assign placeholder_title = 'collections.placeholder_title' | t -%}
+      <span>{{ tile_title | default: placeholder_title | escape }}</span>
+    {%- endif -%}
+    {% render 'icon', name: 'arrow' %}
+  </h3>
+</article>

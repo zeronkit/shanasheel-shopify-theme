@@ -1,0 +1,45 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Room chips: rounded links with a small round thumbnail, used to jump between rooms and collections.
+  Uses the chosen menu; without one it lists the store's collections that have products.
+  Params: menu (link_list, optional), label (aria label), limit (default 8), current (url of the current page), modifier (extra class)
+{%- endcomment -%}
+{%- liquid
+  assign limit = limit | default: 8
+  assign shown = 0
+-%}
+<nav class="st-roomnav{% if modifier != blank %} {{ modifier }}{% endif %}" aria-label="{{ label | escape }}">
+  <ul class="st-roomnav__list" role="list">
+    {%- if menu != blank and menu.links.size > 0 -%}
+      {%- for link in menu.links limit: limit -%}
+        {%- liquid
+          assign thumb = nil
+          if link.type == 'collection_link'
+            assign thumb = link.object.featured_image | default: link.object.products.first.featured_media.preview_image
+          elsif link.type == 'product_link'
+            assign thumb = link.object.featured_media.preview_image
+          endif
+        -%}
+        <li>
+          <a class="st-room-chip{% unless thumb %} st-room-chip--text{% endunless %}" href="{{ link.url }}"{% if link.url == current or link.current %} aria-current="page"{% endif %}>
+            {%- if thumb -%}<span class="st-room-chip__thumb">{{ thumb | image_url: width: 96 | image_tag: alt: '', loading: 'lazy', width: 48, height: 48 }}</span>{%- endif -%}
+            {{ link.title | escape }}
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for c in collections limit: 40 -%}
+        {%- if shown < limit and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' -%}
+          {%- assign shown = shown | plus: 1 -%}
+          {%- assign thumb = c.featured_image | default: c.products.first.featured_media.preview_image -%}
+          <li>
+            <a class="st-room-chip{% unless thumb %} st-room-chip--text{% endunless %}" href="{{ c.url }}"{% if c.url == current %} aria-current="page"{% endif %}>
+              {%- if thumb -%}<span class="st-room-chip__thumb">{{ thumb | image_url: width: 96 | image_tag: alt: '', loading: 'lazy', width: 48, height: 48 }}</span>{%- endif -%}
+              {{ c.title | escape }}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</nav>
