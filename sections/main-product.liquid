@@ -89,11 +89,33 @@
 
             {%- when 'price' -%}
               <div class="st-pdp__price" data-st-swap="price-{{ block.id }}" {{ block.shopify_attributes }}>
-                {% render 'price', product: product, variant: variant, class: 'st-price--large' %}
-                {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
-                  <p class="st-small st-muted">
+                {% render 'price', product: product, variant: variant, class: 'st-price--large', show_save: true %}
+                {%- liquid
+                  # One delivery message, from the same free delivery threshold as the announcement and the cart bar.
+                  # Gift cards get no delivery line.
+                  assign fd_threshold = settings.free_shipping_threshold | times: 100 | round
+                  assign delivery_line = ''
+                  unless product.gift_card?
+                    if fd_threshold > 0 and cart.currency.iso_code == shop.currency
+                      assign fd_amount = fd_threshold | money_without_trailing_zeros
+                      unless fd_amount contains shop.currency
+                        assign fd_amount = fd_amount | append: ' ' | append: shop.currency
+                      endunless
+                      assign fd_amount = '<bdi>' | append: fd_amount | append: '</bdi>'
+                      if shop.shipping_policy.body != blank
+                        assign delivery_line = 'products.free_delivery_line_html' | t: amount: fd_amount, link: shop.shipping_policy.url
+                      else
+                        assign delivery_line = 'products.free_delivery_line_plain' | t: amount: fd_amount
+                      endif
+                    elsif shop.shipping_policy.body != blank
+                      assign delivery_line = 'products.shipping_policy_html' | t: link: shop.shipping_policy.url
+                    endif
+                  endunless
+                -%}
+                {%- if cart.taxes_included or delivery_line != blank -%}
+                  <p class="st-small st-muted st-pdp__price-note">
                     {%- if cart.taxes_included -%}{{ 'products.tax_included' | t }}{% endif %}
-                    {%- if shop.shipping_policy.body != blank %} {{ 'products.shipping_policy_html' | t: link: shop.shipping_policy.url }}{% endif -%}
+                    {%- if delivery_line != blank %} {{ delivery_line }}{% endif -%}
                   </p>
                 {%- endif -%}
               </div>
@@ -107,6 +129,7 @@
               {% render 'product-finishes', block: block, product: product, section_id: section.id, picker_style: picker_style, colour_names: colour_names %}
 
             {%- when 'delivery' -%}
+              {%- unless product.gift_card? -%}
               {%- liquid
                 assign lead = variant.metafields.shanasheel.lead_time.value | default: product.metafields.shanasheel.lead_time.value
                 assign state = 'stock'
@@ -151,15 +174,25 @@
                   {%- endif -%}
                 </div>
               </div>
+              {%- endunless -%}
 
             {%- when 'buy_buttons' -%}
+              {%- liquid
+                # Gift cards: no Buy it now (and no pickup line).
+                assign show_buy_now = block.settings.show_dynamic_checkout
+                assign show_pickup_line = block.settings.show_pickup
+                if product.gift_card?
+                  assign show_buy_now = false
+                  assign show_pickup_line = false
+                endif
+              -%}
               <div data-st-swap="buy-{{ block.id }}" {{ block.shopify_attributes }}>
                 {% render 'buy-form',
                   product: product,
                   variant: variant,
                   section_id: section.id,
-                  show_checkout: block.settings.show_dynamic_checkout,
-                  show_pickup: block.settings.show_pickup,
+                  show_checkout: show_buy_now,
+                  show_pickup: show_pickup_line,
                   show_quantity: block.settings.show_quantity
                 %}
               </div>
@@ -304,6 +337,19 @@
       </div>
     </div>
 
+    {%- comment -%} Phone: a bar with the price and Add to cart that appears once the main button has scrolled away. It submits the main form, so it always adds the selected variant. {%- endcomment -%}
+    <div class="sh-buybar" data-sh-buybar data-st-swap="buybar-{{ section.id }}" aria-hidden="true">
+      <div class="sh-buybar__inner">
+        <div class="sh-buybar__info">
+          <span class="sh-buybar__title">{{ product.title | escape }}</span>
+          {% render 'price', product: product, variant: variant %}
+        </div>
+        <button type="button" class="sh-buybar__add" data-sh-buybar-add tabindex="-1" {% unless variant.available %}disabled{% endunless %}>
+          {%- if variant.available -%}{{ 'products.add_to_cart' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+        </button>
+      </div>
+    </div>
+
     {%- if band != blank -%}
       <div class="st-pdp__details">
         {%- if section.settings.band_heading != blank -%}
@@ -316,6 +362,25 @@
 
   <script type="application/ld+json">
     {{ product | structured_data }}
+  </script>
+  {%- liquid
+    assign crumb_collection = collection | default: product.collections.first
+    assign crumb_home = 'general.home' | t
+    assign crumb_position = 2
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": {{ crumb_home | json }}, "item": {{ request.origin | append: routes.root_url | json }} },
+        {%- if crumb_collection -%}
+          { "@type": "ListItem", "position": 2, "name": {{ crumb_collection.title | json }}, "item": {{ request.origin | append: crumb_collection.url | json }} },
+          {%- assign crumb_position = 3 -%}
+        {%- endif -%}
+        { "@type": "ListItem", "position": {{ crumb_position }}, "name": {{ product.title | json }}, "item": {{ request.origin | append: product.url | json }} }
+      ]
+    }
   </script>
 </section>
 

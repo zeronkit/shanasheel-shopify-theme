@@ -849,3 +849,131 @@ html .st-search-hero button[type="submit"] .st-icon { color: #F4EDE2 !important;
 /* Cart lines (drawer and page): the photo frame keeps the photo size instead of stretching to the row */
 .st-line__media { align-self: start; border-radius: 4px; border: 1px solid rgba(58, 38, 25, 0.2); }
 .st-line__media img { aspect-ratio: 1; object-fit: cover; padding: 0; border-radius: 0; }
+
+/* Free delivery progress in the cart drawer and on the cart page */
+.st-freebar { display: grid; gap: 0.55rem; margin-block-end: 1.25rem; font-size: 0.875rem; line-height: 1.4; }
+.st-freebar__text { display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+.st-freebar__text strong { font-weight: 700; }
+.st-freebar__text .st-icon { inline-size: 1.1rem; block-size: 1.1rem; flex: none; }
+.st-freebar__track { block-size: 8px; border-radius: 999px; background: rgba(58, 38, 25, 0.14); overflow: hidden; }
+.st-freebar__fill { display: block; block-size: 100%; border-radius: inherit; background: #8A4F2B; transition: inline-size 0.4s ease; }
+html .st-cart__aside .st-freebar__track { background: rgba(244, 237, 226, 0.18); }
+html .st-cart__aside .st-freebar__fill { background: #C9A36A; }
+html .st-cart__aside .st-freebar__text strong { color: #D8BC86; }
+@media (prefers-reduced-motion: reduce) { .st-freebar__fill { transition: none; } }
+
+/* ===== Review fixes: search results ===== */
+/* With results: a short walnut band, title and field on one row, so the first results show in the first screen.
+   The empty search state keeps its own layout. */
+html .st-search-page:has(.st-search-hero--results) { padding-block-start: clamp(1rem, 2.5vw, 1.75rem); }
+html .st-search-hero.st-search-hero--results { padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2.25rem) !important; row-gap: 0.4rem; margin-block-end: 1.25rem; }
+html .st-search-hero--results > h1 { font-size: clamp(1.6rem, 3.2vw, 2.4rem) !important; line-height: 1.1; padding: 0 !important; text-indent: 0; }
+html .st-search-hero--results > .st-eyebrow { margin: 0 !important; }
+html .st-search-hero--results .st-search-form,
+html .st-search-hero--results form { margin: 0 !important; }
+@media (min-width: 750px) {
+  html .st-search-hero.st-search-hero--results { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(18rem, 1fr); column-gap: 2.5rem; align-items: center; justify-items: stretch; }
+  html .st-search-hero--results > .st-eyebrow { grid-column: 1; grid-row: 1; }
+  html .st-search-hero--results > h1 { grid-column: 1; grid-row: 2; }
+  html .st-search-hero--results > form,
+  html .st-search-hero--results > .st-search-form,
+  html .st-search-hero--results > *:has(form) { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+}
+/* Popular search chips: readable text */
+.st-search-block .st-chips .st-pill { font-size: 0.875rem; }
+html .st-search-hero--results > h1 { justify-self: stretch; text-align: start !important; }
+
+/* ===== Review fixes: page title panel ===== */
+/* Lighter and shorter: a light sand arch with walnut text, sized to its content, no empty band above the title */
+.shp { padding-block-start: clamp(1.25rem, 3vw, 2rem); }
+.shp__head {
+  background: #EADFCC;
+  color: #2B2019;
+  gap: 0.6rem;
+  border: 1px solid rgba(58, 38, 25, 0.18);
+  border-block-end: 4px solid #C9A36A;
+  border-radius: 160px 160px 4px 4px;
+  padding: clamp(3.25rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 3vw, 2rem);
+}
+@media (min-width: 990px) { .shp__head { min-block-size: 0; justify-content: flex-start; inset-block-start: 130px; } }
+.shp__home { color: #5A3E2B; margin-block-end: 0.5rem; font-size: 0.8125rem; }
+.shp__home:hover { color: #2B2019; text-decoration: underline; }
+.shp__eyebrow { color: #8A4F2B; font-size: 0.8125rem; }
+.shp__title { color: #2B2019; font-size: clamp(2rem, 3.4vw, 2.75rem); text-wrap: balance; }
+.shp__content > :first-child { margin-block-start: 0; }
+.shp__content > h2:first-child,
+.shp__content > h3:first-child { padding-block-start: 0; border-block-start: 0; }
+@media (max-width: 989px) { .shp__head { border-radius: 120px 120px 4px 4px; padding-block-start: 3rem; } }
+
+/* ===== Review fixes: article sign-off and Shop the pieces ===== */
+.sha-signoff { margin: 2.5rem 0 0; padding-block-start: 1rem; border-block-start: 1px solid rgba(58, 38, 25, 0.25); font-size: 0.9375rem; color: #5A3E2B; }
+.sha-signoff strong { color: #2B2019; }
+.sha-pieces { margin-block: clamp(2.5rem, 5vw, 3.5rem) 0; padding: clamp(1.25rem, 3vw, 2rem); background: #EADFCC; border-block-start: 4px solid #3A2619; border-radius: 4px; }
+.sha-pieces__head { display: grid; gap: 0.3rem; margin-block-end: 1.25rem; }
+.sha-pieces__title { margin: 0; font-family: var(--st-font-heading-family, "Arvo", serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: #2B2019; }
+.sha-pieces__text { margin: 0; font-size: 0.9375rem; color: #5A3E2B; }
+.sha-pieces__grid { margin: 0; padding: 0; list-style: none; }
+
+/* ===== Review fixes: phone tap targets and smallest texts ===== */
+@media (max-width: 749px) {
+  .st-icon-button { min-inline-size: 44px; min-block-size: 44px; }
+  html .st-qty .st-qty__btn,
+  html .st-qty .st-qty__input,
+  html .st-line__controls .st-qty__input { min-block-size: 44px; }
+  .st-cart .st-summary button[name="checkout"],
+  .st-drawer .st-summary button[name="checkout"] { min-block-size: 48px; }
+  .st-line__title { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .st-tabs a { display: inline-flex; align-items: center; justify-content: center; min-inline-size: 44px; min-block-size: 44px; }
+  .st-search-block .st-chips .st-pill { min-block-size: 44px; display: inline-flex; align-items: center; }
+  .shb-topics { gap: 0 1.25rem; padding-block: 0.4rem; }
+  .shb-topics a { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .shb-cover__more { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .sha-back { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .sha-tags a { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .shp__home { display: inline-flex; align-items: center; min-block-size: 44px; margin-block-end: 0; }
+}
+.st-count { font-size: max(0.75rem, 0.7em); }
+.sha-rail dt { font-size: 0.75rem; }
+@media (min-width: 750px) { .sha-rail dt { font-size: 0.8125rem; } }
+@media (max-width: 749px) {
+  .sh-ft__links a,
+  .sh-ft__policies a,
+  .shb-topics a { min-inline-size: 44px; justify-content: center; }
+  html .st-pdp .st-room__list .st-mini__link { min-block-size: 44px; }
+}
+html .st-tabs .st-count { font-size: 0.75rem; }
+@media (min-width: 750px) {
+  html body .st-header .st-header__link,
+  html body .st-rooms__grid .st-room__count,
+  html body .st-dims__table th,
+  html body .st-facets .st-button,
+  html body .st-tabs .st-count,
+  html body .sha-spread__tag,
+  html body .sha-tags a { font-size: 0.8125rem; }
+}
+
+/* Cart photos 120px in the cart page and the drawer, so the piece can be recognised (phones keep the same size) */
+html .st-cart .st-line,
+html .st-drawer--cart .st-line { grid-template-columns: 7.5rem 1fr auto; }
+@media (max-width: 749px) {
+  html .st-cart .st-line { grid-template-columns: 7.5rem 1fr; }
+  html .st-drawer--cart .st-line { grid-template-columns: 7.5rem 1fr auto; }
+  /* Remove link and the letter fields of the contact page are 44px tap targets */
+  html .st-line .st-link-button { min-block-size: 44px; min-inline-size: 44px; display: inline-flex; align-items: center; }
+  .sh-contact__line input { min-block-size: 44px; }
+}
+/* Phones: links inside page and policy text get a 44px tall hit area without moving the lines */
+@media (max-width: 749px) {
+  .st-rte p a:not(.st-button), .st-rte li a:not(.st-button), .shopify-policy__body p a, .shopify-policy__body li a { padding-block: 0.72em; }
+}
+
+/* Checkout in the drawer: the same brass plank as the cart page and Add to cart, so checkout looks the same everywhere */
+.st-drawer--cart .st-summary button[name="checkout"] {
+  background: #C9A36A;
+  color: #2A1B12;
+  border: 0;
+  border-block-end: 3px solid #8A4F2B;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.st-drawer--cart .st-summary button[name="checkout"]:hover { background: #D8BC86; color: #2A1B12; }

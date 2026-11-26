@@ -28,11 +28,48 @@
       {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
       {%- unless page_title contains shop.name %} | {{ shop.name }}{% endunless -%}
     </title>
-    {%- if page_description -%}
-      <meta name="description" content="{{ page_description | escape }}">
-    {%- endif -%}
+    {%- liquid
+      # Meta description: the merchant's SEO text first, then the page's own text, then the shop description, then a short theme line.
+      assign meta_desc = page_description | strip_html | strip
+      if meta_desc == blank
+        case request.page_type
+          when 'product'
+            assign meta_desc = product.description
+          when 'collection'
+            assign meta_desc = collection.description
+            if meta_desc == blank
+              assign meta_desc = 'general.meta.collection' | t: title: collection.title, shop: shop.name
+            endif
+          when 'article'
+            assign meta_desc = article.excerpt_or_content
+          when 'blog'
+            assign meta_desc = 'general.meta.blog' | t: title: blog.title, shop: shop.name
+          when 'page'
+            assign meta_desc = page.content
+          when 'list-collections'
+            assign meta_desc = 'general.meta.collections' | t: shop: shop.name
+          when 'search'
+            assign meta_desc = 'general.meta.search' | t: shop: shop.name
+          when 'cart'
+            assign meta_desc = 'general.meta.cart' | t: shop: shop.name
+          when 'policy'
+            assign meta_desc = 'general.meta.policy' | t: title: page_title, shop: shop.name
+          when '404'
+            assign meta_desc = 'general.meta.not_found' | t: shop: shop.name
+        endcase
+        assign meta_desc = meta_desc | strip_html | strip
+      endif
+      if meta_desc == blank
+        assign meta_desc = shop.description | strip_html | strip
+      endif
+      if meta_desc == blank
+        assign meta_desc = 'general.meta.default' | t: shop: shop.name
+      endif
+      assign meta_desc = meta_desc | strip_newlines | replace: '  ', ' ' | truncate: 160
+    -%}
+    <meta name="description" content="{{ meta_desc | escape }}">
 
-    {% render 'meta-tags' %}
+    {% render 'meta-tags', description: meta_desc %}
     {% render 'theme-styles' %}
 
     {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}

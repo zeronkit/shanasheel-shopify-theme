@@ -44,23 +44,22 @@
           <p class="st-line__plan st-small">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>
         {%- endif -%}
 
-        <div class="st-line__price st-small">
-          {%- if item.original_price != item.final_price -%}
-            <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
-            <s class="st-muted">{{ item.original_price | money }}</s>
-            <span class="st-visually-hidden">{{ 'products.price.sale' | t }}</span>
-            <span>{{ item.final_price | money }}</span>
-          {%- else -%}
-            <span>{{ item.original_price | money }}</span>
-          {%- endif -%}
-          {%- if item.unit_price_measurement -%}
-            <span class="st-price__unit">
-              {{ item.unit_price | money }}/
-              {%- if item.unit_price_measurement.reference_value != 1 -%}{{ item.unit_price_measurement.reference_value }}{%- endif -%}
-              {{ item.unit_price_measurement.reference_unit }}
-            </span>
-          {%- endif -%}
-        </div>
+        {%- comment -%} The line price shows once, on the side. Under the name only the price of one piece when there are several, or a unit price. {%- endcomment -%}
+        {%- if item.quantity > 1 or item.unit_price_measurement -%}
+          <p class="st-line__price st-small st-muted">
+            {%- if item.quantity > 1 -%}
+              {%- capture each_price -%}{{ item.final_price | money }}{%- endcapture -%}
+              <span>{{ 'cart.each' | t: price: each_price }}</span>
+            {%- endif -%}
+            {%- if item.unit_price_measurement -%}
+              <span class="st-price__unit">
+                {{ item.unit_price | money }}/
+                {%- if item.unit_price_measurement.reference_value != 1 -%}{{ item.unit_price_measurement.reference_value }}{%- endif -%}
+                {{ item.unit_price_measurement.reference_unit }}
+              </span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
 
         {%- if item.line_level_discount_allocations.size > 0 -%}
           <ul class="st-line__discounts" role="list">
@@ -92,7 +91,9 @@
 
       <div class="st-line__total">
         {%- if item.original_line_price != item.final_line_price -%}
+          <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
           <s class="st-muted st-small">{{ item.original_line_price | money }}</s>
+          <span class="st-visually-hidden">{{ 'products.price.sale' | t }}</span>
         {%- endif -%}
         <span>{{ item.final_line_price | money }}</span>
       </div>

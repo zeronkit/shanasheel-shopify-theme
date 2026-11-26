@@ -17,7 +17,7 @@
 -%}
 <section class="st-section st-search-page color-{{ section.settings.color_scheme }}">
   <div class="st-wrap">
-    <header class="st-search-hero">
+    <header class="st-search-hero{% if search.performed %} st-search-hero--results{% endif %}">
       <p class="st-eyebrow">{{ 'search.title' | t }}</p>
       <h1 class="st-h2">
         {%- if search.performed -%}

@@ -11,7 +11,15 @@
     "per": "لكل",
     "meta": {
       "tags": "الوسم \"{{ tags }}\"",
-      "page": "الصفحة {{ page }}"
+      "page": "الصفحة {{ page }}",
+      "collection": "{{ title }} من {{ shop }}: أثاث وإضاءة ومنسوجات مختارة لتنسجم معًا في البيت.",
+      "blog": "{{ title }} من {{ shop }}: أفكار للغرف وأدلة للعناية وحكايات قطع الأثاث والمنسوجات.",
+      "collections": "تسوّق من {{ shop }} حسب الغرفة: المعيشة والطعام والنوم والإضاءة والديكور والمنسوجات.",
+      "search": "ابحث في {{ shop }} عن الأثاث والإضاءة والمنسوجات ومقالات المجلة.",
+      "cart": "سلتك في {{ shop }}. راجع القطع التي اخترتها ثم انتقل إلى الدفع الآمن.",
+      "policy": "{{ title }}: كيف يتعامل {{ shop }} مع الطلبات والتوصيل والإرجاع وبياناتك.",
+      "not_found": "لم نعثر على هذه الصفحة في {{ shop }}. ابحث في المتجر أو تصفّح الغرف.",
+      "default": "{{ shop }}: أثاث وإضاءة ومنسوجات لغرف تُعاش فيها الحياة."
     },
     "pagination": {
       "label": "التنقل بين الصفحات",
@@ -26,7 +34,9 @@
       "next": "التمرير للأمام: {{ label }}"
     },
     "breadcrumb": "مسار التنقل",
-    "home": "الرئيسية"
+    "home": "الرئيسية",
+    "free_delivery_announcement": "توصيل مجاني داخل أمريكا من {{ amount }}",
+    "footer_write_to_us": "راسلنا"
   },
   "header": {
     "shop": "تسوّق",
@@ -44,7 +54,7 @@
   "search": {
     "title": "بحث",
     "label": "ابحث في المتجر",
-    "placeholder": "ابحث عن قطعة أو لون أو أسلوب",
+    "placeholder": "ابحث عن قطعة أو لون",
     "submit": "بحث",
     "suggestions": "اقتراحات البحث",
     "results_for": "نتائج البحث عن \"{{ terms }}\"",
@@ -103,7 +113,8 @@
       "regular": "السعر العادي",
       "sale": "سعر التخفيض",
       "unit": "سعر الوحدة",
-      "from": "ابتداءً من {{ price }}"
+      "from": "ابتداءً من {{ price }}",
+      "save": "وفّر {{ percent }}٪"
     },
     "media": {
       "gallery": "صور المنتج",
@@ -127,7 +138,7 @@
       "shipping_policy": "سياسة الشحن",
       "refund_policy": "سياسة الإرجاع والاسترداد",
       "materials_default_html": "<p>مصنوع من خامات مختارة لتدوم سنوات من الاستخدام اليومي. الخامات الدقيقة مذكورة على ملصق المنتج.</p><h4>العناية</h4><p>امسح الغبار بقطعة قماش ناعمة وجافة. أبعده عن أشعة الشمس المباشرة وعن المدافئ. امسح أي سائل ينسكب فورًا.</p>",
-      "shipping_default_html": "<p>تُشحن القطع المتوفرة عادةً خلال يوم إلى 3 أيام عمل. القطع المصنوعة حسب الطلب تظهر مدة تجهيزها في هذه الصفحة. خيارات التوصيل وتكلفته لعنوانك تظهر عند الدفع.</p><p>القطع الكبيرة يوصلها فريق من شخصين إلى الغرفة التي تختارها.</p><p>نقبل الإرجاع خلال 30 يومًا من التوصيل للمنتجات غير المستخدمة وفي تغليفها الأصلي.</p>"
+      "shipping_default_html": "<p>تغادر القطع المتوفرة الورشة خلال يوم إلى ثلاثة أيام عمل، أما القطع المصنوعة حسب الطلب فمدة تجهيزها مذكورة أعلاه.</p><p>يحمل القطع الكبيرة فريق من شخصين ويضعها في الغرفة التي تختارها.</p><p>نقبل الإرجاع خلال 30 يومًا من التوصيل إذا كانت القطعة غير مستخدمة وفي تغليفها الأصلي.</p>"
     },
     "show_colour": "عرض اللون {{ colour }}",
     "colour_map": "أسود:black,أبيض:white,رمادي:grey,أخضر:green,أرجواني:purple,بنفسجي:purple,أحمر:red,أزرق:blue,كحلي:navy,بيج:beige,بني:brown,وردي:pink,ذهبي:gold,فضي:silver,كريمي:cream,زيتوني:olive,خاكي:khaki,أصفر:yellow,برتقالي:orange,سماوي:sky blue,عاجي:ivory,جملي:camel,رملي:sand,noir:black,blanc:white,gris:grey,vert:green,rouge:red,bleu:blue,marine:navy,rose:pink,jaune:yellow,beige:beige,marron:brown,violet:purple,doré:gold,argenté:silver,crème:cream,negro:black,blanco:white,gris:grey,verde:green,rojo:red,azul:blue,marino:navy,rosa:pink,amarillo:yellow,marrón:brown,morado:purple,dorado:gold,plateado:silver,crema:cream,schwarz:black,weiß:white,weiss:white,grau:grey,grün:green,rot:red,blau:blue,marineblau:navy,gelb:yellow,braun:brown,lila:purple,golden:gold,silbern:silver",
@@ -169,7 +180,9 @@
     "room": {
       "spot": "عرض {{ title }}",
       "list_label": "في هذه الغرفة"
-    }
+    },
+    "free_delivery_line_html": "توصيل مجاني داخل أمريكا من {{ amount }}. <a href=\"{{ link }}\">التوصيل والإرجاع</a>",
+    "free_delivery_line_plain": "توصيل مجاني داخل أمريكا من {{ amount }}."
   },
   "collections": {
     "eyebrow": "مجموعة",
@@ -223,7 +236,14 @@
     "update": "تحديث السلة",
     "view": "عرض السلة",
     "summary": "ملخص الطلب",
-    "empty_rooms": "ابدأ بغرفة"
+    "empty_rooms": "ابدأ بغرفة",
+    "free_delivery_left_html": "باقٍ <strong>{{ amount }}</strong> على التوصيل المجاني داخل أمريكا",
+    "free_delivery_done": "حصلت على التوصيل المجاني داخل أمريكا",
+    "free_delivery_label": "التقدم نحو التوصيل المجاني",
+    "each": "{{ price }} للقطعة",
+    "taxes_only_at_checkout": "تُحسب الضرائب عند الدفع.",
+    "taxes_only_included": "شامل الضرائب.",
+    "duties_taxes_only_included": "شامل الرسوم الجمركية والضرائب."
   },
   "sections": {
     "home": {
@@ -302,7 +322,23 @@
     "next": "القصة التالية",
     "published": "نُشر",
     "reading": "القراءة",
-    "by": "بقلم"
+    "by": "بقلم",
+    "tag_names": {
+      "guides": "أدلة",
+      "care": "العناية",
+      "wood": "الخشب",
+      "lighting": "الإضاءة",
+      "textiles": "المنسوجات",
+      "ideas": "أفكار",
+      "living_room": "غرفة المعيشة",
+      "bedroom": "غرفة النوم",
+      "dining_room": "غرفة الطعام",
+      "decor": "الديكور",
+      "materials": "الخامات",
+      "inspiration": "إلهام",
+      "news": "أخبار",
+      "how_to": "خطوة بخطوة"
+    }
   },
   "footer": {
     "credit": "قالب من ZeronKit",
@@ -381,11 +417,16 @@
   "sh_cart": {
     "assurance_1": "توصيل بفريق من شخصين إلى الغرفة التي تختارها",
     "assurance_2": "مساعدة في التركيب ونأخذ التغليف معنا",
-    "assurance_3": "30 يومًا لتجربتها في منزلك"
+    "assurance_3": "30 يومًا لتجربتها في منزلك",
+    "empty_text": "ابدأ بغرفة. كل قطعة مختارة لتنسجم مع بقية القطع."
   },
   "sh_blog": {
     "eyebrow": "المجلة",
-    "intro_html": "<p>أفكار للغرف، وأدلة العناية، والحرفيون الذين يصنعون قطعنا.</p>"
+    "intro_html": "<p>أفكار للغرف، وأدلة العناية، والحرفيون الذين يصنعون قطعنا.</p>",
+    "shop_pieces": "تسوّق القطع",
+    "shop_pieces_text": "قطع من هذه القصة، جاهزة لتنتقل إلى بيتك.",
+    "signoff_html": "كتبه <strong>{{ author }}</strong>، {{ date }}",
+    "signoff_date_html": "نُشر في {{ date }}"
   },
   "sh_rooms": {
     "eyebrow": "تسوّق حسب الغرفة"

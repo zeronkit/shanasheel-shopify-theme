@@ -1,6 +1,7 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
-  Params: product (required), variant (optional; when blank the card style "from" price is used), class
+  Params: product (required), variant (optional; when blank the card style "from" price is used), class,
+  show_save (optional; adds a "Save X%" badge when there is a compare at price)
 {%- endcomment -%}
 {%- liquid
   if variant != blank
@@ -34,6 +35,10 @@
     </span>
     <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
     <s class="st-price__was">{{ compare_display }}</s>
+    {%- if show_save -%}
+      {%- assign save_percent = compare | minus: price | times: 100.0 | divided_by: compare | round -%}
+      {%- if save_percent > 0 -%}<span class="st-price__save st-badge st-badge--accent">{{ 'products.price.save' | t: percent: save_percent }}</span>{%- endif -%}
+    {%- endif -%}
   {%- else -%}
     <span class="st-visually-hidden">{{ 'products.price.regular' | t }}</span>
     <span class="st-price__now">

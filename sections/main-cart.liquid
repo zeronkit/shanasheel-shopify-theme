@@ -69,9 +69,13 @@
               <path d="M80 38v22" opacity="0.5"/>
             </svg>
             <h2 class="st-h3">{{ empty_heading | escape }}</h2>
-            {%- if section.settings.empty_text != blank -%}
-              <div class="st-rte st-muted">{{ section.settings.empty_text }}</div>
-            {%- endif -%}
+            {%- liquid
+              assign empty_text = section.settings.empty_text
+              if empty_text == blank
+                assign empty_text = 'sh_cart.empty_text' | t | prepend: '<p>' | append: '</p>'
+              endif
+            -%}
+            <div class="st-rte st-muted">{{ empty_text }}</div>
             <a class="st-button st-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }} {% render 'icon', name: 'arrow' %}</a>
           </div>
 
@@ -166,14 +170,12 @@
     {
       "type": "text",
       "id": "empty_heading",
-      "label": "t:labels.heading",
-      "default": "Your cart is empty"
+      "label": "t:labels.heading"
     },
     {
       "type": "richtext",
       "id": "empty_text",
-      "label": "t:labels.text",
-      "default": "<p>Start with a room. Every piece is chosen to live well with the rest.</p>"
+      "label": "t:labels.text"
     },
     {
       "type": "checkbox",

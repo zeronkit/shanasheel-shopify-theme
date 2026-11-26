@@ -288,26 +288,164 @@ html .st-pdp .st-pdp__info .st-delivery__body * { color: #F4EDE2 !important; opa
 html .st-pdp .st-pdp__info .st-delivery__body strong,
 html .st-pdp .st-pdp__info .st-delivery__body b { color: #D8BC86 !important; }
 
-/* Buy it now: a solid sand plank with a walnut edge, clearly the second choice beside the brass add to cart */
+/* Buy it now: the second choice, an outline on the walnut panel. Only Add to cart is filled. */
 html .st-pdp .st-pdp__info .shopify-payment-button__button--unbranded {
-  background: #F4EDE2 !important;
-  color: #2A1B12 !important;
-  border: 0 !important;
-  border-block-end: 4px solid #C9A36A !important;
+  background: transparent !important;
+  color: #F4EDE2 !important;
+  border: 1px solid rgba(244, 237, 226, 0.7) !important;
   border-radius: 3px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.14em !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  font-size: 0.85rem !important;
-  min-block-size: 52px !important;
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  font-size: 0.8125rem !important;
+  min-block-size: 48px !important;
+  white-space: nowrap !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease !important;
 }
 html .st-pdp .st-pdp__info .shopify-payment-button__button--unbranded:hover {
-  background: #FFFFFF !important;
-  transform: translateY(-1px);
+  background: rgba(244, 237, 226, 0.08) !important;
+  border-color: #D8BC86 !important;
 }
-html .st-pdp .st-pdp__info .shopify-payment-button__button--unbranded::after { content: " \2192"; }
-[dir="rtl"] .st-pdp .st-pdp__info .shopify-payment-button__button--unbranded::after { content: " \2190"; }
+html[dir="rtl"] .st-pdp .st-pdp__info .shopify-payment-button__button--unbranded { letter-spacing: 0 !important; }
 
 /* Hero accent words readable on walnut */
 .st-room-hero em, .st-hero em, .st-room-hero__title em { color: #D8BC86 !important; }
+
+/* ===== Review fixes ===== */
+/* One frame style for every image: a single brass inner line, no outer border or outline */
+html .st-pdp .st-gallery__frame .st-gallery__media,
+html .st-pdp .st-gallery__frame:first-child .st-gallery__media { outline: 0; border: 0; margin: 0; }
+html .st-pdp .st-gallery__figure { box-shadow: 0 10px 24px rgba(42, 27, 18, 0.08); }
+html .st-pdp .st-gallery__figure::after { inset: 10px; border-color: rgba(201, 163, 106, 0.8); }
+/* Count and caption as one walnut label, same place on every image */
+html .st-pdp .st-gallery__caption {
+  position: absolute;
+  inset-block-end: 20px;
+  inset-inline-start: 20px;
+  inset-inline-end: auto;
+  max-inline-size: calc(100% - 40px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: nowrap;
+  padding: 0.35rem 0.75rem;
+  background: #3A2619;
+  color: #F4EDE2;
+  border-radius: 3px;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  z-index: 1;
+}
+html .st-pdp .st-gallery__caption .st-gallery__count,
+html .st-pdp .st-gallery__caption .st-gallery__model {
+  background: transparent;
+  color: #F4EDE2;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  letter-spacing: 0.04em;
+}
+html .st-pdp .st-gallery__caption .st-gallery__count { color: #D8BC86; font-weight: 700; }
+html .st-pdp .st-gallery__caption .st-gallery__model { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html .st-pdp .st-gallery__caption .st-gallery__model::before { content: ""; display: inline-block; inline-size: 1px; block-size: 0.9em; margin-inline: 0.6rem; background: rgba(216, 188, 134, 0.6); vertical-align: -0.1em; }
+
+/* Buy panel starts level with the first image (the sticky offset no longer pushes the relative panel down) */
+@media (max-width: 989px) { html .st-pdp .st-pdp__info { inset-block-start: auto; } }
+@media (min-width: 990px) {
+  /* Gallery follows the page and stays in view beside a longer panel, top offset set by product.js */
+  html .st-pdp .st-pdp__grid > .st-gallery,
+  html .st-pdp .st-pdp__grid > .st-pdp__info { position: sticky; inset-block-start: var(--sh-column-top, 110px); align-self: start; }
+  html .st-pdp .st-pdp__grid { align-items: start; }
+}
+
+/* Phone and tablet: gallery inside the page gutter, the next image peeks in */
+@media (max-width: 989px) {
+  html .st-pdp .st-gallery__sheet {
+    margin-inline: calc(var(--st-gutter) * -1);
+    padding-inline: var(--st-gutter);
+    scroll-padding-inline: var(--st-gutter);
+    grid-auto-columns: 84%;
+    gap: 0.75rem;
+  }
+}
+@media (min-width: 750px) and (max-width: 989px) {
+  html .st-pdp .st-gallery__sheet { grid-auto-columns: 72%; }
+}
+
+/* Fabrics and finishes after the swatches: only the note of the selected finish */
+html .st-pdp .st-finishes--merged { display: grid; gap: 0.4rem; }
+html .st-pdp .st-finishes--merged .st-field__label { margin: 0; }
+html .st-pdp .st-finishes__note { margin: 0; font-size: 0.9375rem; line-height: 1.55; color: #EADFCC; }
+html .st-pdp .st-finishes__note strong { color: #F4EDE2; }
+
+/* Save badge beside the price */
+.st-price__save {
+  display: inline-block;
+  align-self: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  background: #8A4F2B;
+  color: #FFFFFF;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+/* The save badge uses the card sale tag (notched rust tag), so cards and the product page read the same */
+html .st-pdp .st-pdp__info .st-price__save.st-badge { background: #8A4F2B; color: #FFFFFF; font-size: 0.8125rem; padding: 0.3rem 0.9rem 0.3rem 0.55rem; border-radius: 2px; letter-spacing: 0.1em; line-height: 1.3; }
+html[dir="rtl"] .st-pdp .st-pdp__info .st-price__save.st-badge { padding: 0.3rem 0.55rem 0.3rem 0.9rem; }
+html .st-pdp .st-pdp__info .st-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; }
+
+/* Phone buy bar */
+.sh-buybar { display: none; }
+@media (max-width: 749px) {
+  .sh-buybar {
+    display: block;
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 40;
+    background: #3A2619;
+    color: #F4EDE2;
+    border-block-start: 3px solid #C9A36A;
+    box-shadow: 0 -10px 24px rgba(42, 27, 18, 0.25);
+    padding: 0.6rem var(--st-gutter, 1rem) calc(0.6rem + env(safe-area-inset-bottom));
+    transform: translateY(110%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0s 0.25s;
+  }
+  .sh-buybar.is-visible { transform: none; visibility: visible; transition: transform 0.25s ease; }
+  .sh-buybar__inner { display: flex; align-items: center; gap: 0.75rem; }
+  .sh-buybar__info { flex: 1; min-inline-size: 0; display: grid; gap: 0.1rem; }
+  .sh-buybar__title { font-size: 0.8125rem; color: #EADFCC; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sh-buybar .st-price { display: flex; flex-wrap: wrap; gap: 0 0.5rem; align-items: baseline; color: #D8BC86; font-size: 1rem; font-weight: 700; }
+  .sh-buybar .st-price__now { color: #D8BC86; }
+  .sh-buybar .st-price__was { color: #D9CBB5; font-size: 0.8125rem; font-weight: 400; }
+  .sh-buybar__add {
+    flex: none;
+    min-block-size: 48px;
+    padding-inline: 1.25rem;
+    background: #C9A36A;
+    color: #2A1B12;
+    border: 0;
+    border-block-end: 3px solid #8A4F2B;
+    border-radius: 3px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .sh-buybar__add:hover { background: #D8BC86; }
+  .sh-buybar__add:disabled { background: #6B5545; color: #EADFCC; border-color: #6B5545; }
+}
+@media (prefers-reduced-motion: reduce) { .sh-buybar, .sh-buybar.is-visible { transition: none; } }
+/* Room pins on the product page: 44px tap target */
+html .st-pdp .st-spot__dot { inline-size: 44px; block-size: 44px; }
+html .st-pdp .st-room__aside .st-field__label { font-size: 0.8125rem; }
+
+/* Phones: links in the price note and the delivery fold are 44px tap targets */
+@media (max-width: 749px) {
+  html .st-pdp .st-pdp__price-note a,
+  html .st-pdp .st-fold__links a { display: inline-flex; align-items: center; min-block-size: 44px; }
+}

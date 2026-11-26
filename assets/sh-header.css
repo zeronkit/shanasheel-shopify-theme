@@ -34,6 +34,21 @@
 }
 .st-announce__control {
   color: var(--shh-sand);
+  inline-size: 44px;
+  block-size: 44px;
+}
+.st-announce__icon { display: inline-flex; }
+.st-announce__inner { padding-inline: clamp(0.25rem, 2vw, 1.5rem); }
+/* Phone: one line of text, no decoration, full size buttons */
+@media (max-width: 749px) {
+  .st-announce__icon,
+  .st-announce__inner::before,
+  .st-announce__inner::after { display: none; }
+  .st-announce__inner { gap: 0; padding-inline: 0.25rem; }
+  .st-announce__list { padding-block: 0; }
+  .st-announce__item,
+  .st-announce__item a { letter-spacing: 0.06em; }
+  .st-announce--fade.is-ready .st-announce__item { white-space: nowrap; }
 }
 
 /* Header bar: tall walnut panel, no floating pill */
@@ -680,3 +695,17 @@ body {
   border-color: transparent;
 }
 
+@media (min-width: 750px) {
+  .st-announce__item,
+  .st-announce__item a { font-size: 0.8125rem; }
+}
+
+/* ===== Review fixes: phone tap targets ===== */
+@media (max-width: 989px) {
+  .st-header .st-header__menu,
+  .st-header .st-icon-button { min-inline-size: 44px; min-block-size: 44px; }
+  .st-header .st-header__logo-link { min-block-size: 44px; display: inline-flex; align-items: center; }
+}
+.st-slider__button { inline-size: 44px; block-size: 44px; }
+@media (max-width: 749px) { .st-slider__button { inline-size: 44px; block-size: 44px; } }
+.st-locale__option { min-block-size: 44px; }

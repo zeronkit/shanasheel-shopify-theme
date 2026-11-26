@@ -1,7 +1,7 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
   Toolbar, colour bar, active filters and the filter drawer.
-  Params: show_per_page, per_page, search_type (search only), filters, sort_options, sort_by, default_sort, count, section_id, clear_url,
+  Params: show_per_page, per_page, search_type (search only), filters, sort_options, sort_by, default_sort, count, total (products before filtering), section_id, clear_url,
           enable_filtering, enable_sorting, show_colour_bar, terms (search only), scheme
 {%- endcomment -%}
 {%- liquid
@@ -16,6 +16,36 @@
       assign active_count = active_count | plus: filter.active_values.size
     endif
   endfor
+  # Small lists: no Filter button and no per page choice under 12 products (unless a filter is already on, so it can be cleared).
+  # A filter group with fewer than 2 choices is left out, and without any group left there is no Filter button.
+  assign list_total = total | default: count | plus: 0
+  assign useful_groups = 0
+  for filter in filters
+    if filter.type == 'price_range'
+      if filter.range_max > 0
+        assign useful_groups = useful_groups | plus: 1
+      endif
+    else
+      assign live_values = 0
+      for value in filter.values
+        if value.count > 0 or value.active
+          assign live_values = live_values | plus: 1
+        endif
+      endfor
+      if live_values >= 2 or filter.active_values.size > 0
+        assign useful_groups = useful_groups | plus: 1
+      endif
+    endif
+  endfor
+  if list_total < 12 and active_count == 0
+    assign enable_filtering = false
+  endif
+  if useful_groups == 0
+    assign enable_filtering = false
+  endif
+  if list_total <= 12
+    assign show_per_page = false
+  endif
   assign locale_colour_names = 'products.option_names.colour' | t
   assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ','
   assign colour_filter = nil
@@ -133,6 +163,25 @@
         {%- if search_type != blank and search_type != 'all' -%}<input type="hidden" name="type" value="{{ search_type | escape }}">{%- endif -%}
       {%- endif -%}
       {%- for filter in filters -%}
+        {%- liquid
+          assign skip_group = false
+          if filter.type == 'price_range'
+            if filter.range_max == 0
+              assign skip_group = true
+            endif
+          elsif filter.active_values.size == 0
+            assign live_values = 0
+            for value in filter.values
+              if value.count > 0 or value.active
+                assign live_values = live_values | plus: 1
+              endif
+            endfor
+            if live_values < 2
+              assign skip_group = true
+            endif
+          endif
+        -%}
+        {%- if skip_group -%}{%- continue -%}{%- endif -%}
         {%- assign filter_id = section_id | append: '-filter-' | append: forloop.index -%}
         <details class="st-fold" id="{{ filter_id }}"{% if forloop.index <= 2 or filter.active_values.size > 0 %} open{% endif %}>
           <summary class="st-fold__summary">

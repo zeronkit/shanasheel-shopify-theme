@@ -74,7 +74,7 @@
   <div class="st-room__layout">
     <div class="st-room__stage">
       {%- if room_image != blank -%}
-        {% render 'image', image: room_image, sizes: '(min-width: 990px) 60vw, 100vw', class: 'st-room__img' %}
+        {% render 'image', image: room_image, sizes: '(min-width: 990px) 60vw, 100vw', class: 'st-room__img', fallback_alt: product.title %}
       {%- else -%}
         {{ 'lifestyle-1' | placeholder_svg_tag: 'st-placeholder st-room__img' }}
       {%- endif -%}

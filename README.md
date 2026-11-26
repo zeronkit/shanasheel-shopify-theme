@@ -7,7 +7,7 @@
 <p align="center">
 <a href="docs/guide.md"><img alt="Read the full guide in English" src="https://img.shields.io/badge/Full%20guide-English-C9A36A?style=for-the-badge"></a>
 <a href="docs/guide-ar.md"><img alt="Read the full guide in Arabic" src="https://img.shields.io/badge/Full%20guide-Arabic-C9A36A?style=for-the-badge"></a>
-<a href="https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.0.0.zip"><img alt="Download Shanasheel" src="https://img.shields.io/badge/Download-shanasheel--1.0.0.zip-2ea043?style=for-the-badge"></a>
+<a href="https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip"><img alt="Download Shanasheel" src="https://img.shields.io/badge/Download-shanasheel--1.1.0.zip-2ea043?style=for-the-badge"></a>
 </p>
 
 <table><tr><td valign="top" width="50%">
@@ -29,6 +29,7 @@
 - [13. Arabic and other languages](docs/guide.md#13-arabic-and-other-languages)
 - [14. On phones](docs/guide.md#14-on-phones)
 - [15. Troubleshooting](docs/guide.md#15-troubleshooting)
+- [17. Changelog](docs/guide.md#17-changelog)
 
 </td><td valign="top" width="50%" dir="rtl">
 
@@ -49,6 +50,7 @@
 - [13. العربية واللغات الأخرى](docs/guide-ar.md#13-العربية-واللغات-الأخرى)
 - [14. على الهاتف](docs/guide-ar.md#14-على-الهاتف)
 - [15. حل المشاكل](docs/guide-ar.md#15-حل-المشاكل)
+- [17. سجل التغييرات](docs/guide-ar.md#17-سجل-التغييرات)
 
 </td></tr></table>
 
@@ -58,13 +60,16 @@ The same guide is on the website: [zeronkit.com/shanasheel-guide](https://zeronk
 
 Shanasheel is a free Shopify theme for furniture, lighting, textiles and home decor stores, in English and Arabic. Made by [ZeronKit](https://zeronkit.com).
 
+Version 1.1.0. See the [changelog](CHANGELOG.md) for what changed and what to do after updating.
+
 The name comes from the carved wooden bay windows of old Baghdad and Basra houses. The theme borrows their walnut wood, brass fittings, arches and lattice.
 
 **Source-available, free, not for resale.** This repository is not open source and is not under the GPL. You may use and change Shanasheel on stores you own or run. You may not resell, redistribute, sublicense or upload it to theme marketplaces. See [LICENSE](LICENSE).
 
 ## Download
 
-- Latest version: [shanasheel-1.0.0.zip](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.0.0.zip), attached to the v1.0.0 release on this page.
+- Latest version: [shanasheel-1.1.0.zip](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip), attached to the v1.1.0 release on this page.
+- What changed: [CHANGELOG.md](CHANGELOG.md) (English and Arabic).
 - In Shopify admin: `Online Store` > `Themes` > `Add theme` > `Upload zip file`.
 
 ## Features
@@ -73,6 +78,8 @@ The name comes from the carved wooden bay windows of old Baghdad and Basra house
 - Furniture details from metafields: dimensions as large figures and a table, a cm and inch switch, materials, care and assembly.
 - Fabrics and finishes with swatch photos and notes. Clicking a finish picks that variant.
 - Estimated delivery dates from stock and lead times.
+- Free delivery amount in the announcement bar and a free delivery progress bar in the cart.
+- Made for phones: an Add to cart bar that follows the shopper down the product page, and 44 pixel tap targets.
 - Showroom collection page with a room index, a photo collage and a story tile between products.
 - Magazine style journal, a workshop door contact page and a search desk.
 - Six header layouts. The default hangs the logo in its own tab between the menu links.
@@ -88,7 +95,7 @@ The name comes from the carved wooden bay windows of old Baghdad and Basra house
 
 ## Updating
 
-Uploaded themes do not update by themselves. Duplicate your theme first, then upload the new zip and check every page before you publish it.
+Uploaded themes do not update by themselves. Duplicate your theme first, then upload the new zip, copy your settings and check every page before you publish it. The steps are in [section 2.3 of the guide](docs/guide.md#23-updating-later), and [CHANGELOG.md](CHANGELOG.md) lists what to do for each version.
 
 ## Support
 

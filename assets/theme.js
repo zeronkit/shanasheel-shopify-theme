@@ -225,6 +225,17 @@ document.getElementById('SearchDialog')?.addEventListener('hm:open', (event) => 
 });
 
 /* ---------- Lazy modules (import on need) ---------- */
+/* Card hover images are lazy. A card that is about to be hovered or focused loads its second image now,
+   so it is ready when it fades in (cards in side-scrolling shelves are never "near the screen" before). */
+const warmCard = (event) => {
+  const card = event.target.closest?.('[data-st-card]');
+  const second = card?.querySelector('.st-card__img--alt[loading="lazy"]');
+  if (second) second.loading = 'eager';
+};
+document.addEventListener('pointerover', warmCard, { passive: true });
+document.addEventListener('focusin', warmCard);
+document.addEventListener('touchstart', warmCard, { passive: true });
+
 window.Shanasheel = { addItems, announce, parseHTML, strings, routes, afterAdd, readJSON, cartSectionIds, closeDialog };
 
 const loadModules = () => {

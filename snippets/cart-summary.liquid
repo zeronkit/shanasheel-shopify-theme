@@ -4,6 +4,7 @@
   Params: form_id, show_note, heading (boolean, shows an order summary title)
 {%- endcomment -%}
 <div class="st-summary">
+  {% render 'free-delivery-bar' %}
   {%- if heading -%}<h2 class="st-h4 st-summary__heading">{{ 'cart.summary' | t }}</h2>{%- endif -%}
   {%- if show_note -%}
     <details class="st-fold st-summary__note"{% if cart.note != blank %} open{% endif %}>
@@ -28,13 +29,21 @@
     <span>{{ 'cart.subtotal' | t }}</span>
     <span>{{ cart.total_price | money_with_currency }}</span>
   </p>
+  {%- liquid
+    # With the free delivery bar in view, the note speaks about taxes only, so it never contradicts the bar.
+    assign bar_threshold = settings.free_shipping_threshold | times: 100 | round
+    assign bar_in_view = false
+    if bar_threshold > 0 and cart.currency.iso_code == shop.currency
+      assign bar_in_view = true
+    endif
+  -%}
   <p class="st-small st-muted">
     {%- if cart.duties_included and cart.taxes_included -%}
-      {{ 'cart.duties_taxes_included' | t }}
+      {%- if bar_in_view %}{{ 'cart.duties_taxes_only_included' | t }}{% else %}{{ 'cart.duties_taxes_included' | t }}{% endif -%}
     {%- elsif cart.taxes_included -%}
-      {{ 'cart.taxes_included' | t }}
+      {%- if bar_in_view %}{{ 'cart.taxes_only_included' | t }}{% else %}{{ 'cart.taxes_included' | t }}{% endif -%}
     {%- else -%}
-      {{ 'cart.taxes_at_checkout' | t }}
+      {%- if bar_in_view %}{{ 'cart.taxes_only_at_checkout' | t }}{% else %}{{ 'cart.taxes_at_checkout' | t }}{% endif -%}
     {%- endif -%}
   </p>
 

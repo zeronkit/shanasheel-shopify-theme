@@ -9,6 +9,20 @@
     assign tile_image = room.featured_image | default: room.products.first.featured_media.preview_image
   endif
   assign tile_title = title | default: room.title
+  # A wide photo in a tall tile shows mostly wall or ceiling, so it is zoomed toward its subject:
+  # the merchant's focal point when one is set, otherwise the lower part where furniture usually stands.
+  assign media_class = ''
+  assign media_style = ''
+  if index > 0 and tile_image.aspect_ratio > 1.2
+    assign zoom_origin = tile_image.presentation.focal_point | default: '50% 50%'
+    assign zoom_check = zoom_origin | remove: '.0' | remove: ' '
+    if zoom_check == '50%50%'
+      assign zoom_origin = '50% 85%'
+    endif
+    assign media_class = ' st-room__media--zoom'
+    assign sizes = '(min-width: 990px) 40vw, 80vw'
+    assign media_style = ' style="--zoom-origin: ' | append: zoom_origin | append: ';"'
+  endif
   if index == 0
     assign sizes = '(min-width: 990px) 50vw, 100vw'
   else
@@ -16,9 +30,9 @@
   endif
 -%}
 <article class="st-room__tile">
-  <div class="st-room__media">
+  <div class="st-room__media{{ media_class }}"{{ media_style }}>
     {%- if tile_image != blank -%}
-      {% render 'image', image: tile_image, sizes: sizes, max: 1800, alt: '' %}
+      {% render 'image', image: tile_image, fallback_alt: tile_title, sizes: sizes, max: 1800 %}
     {%- else -%}
       {%- assign p_index = index | modulo: 6 | plus: 1 -%}
       {%- assign placeholder = 'collection-' | append: p_index -%}

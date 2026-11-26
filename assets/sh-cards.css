@@ -257,3 +257,90 @@
   .st-grid .sh-card__quick-btn { font-size: 0.62rem; letter-spacing: 0.06em; padding-inline: 0.4rem; white-space: nowrap; }
 }
 html .st-grid .st-card__body { padding-inline: 0.9rem; padding-block-end: 0.9rem; }
+
+/* ===== Review fixes: one button style on every card =====
+   The quick button sits at the bottom of the card with the same inset on all sides and the same size,
+   whatever the card holds above it. The body reserves room for it. */
+html .st-card[data-st-card] { position: relative; }
+html .st-card[data-st-card] .st-card__body {
+  position: relative;
+  padding: 0.75rem 0.9rem calc(44px + 0.9rem + 0.75rem);
+}
+html .st-card[data-st-card] .st-card__body:not(:has(.sh-card__quick)) { padding-block-end: 0.9rem; }
+html .st-card[data-st-card] .sh-card__quick {
+  position: absolute;
+  inset-inline: 0.9rem;
+  inset-block-end: 0.9rem;
+  grid-area: auto;
+  margin: 0;
+  padding: 0;
+  inline-size: auto;
+}
+html .st-card[data-st-card] .sh-card__quick form { display: block; margin: 0; inline-size: 100%; }
+html .st-card[data-st-card] .sh-card__quick .sh-card__quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-align: center;
+}
+@media (max-width: 749px) {
+  html .st-card[data-st-card] .st-card__body { padding: 0.7rem 0.7rem calc(48px + 0.7rem + 0.6rem); }
+  html .st-card[data-st-card] .st-card__body:not(:has(.sh-card__quick)) { padding-block-end: 0.7rem; }
+  html .st-card[data-st-card] .sh-card__quick { inset-inline: 0.7rem; inset-block-end: 0.7rem; }
+  html .st-card[data-st-card] .sh-card__quick .sh-card__quick-btn {
+    min-block-size: 48px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    white-space: normal;
+  }
+}
+
+/* ===== Review fixes: phone tap targets and text sizes ===== */
+/* Card colour swatches: 44px tap area, the swatch itself keeps its size and shows the selection ring */
+@media (max-width: 749px) {
+  html .st-card .st-card__colours,
+  html .st-card .st-swatch-row { min-block-size: 44px; max-block-size: 44px; gap: 0; }
+  html .st-card .st-card__swatch {
+    inline-size: 44px;
+    block-size: 44px;
+    padding: 0;
+    border: 0;
+    display: inline-grid;
+    place-items: center;
+    box-shadow: none !important;
+  }
+  html .st-card .st-card__swatch[aria-pressed="true"] > * { outline: 1.5px solid #3A2619; outline-offset: 2px; }
+  html .st-card .st-card__colours { margin-inline-start: -9px; }
+}
+/* Smallest card texts */
+.st-badge { font-size: 0.75rem; }
+.st-price__was { font-size: max(0.75rem, 0.8em); }
+@media (min-width: 750px) {
+  .st-badge { font-size: 0.8125rem; }
+  .st-price__was { font-size: max(0.8125rem, 0.8em); }
+}
+/* Tablet: narrow three column cards hide the size chips like phones do, so title and price keep their room */
+.st-size { white-space: nowrap; }
+@media (max-width: 989px) {
+  html .st-grid .st-card__sizes,
+  html .shc-grid .st-card__sizes { display: none; }
+  html .st-cards-plinth .st-grid .st-card__body,
+  html .st-cards-plinth .shc-grid .st-card__body { grid-template-columns: minmax(0, 1fr); }
+  html .st-cards-plinth .st-grid .st-card__body > .st-card__price,
+  html .st-cards-plinth .shc-grid .st-card__body > .st-card__price { grid-column: 1; grid-row: auto; text-align: start; }
+  html .st-cards-plinth .st-card__body > .st-card__price .st-price { justify-content: start; }
+}
+
+/* Phones: names on cards and tiles are full 44px tap targets (the link grows, the card text keeps its size) */
+@media (max-width: 749px) {
+  .st-card__link { display: inline-flex; align-items: center; min-block-size: 44px; min-inline-size: 44px; }
+}

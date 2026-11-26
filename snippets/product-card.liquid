@@ -64,13 +64,24 @@
   elsif product.media[1] != blank
     assign card_image_alt = product.media[1].preview_image
   endif
+  # New: tagged "new", or created within the days set in Theme settings (0 turns the date rule off).
   assign is_new = false
-  if settings.new_badge_days > 0 and product.published_at
-    assign age_seconds = 'now' | date: '%s' | minus: 0
-    assign published_seconds = product.published_at | date: '%s' | minus: 0
-    assign age_days = age_seconds | minus: published_seconds | divided_by: 86400
-    if age_days <= settings.new_badge_days
+  for tag in product.tags
+    assign tag_key = tag | downcase | strip
+    if tag_key == 'new'
       assign is_new = true
+      break
+    endif
+  endfor
+  if is_new == false and settings.new_badge_days > 0
+    assign created = product.created_at | default: product.published_at
+    if created
+      assign age_seconds = 'now' | date: '%s' | minus: 0
+      assign created_seconds = created | date: '%s' | minus: 0
+      assign age_days = age_seconds | minus: created_seconds | divided_by: 86400
+      if age_days <= settings.new_badge_days
+        assign is_new = true
+      endif
     endif
   endif
 -%}
@@ -78,7 +89,7 @@
   <article class="st-card" data-st-card>
     <div class="st-card__media{% if settings.card_show_secondary and card_image_alt %} st-card__media--swap{% endif %}">
       {%- if card_image -%}
-        {% render 'image', image: card_image, sizes: sizes, class: 'st-card__img', eager: eager, max: 1200 %}
+        {% render 'image', image: card_image, fallback_alt: product.title, sizes: sizes, class: 'st-card__img', eager: eager, max: 1200 %}
         {%- if settings.card_show_secondary -%}
           {%- if card_image_alt -%}
             {% render 'image', image: card_image_alt, sizes: sizes, class: 'st-card__img st-card__img--alt', alt: '', max: 1200 %}
@@ -91,12 +102,12 @@
       {%- endif -%}
 
       <div class="st-card__badges">
+        {%- comment -%} One badge per card: Sold out, then Sale, then New. {%- endcomment -%}
         {%- if product.available == false -%}
           <span class="st-badge st-badge--muted">{{ 'products.sold_out' | t }}</span>
         {%- elsif product.compare_at_price > product.price -%}
           <span class="st-badge st-badge--accent">{{ 'products.price.sale' | t }}</span>
-        {%- endif -%}
-        {%- if is_new -%}
+        {%- elsif is_new -%}
           <span class="st-badge">{{ 'products.new' | t }}</span>
         {%- endif -%}
       </div>

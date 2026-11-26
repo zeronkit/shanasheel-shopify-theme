@@ -104,10 +104,11 @@
               {%- endif -%}
             </div>
           {%- endif -%}
-          {%- if section.settings.info_email != blank -%}
+          {%- assign info_email = section.settings.info_email | default: settings.contact_email | strip -%}
+          {%- if info_email != blank -%}
             <div class="st-contact__info-item">
               <p class="st-field__label">{{ 'contact.email' | t }}</p>
-              <p><a href="mailto:{{ section.settings.info_email | escape }}">{{ section.settings.info_email | escape }}</a></p>
+              <p><a href="mailto:{{ info_email | escape }}">{{ info_email | escape }}</a></p>
             </div>
           {%- endif -%}
           {%- if section.settings.info_hours != blank -%}

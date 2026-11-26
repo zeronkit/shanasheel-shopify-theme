@@ -472,7 +472,7 @@
         "max": 60,
         "step": 1,
         "unit": "d",
-        "default": 21,
+        "default": 30,
         "info": "t:info.new_badge"
       }
     ]
@@ -507,6 +507,13 @@
         "id": "currency_code_enabled",
         "label": "t:labels.currency_code",
         "default": false
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "t:labels.free_shipping_threshold",
+        "info": "t:info.free_shipping_threshold",
+        "default": 70
       }
     ]
   },
@@ -542,6 +549,12 @@
         "id": "logo_social",
         "label": "t:labels.logo_social",
         "info": "t:info.logo_social"
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "t:labels.contact_email",
+        "info": "t:info.contact_email"
       }
     ]
   },

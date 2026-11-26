@@ -11,7 +11,15 @@
     "per": "per",
     "meta": {
       "tags": "Tagged \"{{ tags }}\"",
-      "page": "Page {{ page }}"
+      "page": "Page {{ page }}",
+      "collection": "{{ title }} at {{ shop }}: furniture, lighting and textiles chosen to live well together.",
+      "blog": "{{ title }} from {{ shop }}: room ideas, care guides and the stories behind our furniture and textiles.",
+      "collections": "Shop {{ shop }} by room: living room, dining room, bedroom, lighting, decor and textiles.",
+      "search": "Search {{ shop }} for furniture, lighting, textiles and journal stories.",
+      "cart": "Your cart at {{ shop }}. Review your pieces and go to the secure checkout.",
+      "policy": "{{ title }}: how {{ shop }} handles orders, delivery, returns and your data.",
+      "not_found": "This page could not be found at {{ shop }}. Search the shop or browse the rooms.",
+      "default": "{{ shop }}: furniture, lighting and textiles for rooms that are lived in."
     },
     "pagination": {
       "label": "Pagination",
@@ -26,7 +34,9 @@
       "next": "Scroll forward: {{ label }}"
     },
     "breadcrumb": "Breadcrumb",
-    "home": "Home"
+    "home": "Home",
+    "free_delivery_announcement": "Free US delivery from {{ amount }}",
+    "footer_write_to_us": "Write to us"
   },
   "header": {
     "shop": "Shop",
@@ -44,7 +54,7 @@
   "search": {
     "title": "Search",
     "label": "Search the store",
-    "placeholder": "Search for a piece, colour or style",
+    "placeholder": "Search pieces or colours",
     "submit": "Search",
     "suggestions": "Search suggestions",
     "results_for": "Results for \"{{ terms }}\"",
@@ -95,7 +105,8 @@
       "regular": "Regular price",
       "sale": "Sale price",
       "unit": "Unit price",
-      "from": "From {{ price }}"
+      "from": "From {{ price }}",
+      "save": "Save {{ percent }}%"
     },
     "media": {
       "gallery": "Product images",
@@ -119,7 +130,7 @@
       "shipping_policy": "Shipping policy",
       "refund_policy": "Returns and refunds policy",
       "materials_default_html": "<p>Made from materials chosen to last for years of everyday use. The exact materials are listed on the product label.</p><h4>Care</h4><p>Dust with a soft dry cloth. Keep out of direct sunlight and away from radiators. Wipe spills straight away.</p>",
-      "shipping_default_html": "<p>In-stock pieces are usually dispatched within 1 to 3 working days. Made-to-order pieces show their lead time on this page. Delivery options and costs for your address are shown at checkout.</p><p>Large pieces are delivered by a two-person team to the room of your choice.</p><p>Returns are accepted within 30 days of delivery for unused items in their original packaging.</p>"
+      "shipping_default_html": "<p>In-stock pieces leave the workshop within 1 to 3 working days. Made-to-order pieces show their lead time above.</p><p>Large pieces are carried in by a two-person team and placed in the room of your choice.</p><p>Returns are accepted within 30 days of delivery for unused pieces in their original packaging.</p>"
     },
     "show_colour": "Show {{ colour }}",
     "colour_map": "noir:black,blanc:white,gris:grey,vert:green,rouge:red,bleu:blue,marine:navy,rose:pink,jaune:yellow,beige:beige,marron:brown,violet:purple,doré:gold,argenté:silver,crème:cream,negro:black,blanco:white,gris:grey,verde:green,rojo:red,azul:blue,marino:navy,rosa:pink,amarillo:yellow,marrón:brown,morado:purple,dorado:gold,plateado:silver,crema:cream,schwarz:black,weiß:white,weiss:white,grau:grey,grün:green,rot:red,blau:blue,marineblau:navy,gelb:yellow,braun:brown,lila:purple,golden:gold,silbern:silver",
@@ -161,7 +172,9 @@
     "room": {
       "spot": "Show {{ title }}",
       "list_label": "In this room"
-    }
+    },
+    "free_delivery_line_html": "Free US delivery from {{ amount }}. <a href=\"{{ link }}\">Delivery and returns</a>",
+    "free_delivery_line_plain": "Free US delivery from {{ amount }}."
   },
   "collections": {
     "eyebrow": "Collection",
@@ -207,7 +220,14 @@
     "update": "Update cart",
     "view": "View cart",
     "summary": "Order summary",
-    "empty_rooms": "Start with a room"
+    "empty_rooms": "Start with a room",
+    "free_delivery_left_html": "<strong>{{ amount }}</strong> away from free US delivery",
+    "free_delivery_done": "You have free US delivery",
+    "free_delivery_label": "Progress to free delivery",
+    "each": "{{ price }} each",
+    "taxes_only_at_checkout": "Taxes calculated at checkout.",
+    "taxes_only_included": "Taxes included.",
+    "duties_taxes_only_included": "Duties and taxes included."
   },
   "sections": {
     "home": {
@@ -278,7 +298,23 @@
     "next": "Next story",
     "published": "Published",
     "reading": "Reading",
-    "by": "By"
+    "by": "By",
+    "tag_names": {
+      "guides": "Guides",
+      "care": "Care",
+      "wood": "Wood",
+      "lighting": "Lighting",
+      "textiles": "Textiles",
+      "ideas": "Ideas",
+      "living_room": "Living room",
+      "bedroom": "Bedroom",
+      "dining_room": "Dining room",
+      "decor": "Decor",
+      "materials": "Materials",
+      "inspiration": "Inspiration",
+      "news": "News",
+      "how_to": "How to"
+    }
   },
   "footer": {
     "credit": "Theme by ZeronKit",
@@ -357,11 +393,16 @@
   "sh_cart": {
     "assurance_1": "Two person delivery to the room of your choice",
     "assurance_2": "Assembly help and packaging taken away",
-    "assurance_3": "30 days to live with it at home"
+    "assurance_3": "30 days to live with it at home",
+    "empty_text": "Start with a room. Every piece is chosen to live well with the rest."
   },
   "sh_blog": {
     "eyebrow": "Journal",
-    "intro_html": "<p>Room ideas, care guides and the makers behind our pieces.</p>"
+    "intro_html": "<p>Room ideas, care guides and the makers behind our pieces.</p>",
+    "shop_pieces": "Shop the pieces",
+    "shop_pieces_text": "Pieces from this story, ready to bring home.",
+    "signoff_html": "Written by <strong>{{ author }}</strong>, {{ date }}",
+    "signoff_date_html": "Published {{ date }}"
   },
   "sh_rooms": {
     "eyebrow": "Shop by room"

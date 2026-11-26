@@ -346,3 +346,19 @@
   .st-facets .st-toolbar .st-select { flex: 1; min-inline-size: 0; }
   .st-facets .st-toolbar .st-select select { inline-size: 100%; font-size: 0.9rem; }
 }
+
+/* ===== Review fixes: phone tap targets and smallest texts ===== */
+html .st-facets .st-field__label,
+html .shc-tile__eyebrow { font-size: 0.75rem; }
+@media (min-width: 750px) {
+  html .st-facets .st-field__label,
+  html .shc-tile__eyebrow { font-size: 0.8125rem; }
+}
+@media (max-width: 749px) {
+  .shc-crumbs a { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .shc-tile__link { min-block-size: 44px; }
+}
+@media (max-width: 749px) { .shc-crumbs a { min-inline-size: 44px; justify-content: center; } }
+html .st-facets .st-toolbar .st-toolbar__filter { min-block-size: 44px; }
+@media (min-width: 750px) { html .st-facets .st-toolbar .st-toolbar__filter { font-size: 0.8125rem; } }
+.shc-crumbs { align-items: center; } @media (max-width: 749px) { .shc-crumbs { gap: 0.15rem; margin-block-end: 0.75rem; } }

@@ -16,7 +16,7 @@
 <article class="st-journal-card{% if lead %} st-journal-card--lead{% endif %}">
   <div class="st-journal-card__media">
     {%- if article.image -%}
-      {% render 'image', image: article.image, sizes: sizes, max: 1600, alt: '', eager: lead %}
+      {% render 'image', image: article.image, fallback_alt: article.title, sizes: sizes, max: 1600, eager: lead %}
     {%- else -%}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'st-placeholder' }}
     {%- endif -%}

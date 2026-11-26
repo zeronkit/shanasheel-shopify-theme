@@ -92,7 +92,7 @@
         "card_width": "medium",
         "show_arrows": true,
         "show_view_all": true,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-4"
       }
     },
     "dimensions": {
@@ -171,7 +171,7 @@
         "default_unit": "cm",
         "show_unit_toggle": true,
         "media_side": "start",
-        "color_scheme": "scheme-6"
+        "color_scheme": "scheme-1"
       }
     },
     "spotlight": {
@@ -213,7 +213,7 @@
         "media_limit": 3,
         "show_dynamic_checkout": false,
         "media_side": "start",
-        "color_scheme": "scheme-3"
+        "color_scheme": "scheme-2"
       }
     },
     "materials": {
@@ -288,7 +288,7 @@
         "text": "<p>A short list of honest materials, chosen to age well and be repaired, not replaced.</p>",
         "shape": "arch",
         "columns": 6,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-3"
       }
     },
     "delivery": {
@@ -348,7 +348,7 @@
         "heading": "New pieces, restocks and room ideas",
         "text": "<p>One calm email a month. Unsubscribe any time.</p>",
         "show_image": true,
-        "color_scheme": "scheme-5"
+        "color_scheme": "scheme-2"
       }
     }
   },

@@ -43,7 +43,8 @@
         "show_language": true,
         "show_payment": true,
         "show_policies": true,
-        "show_powered_by": false
+        "show_powered_by": false,
+        "contact_text": "<p>Monday to Friday, 9:00 to 17:00. Saturday, 10:00 to 15:00.</p>"
       }
     }
   },

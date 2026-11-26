@@ -1,0 +1,34 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Free delivery progress for the cart drawer and cart page. Uses the same threshold as the announcement bar
+  (Theme settings, Cart). Hidden when the threshold is 0, the cart is empty or the cart is in another currency.
+{%- endcomment -%}
+{%- liquid
+  assign fd_threshold = settings.free_shipping_threshold | times: 100 | round
+  assign fd_show = false
+  if fd_threshold > 0 and cart.item_count > 0 and cart.currency.iso_code == shop.currency
+    assign fd_show = true
+  endif
+-%}
+{%- if fd_show -%}
+  {%- liquid
+    assign fd_left = fd_threshold | minus: cart.total_price
+    assign fd_percent = cart.total_price | times: 100 | divided_by: fd_threshold
+    if fd_percent > 100
+      assign fd_percent = 100
+    endif
+  -%}
+  <div class="st-freebar{% if fd_left <= 0 %} is-done{% endif %}">
+    <p class="st-freebar__text">
+      {%- if fd_left > 0 -%}
+        {%- capture fd_money -%}<bdi>{{ fd_left | money }}</bdi>{%- endcapture -%}
+        {{ 'cart.free_delivery_left_html' | t: amount: fd_money }}
+      {%- else -%}
+        {% render 'icon', name: 'truck' %}<span>{{ 'cart.free_delivery_done' | t }}</span>
+      {%- endif -%}
+    </p>
+    <div class="st-freebar__track" role="progressbar" aria-label="{{ 'cart.free_delivery_label' | t }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ fd_percent }}">
+      <span class="st-freebar__fill" style="inline-size: {{ fd_percent }}%;"></span>
+    </div>
+  </div>
+{%- endif -%}

@@ -5,6 +5,11 @@
 {%- liquid
   assign form_id = 'ShContact-' | append: section.id
   assign form_dom_id = form_id | append: '-form'
+  assign contact_email = section.settings.email | default: settings.contact_email | strip
+  assign visit_num = '03'
+  if contact_email == blank
+    assign visit_num = '02'
+  endif
 -%}
 {%- liquid
   assign t_eyebrow = 'sh_contact.eyebrow' | t
@@ -116,18 +121,18 @@
               <span class="sh-contact__way-text">{{ t_way_write_text | escape }}</span>
             </a>
           </li>
-          {%- if section.settings.email != blank -%}
+          {%- if contact_email != blank -%}
             <li>
-              <a class="sh-contact__way" href="mailto:{{ section.settings.email | escape }}">
+              <a class="sh-contact__way" href="mailto:{{ contact_email | escape }}">
                 <span class="sh-contact__way-num">02</span>
                 <span class="sh-contact__way-title">{{ t_way_email | escape }}</span>
-                <span class="sh-contact__way-text">{{ section.settings.email | escape }}</span>
+                <span class="sh-contact__way-text">{{ contact_email | escape }}</span>
               </a>
             </li>
           {%- endif -%}
           <li>
             <a class="sh-contact__way" href="#{{ section.id }}-card">
-              <span class="sh-contact__way-num">03</span>
+              <span class="sh-contact__way-num">{{ visit_num }}</span>
               <span class="sh-contact__way-title">{{ t_way_visit | escape }}</span>
               <span class="sh-contact__way-text">{{ t_way_visit_text | escape }}</span>
             </a>
@@ -202,10 +207,10 @@
           <div class="sh-contact__hours">{{ t_hours }}</div>
         </div>
       {%- endif -%}
-      {%- if section.settings.email != blank -%}
+      {%- if contact_email != blank -%}
         <div class="sh-contact__card-row">
           <p class="sh-contact__card-label">{{ 'contact.email' | t }}</p>
-          <a href="mailto:{{ section.settings.email | escape }}">{{ section.settings.email | escape }}</a>
+          <a href="mailto:{{ contact_email | escape }}">{{ contact_email | escape }}</a>
         </div>
       {%- endif -%}
       {%- if section.blocks.size > 0 -%}
@@ -272,7 +277,7 @@
       "type": "text",
       "id": "email",
       "label": "Email address",
-      "default": "info@zeronkit.com"
+      "info": "Leave empty to use the store contact email from Theme settings. With both empty, no email is shown and the form stays."
     },
     {
       "type": "text",

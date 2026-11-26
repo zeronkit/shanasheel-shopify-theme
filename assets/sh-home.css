@@ -219,3 +219,25 @@ html .st-materials__list .st-material { padding: 1.25rem 1.25rem 1.5rem !importa
 html .st-journey .st-journey__steps .st-journey__step { padding-inline-start: 1.25rem !important; padding-inline-end: 0.75rem; }
 html .st-shelf .st-card__body { padding-inline: 0.9rem !important; padding-block-end: 0.9rem; }
 html .st-dims__tag { padding: 0.35rem 0.7rem !important; }
+
+/* ===== Review fixes: hero fits the first screen ===== */
+.st-room-hero__title { text-wrap: balance; }
+@media (min-width: 990px) {
+  /* Wider walnut panel and a heading about 25 percent smaller, so the buttons show in the first screen */
+  .st-room-hero .st-room-hero__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .st-room-hero .st-room-hero__title { font-size: calc(clamp(2.4rem, 4.5vw, 3.75rem) * var(--st-heading-scale, 1)); line-height: 1.05; }
+  .st-room-hero .st-room-hero__copy { gap: 1rem; padding: clamp(1.75rem, 3vw, 2.75rem); }
+  .st-room-hero--tall .st-room-hero__media { min-block-size: min(72vh, 46rem); }
+}
+/* Tablet: the photo takes about 45 percent of the screen so the heading and buttons follow in view */
+@media (min-width: 750px) and (max-width: 989px) {
+  .st-room-hero .st-room-hero__media { aspect-ratio: auto; block-size: 44vh; min-block-size: 20rem; max-block-size: 34rem; }
+  .st-room-hero .st-room-hero__copy { gap: 1rem; padding: 2rem; }
+}
+/* One spacing unit between the hero and the next section (it shares the same background, so two paddings would stack) */
+html section.st-room-hero { padding-block-end: 0; }
+/* Wide room photos in tall tiles: zoom toward the subject instead of showing an empty wall */
+.st-room__media--zoom { overflow: hidden; }
+.st-room__media--zoom img { transform: scale(1.55); transform-origin: var(--zoom-origin, 50% 85%); object-position: var(--zoom-origin, 50% 85%) !important; }
+/* Hotspot card link: a full 44px tap target */
+.st-spot__link { display: inline-flex; align-items: center; min-block-size: 44px; }

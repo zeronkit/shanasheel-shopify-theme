@@ -8,13 +8,13 @@
   <div class="sha-spread">
     <header class="sha-spread__text">
       <a class="sha-back" href="{{ blog.url }}">{% render 'icon', name: 'back' %}{{ 'blogs.back_to' | t: blog: blog_title }}</a>
-      {%- if article.tags.size > 0 -%}<p class="sha-spread__tag">{{ article.tags.first | escape }}</p>{%- endif -%}
+      {%- if article.tags.size > 0 -%}<p class="sha-spread__tag">{% render 'tag-label', tag: article.tags.first %}</p>{%- endif -%}
       <h1 class="sha-spread__title">{{ article.title | escape }}</h1>
       {%- if article.excerpt != blank -%}<p class="sha-spread__dek">{{ article.excerpt | strip_html | truncatewords: 30 }}</p>{%- endif -%}
     </header>
     {%- if article.image -%}
       <div class="sha-spread__media">
-        {% render 'image', image: article.image, sizes: '(min-width: 990px) 55vw, 100vw', eager: true %}
+        {% render 'image', image: article.image, fallback_alt: article.title, sizes: '(min-width: 990px) 55vw, 100vw', eager: true %}
       </div>
     {%- endif -%}
   </div>
@@ -29,13 +29,116 @@
       {%- if article.tags.size > 0 -%}
         <ul class="sha-tags" role="list" aria-label="{{ 'blogs.tags' | t }}">
           {%- for tag in article.tags -%}
-            <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | escape }}</a></li>
+            <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}">{% render 'tag-label', tag: tag %}</a></li>
           {%- endfor -%}
         </ul>
       {%- endif -%}
     </aside>
     <div class="sha-main">
     <div class="st-rte st-article__content sha-content{% if section.settings.drop_cap %} st-article__content--drop{% endif %}">{{ article.content }}</div>
+
+    {%- capture signoff_date -%}{{ article.published_at | time_tag: format: 'date' }}{%- endcapture -%}
+    <p class="sha-signoff">
+      {%- if section.settings.show_author and article.author != blank -%}
+        {{ 'sh_blog.signoff_html' | t: author: article.author, date: signoff_date }}
+      {%- else -%}
+        {{ 'sh_blog.signoff_date_html' | t: date: signoff_date }}
+      {%- endif -%}
+    </p>
+
+    {%- if section.settings.show_products -%}
+      {%- liquid
+        # Shop the pieces: products picked on the article (shanasheel.products), then products whose tags
+        # contain one of the article tags, then bestsellers, so every story ends with pieces to shop.
+        assign piece_limit = section.settings.products_limit
+        assign picked = article.metafields.shanasheel.products.value
+        assign piece_ids = ''
+        assign piece_count = 0
+        if picked != blank
+          for product in picked limit: piece_limit
+            assign piece_ids = piece_ids | append: product.id | append: ','
+            assign piece_count = piece_count | plus: 1
+          endfor
+        endif
+        if piece_count < piece_limit and article.tags.size > 0
+          for product in collections.all.products limit: 50
+            if piece_count >= piece_limit
+              break
+            endif
+            assign key = product.id | append: ','
+            if piece_ids contains key or product.available == false
+              continue
+            endif
+            assign product_tags = product.tags | join: '|' | downcase
+            for tag in article.tags
+              assign tag_key = tag | downcase | strip
+              if product_tags contains tag_key
+                assign piece_ids = piece_ids | append: key
+                assign piece_count = piece_count | plus: 1
+                break
+              endif
+            endfor
+          endfor
+        endif
+        if piece_count < piece_limit
+          for product in collections.all.products limit: 50
+            if piece_count >= piece_limit
+              break
+            endif
+            assign key = product.id | append: ','
+            assign product_tags = product.tags | join: '|' | downcase
+            if piece_ids contains key or product.available == false
+              continue
+            endif
+            unless product_tags contains 'bestseller'
+              continue
+            endunless
+            assign piece_ids = piece_ids | append: key
+            assign piece_count = piece_count | plus: 1
+          endfor
+        endif
+        assign pieces_heading = section.settings.products_heading | default: ''
+        if pieces_heading == blank
+          assign pieces_heading = 'sh_blog.shop_pieces' | t
+        endif
+      -%}
+      {%- if piece_count > 0 -%}
+        <section class="sha-pieces" aria-labelledby="Pieces-{{ section.id }}">
+          <div class="sha-pieces__head">
+            <h2 class="sha-pieces__title" id="Pieces-{{ section.id }}">{{ pieces_heading | escape }}</h2>
+            <p class="sha-pieces__text">{{ 'sh_blog.shop_pieces_text' | t }}</p>
+          </div>
+          <ul class="st-grid st-grid--3 st-grid--m2 sha-pieces__grid" role="list">
+            {%- assign shown_pieces = 0 -%}
+            {%- if picked != blank -%}
+              {%- for product in picked limit: piece_limit -%}
+                <li>{% render 'product-card', product: product, sizes: '(min-width: 990px) 20vw, 50vw' %}</li>
+                {%- assign shown_pieces = shown_pieces | plus: 1 -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- for product in collections.all.products limit: 50 -%}
+              {%- assign key = product.id | append: ',' -%}
+              {%- if piece_ids contains key and shown_pieces < piece_limit -%}
+                {%- liquid
+                  assign already = false
+                  if picked != blank
+                    for p in picked
+                      if p.id == product.id
+                        assign already = true
+                      endif
+                    endfor
+                  endif
+                -%}
+                {%- unless already -%}
+                  <li>{% render 'product-card', product: product, sizes: '(min-width: 990px) 20vw, 50vw' %}</li>
+                  {%- assign shown_pieces = shown_pieces | plus: 1 -%}
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </section>
+      {%- endif -%}
+    {%- endif -%}
 
     {%- if section.settings.show_pager -%}
       {%- if blog.previous_article or blog.next_article -%}
@@ -117,6 +220,9 @@
     { "type": "checkbox", "id": "show_reading_time", "label": "t:labels.show_reading_time", "default": true },
     { "type": "checkbox", "id": "drop_cap", "label": "t:labels.drop_cap", "default": true },
     { "type": "checkbox", "id": "show_pager", "label": "t:labels.show_pager", "default": true },
+    { "type": "checkbox", "id": "show_products", "label": "t:labels.show_article_products", "info": "t:info.article_products", "default": true },
+    { "type": "text", "id": "products_heading", "label": "t:labels.heading" },
+    { "type": "range", "id": "products_limit", "label": "t:labels.products_to_show", "min": 2, "max": 6, "step": 1, "default": 3 },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
   ]
 }

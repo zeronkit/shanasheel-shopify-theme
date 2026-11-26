@@ -1039,3 +1039,27 @@ html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="
   white-space: nowrap; overflow: hidden; text-overflow: clip; user-select: none;
 }
 .st-footer--centered .st-footer__signature { text-align: center; }
+
+/* Review fixes: no text below 13px on tablet and desktop (labels, counts, eyebrows, header links) */
+@media (min-width: 750px) {
+  html .st-header__link,
+  html .st-header__menu-label,
+  html .st-eyebrow,
+  html .st-room__count,
+  html .st-size,
+  html .st-dims__table th,
+  html .st-field__label,
+  html .st-options__current,
+  html .st-material__origin,
+  html .st-journey__count,
+  html .shc-crumbs a,
+  html .shc-head__eyebrow,
+  html .shc-head__count,
+  html .shc-index__no,
+  html .st-facets .st-button,
+  html .shc-tile__link,
+  html .st-dims__figure abbr,
+  html .st-tabs .st-count,
+  html .shb-meta,
+  html .shb-mast__eyebrow { font-size: 0.8125rem; }
+}

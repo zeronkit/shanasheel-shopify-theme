@@ -1,0 +1,393 @@
+# Shanasheel changelog
+
+All notable changes to the Shanasheel Shopify theme by ZeronKit. The Arabic version follows the English one.
+
+## 1.1.0 (25 November 2026)
+
+This release comes from a full review of the theme on desktop, tablet and phone, in English and Arabic. Nothing was removed and no setting was renamed, so your content and your choices in the editor keep working.
+
+### Added
+
+- **Free delivery threshold.** A new setting, `Theme settings`, `Cart`, `Free delivery threshold` (default 70, in your store currency). Any announcement message can contain `[threshold]`, which shows that amount with its currency, for example "Free US delivery from $70 USD". If you leave a message with the truck icon empty, the theme writes a translated delivery message for you.
+
+  Why: the 1.0.0 message said "Free standard delivery over 100" with no currency, so shoppers could not tell what it meant (readability, consistency).
+
+  What to do: set the threshold to the amount of your own free shipping rate in `Settings`, `Shipping and delivery`, or to 0 if you do not offer free delivery. Put `[threshold]` in your delivery message.
+- **Free delivery progress bar in the cart.** The cart drawer and the cart page show how much is left until free delivery, for example "$31.00 away from free US delivery", and "You have free US delivery" once the order reaches the amount. It uses the same `Free delivery threshold`.
+
+  Why: shoppers see right away how close they are to free delivery (buying flow).
+
+  What to do: nothing beyond setting the threshold. Set it to 0 to hide the bar. The built-in texts say "US delivery". If your free delivery covers another country, change them in `Themes`, `...`, `Edit default theme content` (search for "free US delivery" and "free delivery").
+- **Add to cart bar on phones.** On a phone product page, a bar with the product name, the price and an `Add to cart` button appears at the bottom of the screen once the main button has scrolled away. It adds the variant the shopper picked and shows "Sold out" when that variant is not available.
+
+  Why: on long product pages the buy button disappeared after the first screen (phone use, buying flow).
+
+  What to do: nothing. It works on every product page.
+- **Sale badge on the product page.** When a variant has a compare at price, a "Save 13%" badge (Arabic "وفّر 13٪") shows beside the price. The phone bar shows the sale price with the regular price crossed out.
+
+  Why: a sale was easy to miss on the product page (buying flow).
+
+  What to do: nothing. Fill in `Compare-at price` on the product as usual.
+- **Article sign-off and "Shop the pieces".** Every journal post ends with "Written by" the author and the date, then a row of products. The products come from the article metafield `shanasheel.products` when it is set, otherwise from products whose tags match the post's tags, otherwise from products tagged "bestseller". If none match, the row stays hidden. The `Blog post` section has `Show "Shop the pieces"`, `Heading` and `Products to show`.
+
+  Why: a reader who likes a story can buy the pieces in it without searching (buying flow).
+
+  What to do: optional. Tag a few products "bestseller" or give your posts tags that match your product tags. To pick the products yourself, create a metafield definition for blog posts in `Settings`, `Custom data`, with namespace and key `shanasheel.products` and the type list of products, then fill it on each post. Turn the block off with `Show "Shop the pieces"` if you do not want it.
+
+- **Store contact email.** A new setting, `Theme settings`, `Brand assets`, `Store contact email`, empty by default. When you fill it in, the address shows in the footer contact window under "Write to us" and on the contact page. When it is empty, no email line shows and the contact form stays.
+
+  Why: the 1.0.0 demo content showed the theme maker's address as if it were the store's (trust).
+
+  What to do: write your own shop address in the setting. If your footer contact text or your pages still mention another address, change them.
+- **Meta descriptions everywhere.** Every page now has a meta description: your own SEO text first, then the page's own text (product, collection, article or page), then the shop description, then a short theme line for the home page, the collections list, the journal, search, cart, policies and the 404 page. Product pages also get BreadcrumbList data for search engines.
+
+  Why: the home page, the collections list, the journal, search, cart, policies and the 404 page had no description (search engines).
+
+  What to do: optional. Write a description in `Online Store`, `Preferences` and in the SEO part of your products and collections. The theme fills the gaps.
+- **Journal tags in other languages.** Common journal tags (Guides, Care, Wood, Lighting, Textiles, Ideas, Living room and a few more) now show in Arabic on Arabic pages. Other tags show as written.
+
+  Why: Shopify cannot translate tags, so English tags showed on Arabic pages (Arabic).
+
+  What to do: to rename a tag, use `Themes`, `...`, `Edit default theme content` and search for the tag name.
+
+### Changed
+
+- **Product gallery.** Every image now has the same frame, and the image number and caption sit together in one label ("01 / 03 | Cream cover in daylight") in the same corner of every image.
+
+  Why: in 1.0.0 the first image had a different frame from the others and the number and caption were two separate labels (consistency).
+
+  What to do: nothing.
+- **Product page columns.** The buy panel now starts level with the first image. On desktop the shorter column (the gallery or the panel) moves with the page and then stays in view beside the longer one, so there is never an empty column.
+
+  Why: the panel started lower than the gallery and long pages left a large empty gap (readability, buying flow).
+
+  What to do: nothing. This now happens on every product page, whatever `Keep product details in view while scrolling` is set to.
+- **Fabrics and finishes.** When the variant buttons already show the finishes as swatches, the `Fabrics and finishes` block shows only its heading and the note of the selected finish, and the note follows the shopper's choice.
+
+  Why: the same choices were shown twice, one above the other (consistency, readability).
+
+  What to do: nothing.
+- **Phone and tablet gallery.** The gallery now sits inside the page margin and the next image peeks in from the side.
+
+  Why: the first image touched the screen edge, and shoppers did not see that there were more images (phone use).
+
+  What to do: nothing.
+- **Home page hero.** The heading is smaller and the text panel wider, so the heading fits on fewer lines and both buttons are visible in the first screen on a laptop. On tablets the photo is shorter so the heading and buttons fit in the first screen.
+
+  Why: the buttons were below the first screen on common laptop and tablet sizes (readability, buying flow).
+
+  What to do: nothing. If you wrote a long heading, check it in the editor.
+- **Spacing.** The gap between the hero and the next section and the space above the footer now use the same spacing as every other section. Arched cards no longer have empty space at the bottom.
+
+  Why: some gaps were twice as large as others (consistency).
+
+  What to do: nothing.
+- **Footer.** Menu columns now spread across the full width on desktop (four columns). Phones keep one column.
+
+  Why: the links sat in two crowded columns with empty space beside them (readability).
+
+  What to do: nothing.
+- **Room tiles.** A wide photo inside a tall room tile now zooms toward its subject instead of showing mostly wall.
+
+  Why: landscape photos looked empty in the arched tiles (readability).
+
+  What to do: if a tile does not show the right part of the photo, set the focal point on that image in Shopify (open the image in `Content`, `Files` or on the collection and choose the focal point).
+- **Product card buttons.** Every card button now has the same height, text size and distance from the card edges, on every page.
+
+  Why: buttons had different sizes and one touched the card edge (consistency, phone use).
+
+  What to do: nothing.
+- **Search results.** With results, the page opens with a short band that has the title and the search field on one row, so the first results appear in the first screen. The empty search page did not change.
+
+  Why: the first result was below the first screen on laptops and phones (buying flow).
+
+  What to do: nothing.
+- **Popular search buttons.** They are now 44 pixels high on phones with slightly smaller text.
+
+  Why: they were hard to tap (phone use).
+
+  What to do: nothing.
+- **Normal page title.** The page title now sits in a light sand arch instead of a dark walnut one. It is shorter, the title starts near the top, and it stays in view on desktop while the page scrolls.
+
+  Why: the dark arch was tall and left an empty band above the title (readability).
+
+  What to do: nothing.
+- **Text sizes and tap targets.** On phones, every visible text is at least 12 pixels and every button or link is at least 44 pixels tall or wide. On desktop, small labels (header links, eyebrows, counts, field labels, table headings, breadcrumbs) are at least 13 pixels and the footer text is 14 pixels.
+
+  Why: some labels were too small to read and some links too small to tap (readability, phone use).
+
+  What to do: nothing.
+- **Announcement bar on phones.** The text now fits on one line, the icons are hidden on phones, and the pause and close buttons are larger.
+
+  Why: the delivery message wrapped onto two lines and pushed the page down (phone use).
+
+  What to do: keep each message short.
+- **Cart lines.** The line price now shows once, on the side. Under the product name you only see the price of one item ("$39.00 each") when the quantity is more than 1.
+
+  Why: the same price appeared twice on every line (readability).
+
+  What to do: nothing.
+- **Images for screen readers.** Decorative copies of images (card hover images, thumbnails, collage frames) now have empty alt text, and real photos keep their description. A card's second image now loads as soon as the pointer, a tap or the keyboard reaches the card.
+
+  Why: screen readers read every photo twice, and some hover images were still blank on the first hover (consistency).
+
+  What to do: keep writing alt text for your product photos.
+
+- **Buy it now.** It is now an outline button on the product panel. Only Add to cart is filled.
+
+  Why: two filled buttons competed for attention (buying flow).
+
+  What to do: nothing.
+- **One delivery message on the product page.** The line under the price now says "Free US delivery from $70 USD" from the same `Free delivery threshold` as the announcement and the cart bar, with a link to your delivery and returns policy. The "Shipping calculated at checkout" line is gone, and the `Delivery and returns` fold no longer repeats the delivery box. In the cart, the line under the bar now speaks only about taxes. Gift card products show no delivery line, no delivery box and no Buy it now.
+
+  Why: the page said "Shipping calculated at checkout" right beside a free delivery offer, and the same delivery facts appeared three times (consistency, trust).
+
+  What to do: keep the threshold equal to your real free shipping rate. Set it to 0 if you do not offer free delivery, then the old line comes back.
+- **Badges.** A product card shows one badge: Sold out, then Sale, then New. New shows for products tagged "new", or created within the days set in `Theme settings`, `Product cards` (default now 30, 0 uses the tag only). The "Save" badge on the product page now has the same notched tag shape as the card badge.
+
+  Why: cards could show Sale and New at the same time (consistency).
+
+  What to do: tag products "new" if you want the badge on older pieces.
+- **Small lists.** Collections and search results with fewer than 12 products no longer show the Filter button or the per page choice. A filter group with only one choice is left out.
+
+  Why: filters on a list of five products only added clicks (readability).
+
+  What to do: nothing.
+- **Cart photos.** Product photos in the cart page and the cart drawer are now 120 pixels wide on every screen.
+
+  Why: at 78 pixels on phones the pieces were hard to recognise (buying flow).
+
+  What to do: nothing.
+- **Phones.** Card names, footer credit links, links under the product price and in the delivery fold, the cart Remove link and the contact page fields are now 44 pixels tall. The search field placeholder is shorter ("Search pieces or colours") so it fits on phones in English and Arabic.
+
+  Why: reviewers counted many tap targets under 44 pixels and a cut placeholder (phone use).
+
+  What to do: nothing.
+- **Photo descriptions.** A real photo without its own alt text now uses the product, collection or article title (or the hero heading). Decorative copies keep an empty alt text.
+
+  Why: screen readers heard nothing for these photos (accessibility).
+
+  What to do: alt text you write yourself always wins.
+
+### Fixed
+
+- The breadcrumb on collection pages on phones: the slash now lines up with the links.
+- Product grids on tablets: size chips are hidden below 990 pixels wide (as on phones) and the title and price are stacked, so product names are no longer cut to a few letters.
+- The empty cart page in Arabic showed "Your cart is empty" in English. Both texts now come from the theme language files.
+
+  What to do: if you copy your settings from 1.0.0 and the `Cart` section on the cart page still holds the old English heading and text, clear the two fields so the translated texts show.
+- On product pages, the buy panel was pushed about 90 pixels down by a leftover offset. It now starts level with the gallery.
+
+### Updating from 1.0.0
+
+A theme uploaded from a zip file does not update by itself. Your 1.0.0 store keeps working. Update when you are ready:
+
+1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
+2. Download Shanasheel 1.1.0 and upload the zip with `Add theme`, `Upload zip file`. It arrives as a new, unpublished theme.
+3. Copy your settings. You can set the new theme up in the editor the same way as the old one, or copy the files: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. Version 1.1.0 renamed no setting, so these files fit.
+4. In the new theme, set `Theme settings`, `Cart`, `Free delivery threshold`, and change your delivery message in the `Announcement bar` to use `[threshold]`. Write your shop address in `Theme settings`, `Brand assets`, `Store contact email`, and remove any other address from the footer contact text.
+5. Check the pages: the home page, a collection, a product (also on a phone), the cart with an item in it, a search, a journal post and a normal page, in every language you sell in.
+6. Publish the new theme only when every page looks right. Keep the old copy for a while.
+
+Note: the theme info in the 1.0.0 download said 1.1.0 by mistake. To tell the two apart, use the theme names in your library, or look for the `Free delivery threshold` setting, which only 1.1.0 has.
+
+## 1.0.0 (25 November 2026)
+
+First release.
+
+---
+
+# سجل تغييرات شناشيل
+
+## 1.1.0 (25 نوفمبر 2026)
+
+جاء هذا الإصدار بعد مراجعة كاملة للقالب على الحاسوب والجهاز اللوحي والهاتف، بالعربية والإنجليزية. لم يُحذف شيء ولم يتغيّر اسم أي إعداد، فيبقى محتواك واختياراتك في المحرر كما هي.
+
+### أُضيف
+
+- **حدّ التوصيل المجاني.** إعداد جديد في `Theme settings` ثم `Cart` ثم `Free delivery threshold` (القيمة الافتراضية 70 بعملة متجرك). يمكن أن تحتوي أي رسالة في شريط الإعلانات على `[threshold]`، فيظهر مكانها هذا المبلغ مع عملته، مثل "توصيل مجاني داخل أمريكا من $70 USD". وإذا تركت رسالة أيقونة الشاحنة فارغة يكتب القالب رسالة توصيل مترجمة.
+
+  السبب: رسالة 1.0.0 كانت "Free standard delivery over 100" بلا عملة، فلم يفهم الزبون المقصود (الوضوح والاتساق).
+
+  ما عليك فعله: اجعل الحد مساويًا لمبلغ الشحن المجاني في `Settings` ثم `Shipping and delivery`، أو 0 إذا لم يكن لديك توصيل مجاني، وضع `[threshold]` في رسالة التوصيل.
+- **شريط التقدم نحو التوصيل المجاني في السلة.** يعرض درج السلة وصفحة السلة المبلغ الباقي للتوصيل المجاني، مثل "باقٍ $31.00 على التوصيل المجاني داخل أمريكا"، ثم "حصلت على التوصيل المجاني داخل أمريكا" عندما يبلغ الطلب الحد. ويستخدم الإعداد نفسه `Free delivery threshold`.
+
+  السبب: يرى الزبون مباشرة كم بقي له ليحصل على التوصيل المجاني (مسار الشراء).
+
+  ما عليك فعله: يكفي ضبط الحد، واجعله 0 لإخفاء الشريط. النصوص المدمجة تذكر أمريكا، فإذا كان توصيلك المجاني لبلد آخر فغيّرها من `Themes` ثم `...` ثم `Edit default theme content` (ابحث عن "free US delivery" و"free delivery").
+- **شريط الإضافة إلى السلة على الهاتف.** في صفحة المنتج على الهاتف يظهر أسفل الشاشة شريط فيه اسم المنتج وسعره وزر `Add to cart` بعد أن يختفي الزر الرئيسي من الشاشة. يضيف الخيار الذي اختاره الزبون، ويكتب "نفدت الكمية" إذا لم يكن الخيار متوفرًا.
+
+  السبب: في صفحات المنتجات الطويلة كان زر الشراء يختفي بعد الشاشة الأولى (الاستخدام على الهاتف ومسار الشراء).
+
+  ما عليك فعله: لا شيء، فهو يعمل في كل صفحات المنتجات.
+- **شارة التخفيض في صفحة المنتج.** عندما يكون للخيار سعر قبل التخفيض تظهر بجانب السعر شارة مثل "وفّر 13٪"، ويعرض شريط الهاتف سعر التخفيض مع السعر الأصلي مشطوبًا.
+
+  السبب: كان التخفيض لا يلفت النظر في صفحة المنتج (مسار الشراء).
+
+  ما عليك فعله: لا شيء، املأ `Compare-at price` في المنتج كالمعتاد.
+- **توقيع المقال وقسم "تسوّق القطع".** ينتهي كل مقال في المدوّنة بعبارة "كتبه" مع اسم الكاتب والتاريخ، ثم صف من المنتجات. تأتي المنتجات من حقل المقال `shanasheel.products` إن وُجد، وإلا فمن المنتجات التي تطابق وسومها وسوم المقال، وإلا فمن المنتجات التي تحمل الوسم "bestseller". وإذا لم يطابق أي منتج يبقى الصف مخفيًا. وفي قسم `Blog post` الإعدادات `Show "Shop the pieces"` و`Heading` و`Products to show`.
+
+  السبب: القارئ الذي أعجبته القصة يشتري قطعها دون أن يبحث عنها (مسار الشراء).
+
+  ما عليك فعله: هذا اختياري. ضع الوسم "bestseller" على بعض المنتجات، أو أعطِ مقالاتك وسومًا تطابق وسوم منتجاتك. ولتختار المنتجات بنفسك أنشئ تعريف حقل للمقالات من `Settings` ثم `Custom data`، بمساحة الاسم والمفتاح `shanasheel.products` ونوع قائمة منتجات، ثم املأه في كل مقال. وأطفئ `Show "Shop the pieces"` إذا لم ترده.
+
+- **بريد التواصل مع المتجر.** إعداد جديد في `Theme settings` ثم `Brand assets` ثم `Store contact email`، فارغ في البداية. عندما تكتب فيه عنوانك يظهر في نافذة التواصل في التذييل تحت "راسلنا" وفي صفحة التواصل. وإذا بقي فارغًا لا يظهر أي بريد ويبقى نموذج التواصل.
+
+  السبب: كان المحتوى التجريبي في 1.0.0 يعرض عنوان صانع القالب كأنه عنوان المتجر (الثقة).
+
+  ما عليك فعله: اكتب عنوان بريد متجرك في الإعداد. وإذا كان نص التواصل في التذييل أو صفحاتك تذكر عنوانًا آخر فغيّره.
+- **وصف لكل صفحة في محركات البحث.** صار لكل صفحة وصف: نص SEO الذي كتبته أولًا، ثم نص الصفحة نفسها (المنتج أو المجموعة أو المقال أو الصفحة)، ثم وصف المتجر، ثم سطر قصير من القالب للرئيسية وقائمة المجموعات والمجلة والبحث والسلة والسياسات وصفحة 404. وتحصل صفحات المنتجات أيضًا على بيانات BreadcrumbList لمحركات البحث.
+
+  السبب: لم يكن للرئيسية وقائمة المجموعات والمجلة والبحث والسلة والسياسات وصفحة 404 أي وصف (محركات البحث).
+
+  ما عليك فعله: اختياري. اكتب وصفًا في `Online Store` ثم `Preferences` وفي قسم SEO لمنتجاتك ومجموعاتك، والقالب يملأ ما ينقص.
+- **وسوم المجلة بلغات أخرى.** الوسوم الشائعة في المجلة (أدلة، العناية، الخشب، الإضاءة، المنسوجات، أفكار، غرفة المعيشة وغيرها) تظهر الآن بالعربية في الصفحات العربية، وغيرها يظهر كما كُتب.
+
+  السبب: لا يستطيع Shopify ترجمة الوسوم، فكانت الوسوم الإنجليزية تظهر في الصفحات العربية (العربية).
+
+  ما عليك فعله: لتغيير اسم وسم استخدم `Themes` ثم `...` ثم `Edit default theme content` وابحث عن اسمه.
+
+### تغيّر
+
+- **معرض صور المنتج.** لكل الصور الآن الإطار نفسه، ورقم الصورة ووصفها معًا في ملصق واحد ("01 / 03 | Cream cover in daylight") في الزاوية نفسها من كل صورة.
+
+  السبب: في 1.0.0 كان إطار الصورة الأولى مختلفًا عن البقية، وكان الرقم والوصف ملصقين منفصلين (الاتساق).
+
+  ما عليك فعله: لا شيء.
+- **أعمدة صفحة المنتج.** تبدأ لوحة الشراء الآن على مستوى الصورة الأولى. وعلى الحاسوب يتحرك العمود الأقصر (المعرض أو اللوحة) مع الصفحة ثم يبقى ظاهرًا بجانب العمود الأطول، فلا يظهر عمود فارغ أبدًا.
+
+  السبب: كانت اللوحة تبدأ أدنى من المعرض، وكانت الصفحات الطويلة تترك فراغًا كبيرًا (الوضوح ومسار الشراء).
+
+  ما عليك فعله: لا شيء. يحدث هذا الآن في كل صفحات المنتجات مهما كانت قيمة `Keep product details in view while scrolling`.
+- **الأقمشة والتشطيبات.** عندما تعرض أزرار الخيارات التشطيبات كعيّنات، يعرض عنصر `Fabrics and finishes` عنوانه وملاحظة التشطيب المختار فقط، وتتغيّر الملاحظة مع اختيار الزبون.
+
+  السبب: كانت الخيارات نفسها تظهر مرتين، واحدة فوق الأخرى (الاتساق والوضوح).
+
+  ما عليك فعله: لا شيء.
+- **المعرض على الهاتف والجهاز اللوحي.** صار المعرض داخل هامش الصفحة، وتظهر الصورة التالية جزئيًا من الجانب.
+
+  السبب: كانت الصورة الأولى تلامس حافة الشاشة، ولم يكن الزبون يعرف أن هناك صورًا أخرى (الاستخدام على الهاتف).
+
+  ما عليك فعله: لا شيء.
+- **واجهة الصفحة الرئيسية.** صار العنوان أصغر ولوحة النص أعرض، فيأخذ العنوان أسطرًا أقل ويظهر الزران في الشاشة الأولى على الحاسوب المحمول. وعلى الجهاز اللوحي صارت الصورة أقصر ليظهر العنوان والزران في الشاشة الأولى.
+
+  السبب: كان الزران تحت الشاشة الأولى في المقاسات الشائعة للحواسيب المحمولة والأجهزة اللوحية (الوضوح ومسار الشراء).
+
+  ما عليك فعله: لا شيء، وإذا كتبت عنوانًا طويلًا فراجعه في المحرر.
+- **المسافات.** صارت المسافة بين الواجهة والقسم الذي يليها، والمسافة فوق التذييل، مثل المسافة بين أي قسمين آخرين. ولم يعد في أسفل البطاقات المقوّسة فراغ زائد.
+
+  السبب: كانت بعض المسافات ضعف غيرها (الاتساق).
+
+  ما عليك فعله: لا شيء.
+- **التذييل.** صارت أعمدة القوائم تمتد على العرض كله في الحاسوب (أربعة أعمدة)، ويبقى عمود واحد على الهاتف.
+
+  السبب: كانت الروابط مزدحمة في عمودين بجانبهما فراغ (الوضوح).
+
+  ما عليك فعله: لا شيء.
+- **مربعات الغرف.** الصورة العريضة داخل مربع غرفة طويل تقترب الآن من موضوعها بدل أن يظهر الجدار غالبًا.
+
+  السبب: كانت الصور الأفقية تبدو فارغة داخل المربعات المقوّسة (الوضوح).
+
+  ما عليك فعله: إذا لم يُظهر المربع الجزء الصحيح من الصورة فحدّد نقطة التركيز في الصورة نفسها داخل Shopify (افتح الصورة من `Content` ثم `Files` أو من المجموعة واختر نقطة التركيز).
+- **أزرار بطاقات المنتجات.** صار لكل أزرار البطاقات الارتفاع نفسه وحجم النص نفسه والمسافة نفسها عن حواف البطاقة في كل الصفحات.
+
+  السبب: كانت الأزرار بأحجام مختلفة، وأحدها يلامس حافة البطاقة (الاتساق والاستخدام على الهاتف).
+
+  ما عليك فعله: لا شيء.
+- **نتائج البحث.** عندما توجد نتائج تبدأ الصفحة بشريط قصير فيه العنوان وحقل البحث في سطر واحد، فتظهر النتائج الأولى في الشاشة الأولى. أما صفحة البحث الفارغة فلم تتغيّر.
+
+  السبب: كانت النتيجة الأولى تحت الشاشة الأولى على الحاسوب والهاتف (مسار الشراء).
+
+  ما عليك فعله: لا شيء.
+- **أزرار البحوث الشائعة.** صار ارتفاعها 44 بكسل على الهاتف ونصها أصغر قليلًا.
+
+  السبب: كان الضغط عليها صعبًا (الاستخدام على الهاتف).
+
+  ما عليك فعله: لا شيء.
+- **عنوان الصفحات العادية.** صار عنوان الصفحة داخل قوس فاتح بلون الرمل بدل القوس الداكن بلون الجوز. وهو أقصر، ويبدأ العنوان قرب أعلاه، ويبقى ظاهرًا على الحاسوب أثناء التمرير.
+
+  السبب: كان القوس الداكن طويلًا ويترك فراغًا فوق العنوان (الوضوح).
+
+  ما عليك فعله: لا شيء.
+- **أحجام النصوص ومساحات اللمس.** على الهاتف صار كل نص ظاهر 12 بكسل على الأقل، وكل زر أو رابط 44 بكسل على الأقل طولًا أو عرضًا. وعلى الحاسوب صارت التسميات الصغيرة (روابط الترويسة، والعناوين الصغيرة فوق الأقسام، والأعداد، وتسميات الحقول، ورؤوس الجداول، ومسار التنقل) 13 بكسل على الأقل، ونص التذييل 14 بكسل.
+
+  السبب: كانت بعض التسميات صغيرة يصعب قراءتها، وبعض الروابط صغيرة يصعب الضغط عليها (الوضوح والاستخدام على الهاتف).
+
+  ما عليك فعله: لا شيء.
+- **شريط الإعلانات على الهاتف.** صار النص في سطر واحد، واختفت الأيقونات على الهاتف، وكبر زرّا الإيقاف والإغلاق.
+
+  السبب: كانت رسالة التوصيل تنقسم على سطرين وتدفع الصفحة إلى الأسفل (الاستخدام على الهاتف).
+
+  ما عليك فعله: اجعل كل رسالة قصيرة.
+- **أسطر السلة.** صار سعر السطر يظهر مرة واحدة في الجانب. وتحت اسم المنتج يظهر سعر القطعة الواحدة ("$39.00 للقطعة") فقط عندما تكون الكمية أكثر من 1.
+
+  السبب: كان السعر نفسه يظهر مرتين في كل سطر (الوضوح).
+
+  ما عليك فعله: لا شيء.
+- **الصور وقارئات الشاشة.** النسخ الزخرفية من الصور (صور المرور على البطاقات، والصور المصغّرة، وإطارات مجموعة الصور) صار نصها البديل فارغًا، والصور الحقيقية تحتفظ بوصفها. وتُحمَّل الصورة الثانية للبطاقة بمجرد أن يصل إليها المؤشر أو اللمس أو لوحة المفاتيح.
+
+  السبب: كانت قارئات الشاشة تقرأ كل صورة مرتين، وكانت بعض صور المرور فارغة في أول مرور (الاتساق).
+
+  ما عليك فعله: استمر في كتابة نص بديل لصور منتجاتك.
+
+- **زر الشراء الفوري.** صار زر `Buy it now` زرًا بإطار فقط في لوحة المنتج، والزر الممتلئ الوحيد هو الإضافة إلى السلة.
+
+  السبب: كان زرّان ممتلئان يتنافسان على الانتباه (مسار الشراء).
+
+  ما عليك فعله: لا شيء.
+- **رسالة توصيل واحدة في صفحة المنتج.** السطر تحت السعر يقول الآن "توصيل مجاني داخل أمريكا من $70 USD" من إعداد `Free delivery threshold` نفسه الذي يستخدمه شريط الإعلانات وشريط السلة، مع رابط إلى سياسة التوصيل والإرجاع. اختفى سطر "تُحسب تكلفة الشحن عند الدفع"، ولم يعد قسم `Delivery and returns` يكرر صندوق التوصيل. وفي السلة صار السطر تحت الشريط يتحدث عن الضرائب فقط. ولا يظهر في بطاقات الهدايا سطر توصيل ولا صندوق توصيل ولا زر الشراء الفوري.
+
+  السبب: كانت الصفحة تقول "تُحسب تكلفة الشحن عند الدفع" بجانب عرض التوصيل المجاني، وكانت معلومات التوصيل نفسها تظهر ثلاث مرات (الاتساق، الثقة).
+
+  ما عليك فعله: اجعل الحد مساويًا لسعر الشحن المجاني الحقيقي عندك، أو اجعله 0 إذا لم تقدّم توصيلًا مجانيًا فيعود السطر القديم.
+- **الشارات.** تعرض بطاقة المنتج شارة واحدة: نفدت الكمية، ثم التخفيض، ثم جديد. تظهر شارة جديد للمنتجات التي تحمل الوسم "new"، أو التي أُنشئت خلال عدد الأيام المحدد في `Theme settings` ثم `Product cards` (صار الافتراضي 30، والصفر يعني الوسم فقط). وصارت شارة "وفّر" في صفحة المنتج بشكل شارة البطاقة نفسه.
+
+  السبب: كانت البطاقة تعرض شارتي التخفيض وجديد معًا (الاتساق).
+
+  ما عليك فعله: أضف الوسم "new" إذا أردت الشارة على قطع أقدم.
+- **القوائم الصغيرة.** المجموعات ونتائج البحث التي فيها أقل من 12 منتجًا لم تعد تعرض زر التصفية ولا اختيار عدد المنتجات في الصفحة، وتُخفى مجموعة التصفية التي فيها خيار واحد فقط.
+
+  السبب: كانت التصفية في قائمة من خمسة منتجات تضيف نقرات بلا فائدة (سهولة القراءة).
+
+  ما عليك فعله: لا شيء.
+- **صور السلة.** صارت صور المنتجات في صفحة السلة ودرج السلة بعرض 120 بكسل على كل الشاشات.
+
+  السبب: كان التعرّف على القطع صعبًا بعرض 78 بكسل على الهاتف (مسار الشراء).
+
+  ما عليك فعله: لا شيء.
+- **الهاتف.** صارت أسماء البطاقات وروابط الحقوق في التذييل والروابط تحت السعر وفي قسم التوصيل ورابط الحذف في السلة وحقول صفحة التواصل بارتفاع 44 بكسل. وصار النص داخل حقل البحث أقصر ("ابحث عن قطعة أو لون") ليتسع على الهاتف بالعربية والإنجليزية.
+
+  السبب: أحصى المراجعون عناصر لمس كثيرة أصغر من 44 بكسل ونصًا مقطوعًا في حقل البحث (استخدام الهاتف).
+
+  ما عليك فعله: لا شيء.
+- **وصف الصور.** الصورة الحقيقية التي ليس لها نص بديل تستخدم الآن اسم المنتج أو المجموعة أو المقال (أو عنوان الواجهة)، وتبقى النسخ الزخرفية بنص بديل فارغ.
+
+  السبب: لم تكن قارئات الشاشة تقول شيئًا عن هذه الصور (سهولة الوصول).
+
+  ما عليك فعله: النص البديل الذي تكتبه بنفسك له الأولوية دائمًا.
+
+### أُصلح
+
+- مسار التنقل في صفحات المجموعات على الهاتف: صارت الشرطة المائلة على مستوى الروابط.
+- شبكة المنتجات على الجهاز اللوحي: أُخفيت أزرار المقاسات تحت عرض 990 بكسل (كما على الهاتف)، وصار الاسم فوق السعر، فلم تعد أسماء المنتجات مقطوعة إلى بضعة أحرف.
+- صفحة السلة الفارغة بالعربية كانت تعرض "Your cart is empty" بالإنجليزية. صار النصان يأتيان من ملفات لغة القالب.
+
+  ما عليك فعله: إذا نقلت إعداداتك من 1.0.0 وبقي في قسم `Cart` بصفحة السلة العنوان والنص الإنجليزيان القديمان، فامسح الحقلين لتظهر النصوص المترجمة.
+- في صفحات المنتجات كانت لوحة الشراء منزاحة نحو 90 بكسل إلى الأسفل بسبب إزاحة متبقية، وصارت تبدأ على مستوى المعرض.
+
+### التحديث من 1.0.0
+
+القالب المرفوع من ملف مضغوط لا يتحدّث وحده، ومتجرك على 1.0.0 يبقى يعمل. حدّثه عندما تكون مستعدًا:
+
+1. من `Online Store` ثم `Themes` افتح قائمة `...` لنسختك الحالية من شناشيل واضغط `Duplicate`. هذه النسخة هي احتياطك.
+2. حمّل شناشيل 1.1.0 وارفع الملف المضغوط من `Add theme` ثم `Upload zip file`، فيظهر قالبًا جديدًا غير منشور.
+3. انقل إعداداتك. يمكنك ضبط القالب الجديد في المحرر كما ضبطت القديم، أو نقل الملفات: في القالب القديم افتح `Edit code` وانسخ محتوى `config/settings_data.json` و`sections/header-group.json` و`sections/footer-group.json` وكل ملف غيّرته داخل `templates`، والصقه في الملفات نفسها في القالب الجديد. لم يتغيّر اسم أي إعداد في 1.1.0، فهذه الملفات تناسبه.
+4. في القالب الجديد اضبط `Theme settings` ثم `Cart` ثم `Free delivery threshold`، وعدّل رسالة التوصيل في `Announcement bar` لتستخدم `[threshold]`. واكتب بريد متجرك في `Theme settings` ثم `Brand assets` ثم `Store contact email`، واحذف أي عنوان آخر من نص التواصل في التذييل.
+5. راجع الصفحات: الرئيسية، ومجموعة، ومنتجًا (على الهاتف أيضًا)، والسلة وفيها منتج، وبحثًا، ومقالًا، وصفحة عادية، بكل اللغات التي تبيع بها.
+6. انشر القالب الجديد فقط عندما تصبح كل الصفحات صحيحة، واحتفظ بالنسخة القديمة فترة.
+
+ملاحظة: معلومات القالب في ملف 1.0.0 كانت تذكر الرقم 1.1.0 خطأً. لتميّز بين النسختين استخدم اسمي القالبين في مكتبتك، أو ابحث عن إعداد `Free delivery threshold` الموجود في 1.1.0 فقط.
+
+## 1.0.0 (25 نوفمبر 2026)
+
+الإصدار الأول.

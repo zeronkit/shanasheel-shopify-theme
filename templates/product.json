@@ -35,7 +35,7 @@
             "stock_max_days": 7,
             "order_min_days": 35,
             "order_max_days": 56,
-            "note": "Large pieces are delivered to the room of your choice."
+            "note": ""
           }
         },
         "buy": {

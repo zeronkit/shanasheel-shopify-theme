@@ -1,0 +1,15 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Shopper facing name of a blog tag. Shopify cannot translate tags, so common journal tags have names in the
+  locale files (blogs.tag_names, editable in Edit default theme content). Other tags show as they are.
+  Params: tag
+{%- endcomment -%}
+{%- liquid
+  assign tag_key = tag | handleize | replace: '-', '_'
+  assign tag_path = 'blogs.tag_names.' | append: tag_key
+  assign tag_label = tag_path | t
+  if tag_label contains 'translation missing' or tag_label contains tag_path or tag_label == blank
+    assign tag_label = tag
+  endif
+  echo tag_label | escape
+-%}

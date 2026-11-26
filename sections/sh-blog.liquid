@@ -26,7 +26,7 @@
       <nav class="st-wrap shb-topics" aria-label="{{ 'blogs.tags' | t }}">
         <a href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blogs.all' | t }}</a>
         {%- for tag in blog.all_tags -%}
-          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{% render 'tag-label', tag: tag %}</a>
         {%- endfor -%}
       </nav>
     {%- endif -%}
@@ -43,7 +43,7 @@
           {%- if forloop.first and paginate.current_page == 1 -%}
             <article class="shb-cover">
               <a class="shb-cover__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
-                {%- if article.image -%}{% render 'image', image: article.image, sizes: '(min-width: 990px) 60vw, 100vw', eager: true, alt: '' %}{%- endif -%}
+                {%- if article.image -%}{% render 'image', image: article.image, fallback_alt: article.title, sizes: '(min-width: 990px) 60vw, 100vw', eager: true %}{%- endif -%}
               </a>
               <div class="shb-cover__card">
                 <p class="shb-meta">{{ article.published_at | time_tag: format: 'date' }}<span>{{ 'blogs.read_time' | t: count: mins }}</span></p>
@@ -68,12 +68,12 @@
             <li class="shb-row">
               <span class="shb-row__no" aria-hidden="true">{{ forloop.index | plus: paginate.current_offset | plus: skip | prepend: '0' | slice: -2, 2 }}</span>
               <div class="shb-row__text">
-                <p class="shb-meta">{{ article.published_at | time_tag: format: 'date' }}<span>{{ 'blogs.read_time' | t: count: mins }}</span>{%- if article.tags.size > 0 -%}<span>{{ article.tags.first | escape }}</span>{%- endif -%}</p>
+                <p class="shb-meta">{{ article.published_at | time_tag: format: 'date' }}<span>{{ 'blogs.read_time' | t: count: mins }}</span>{%- if article.tags.size > 0 -%}<span>{% render 'tag-label', tag: article.tags.first %}</span>{%- endif -%}</p>
                 <h2 class="shb-row__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
                 <p class="shb-row__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
               </div>
               <a class="shb-row__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
-                {%- if article.image -%}{% render 'image', image: article.image, sizes: '(min-width: 750px) 220px, 30vw', alt: '' %}{%- endif -%}
+                {%- if article.image -%}{% render 'image', image: article.image, fallback_alt: article.title, sizes: '(min-width: 750px) 220px, 30vw' %}{%- endif -%}
               </a>
             </li>
           {%- endfor -%}

@@ -14,7 +14,7 @@
             <li><a class="st-rail__pill" href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blogs.all' | t }}</a></li>
             {%- for tag in blog.all_tags -%}
               <li>
-                <a class="st-rail__pill" href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+                <a class="st-rail__pill" href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{% render 'tag-label', tag: tag %}</a>
               </li>
             {%- endfor -%}
           </ul>

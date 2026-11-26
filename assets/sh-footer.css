@@ -139,3 +139,36 @@
 @media (prefers-reduced-motion: no-preference) {
   .sh-ft__band a { transition: color .2s; }
 }
+
+/* ===== Review fixes ===== */
+/* One spacing unit above the footer: the last section already ends with its own padding */
+.sh-ft { margin-top: 0; }
+.sh-ft__windows { padding-block-start: clamp(1rem, 2vw, 1.5rem); }
+/* Arch cards: the text sits at the bottom of the window, so no empty strip above the walnut band */
+.sh-ft__window { display: flex; flex-direction: column; justify-content: flex-end; padding: 4.25rem 1.75rem 1.75rem; }
+.sh-ft__window > :last-child,
+.sh-ft__window .st-rte > :last-child { margin-bottom: 0; }
+/* Link columns spread over the full width: each menu splits into two columns on wide screens */
+@media (min-width: 990px) {
+  .sh-ft__cols { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); column-gap: 2.5rem; }
+  .sh-ft__col--menu .sh-ft__links { column-count: 2; column-gap: 2.5rem; }
+  .sh-ft__col--menu .sh-ft__links li { break-inside: avoid; }
+}
+/* Phone: footer and policy links are full 44px tap targets */
+@media (max-width: 989px) {
+  .sh-ft__links li { margin: 0; }
+  .sh-ft__links a,
+  .sh-ft__policies a { display: inline-flex; align-items: center; min-block-size: 44px; }
+  .sh-ft__policies { gap: 0 1.25rem; }
+}
+.sh-ft__base { font-size: 0.875rem; }
+
+/* Store email line in the contact window: a short brass rule, a small label, the address on its own line */
+.sh-ft__mail { display: grid; gap: .35rem; margin: 1rem 0 0; padding-block-start: .85rem; border-block-start: 1px solid var(--sh-amber); position: relative; z-index: 1; }
+.sh-ft__mail-label { font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; color: var(--sh-turq); }
+.sh-ft__mail a { color: var(--sh-walnut); font-weight: 600; overflow-wrap: anywhere; text-underline-offset: .2em; min-block-size: 44px; display: inline-flex; align-items: center; }
+html[dir="rtl"] .sh-ft__mail-label { letter-spacing: 0; }
+/* Phones: the copyright and credit links are 44px tap targets like the menu links */
+@media (max-width: 989px) {
+  .sh-ft__legal p a { display: inline-flex; align-items: center; min-block-size: 44px; }
+}

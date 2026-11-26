@@ -16,13 +16,63 @@ class StProduct extends HTMLElement {
       if (event.target.matches('[data-st-option]')) this.onOptionChange(event.target);
     });
     this.setupModels();
+    this.setupBuybar();
+    this.setupStickyGallery();
     this.addEventListener('click', (event) => {
+      if (event.target.closest('[data-sh-buybar-add]')) {
+        const main = this.querySelector('.st-buy__add');
+        main?.closest('form')?.requestSubmit(main);
+        return;
+      }
       const zoom = event.target.closest('[data-st-zoom]');
       if (zoom) {
         this.lightboxOpener = zoom;
         this.openLightbox(zoom.closest('.st-gallery__frame'));
       }
     });
+  }
+
+  /* Phone buy bar: shown while the main Add to cart button is above the screen and the footer is not in view. */
+  setupBuybar() {
+    if (!this.querySelector('[data-sh-buybar]')) return;
+    const phone = window.matchMedia('(max-width: 749px)');
+    const footer = document.querySelector('.st-footer, footer');
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const bar = this.querySelector('[data-sh-buybar]');
+      const main = this.querySelector('.st-buy__add');
+      if (!bar || !main) return;
+      const passed = main.getBoundingClientRect().bottom < 0;
+      const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight : false;
+      const show = phone.matches && passed && !nearFooter;
+      bar.classList.toggle('is-visible', show);
+      bar.setAttribute('aria-hidden', String(!show));
+      bar.toggleAttribute('inert', !show);
+      bar.querySelector('[data-sh-buybar-add]')?.setAttribute('tabindex', show ? '0' : '-1');
+    };
+    this.updateBuybar = update;
+    const queue = () => { if (!queued) { queued = true; window.requestAnimationFrame(update); } };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    update();
+  }
+
+  /* Desktop: the shorter column (gallery or buy panel) scrolls with the page until its end, then stays in view beside the longer one, so no empty gap shows. */
+  setupStickyGallery() {
+    const columns = [...this.querySelectorAll('.st-pdp__grid > .st-gallery, .st-pdp__grid > .st-pdp__info')];
+    if (!columns.length || !('ResizeObserver' in window)) return;
+    const set = () => {
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--st-header-height')) || 0;
+      columns.forEach((column) => {
+        const room = window.innerHeight - column.offsetHeight - 24;
+        column.style.setProperty('--sh-column-top', `${Math.min(header + 24, room)}px`);
+      });
+    };
+    const observer = new ResizeObserver(set);
+    columns.forEach((column) => observer.observe(column));
+    window.addEventListener('resize', set);
+    set();
   }
 
   selectedValueIds() {
@@ -66,6 +116,7 @@ class StProduct extends HTMLElement {
         if (this.querySelector('[data-st-gallery][data-colour-filter="true"]')) this.filterGallery();
         else this.showMedia(picker.dataset.variantMedia);
       }
+      this.updateBuybar?.();
       if (focusedId) document.getElementById(focusedId)?.focus({ preventScroll: true });
     } catch (error) {
       if (error.name !== 'AbortError') announce(strings.error);

@@ -29,12 +29,19 @@
       </div>
     {%- endif -%}
 
-    {%- if section.settings.contact_heading != blank or section.settings.contact_text != blank -%}
+    {%- assign footer_email = settings.contact_email | strip -%}
+    {%- if section.settings.contact_heading != blank or section.settings.contact_text != blank or footer_email != blank -%}
       <div class="sh-ft__window">
         {%- if section.settings.contact_heading != blank -%}
           <h2 class="sh-ft__heading">{{ section.settings.contact_heading | escape }}</h2>
         {%- endif -%}
         {%- if section.settings.contact_text != blank -%}<div class="st-rte">{{ section.settings.contact_text }}</div>{%- endif -%}
+        {%- if footer_email != blank -%}
+          <p class="sh-ft__mail">
+            <span class="sh-ft__mail-label">{{ 'general.footer_write_to_us' | t }}</span>
+            <a href="mailto:{{ footer_email | escape }}">{{ footer_email | escape }}</a>
+          </p>
+        {%- endif -%}
       </div>
     {%- endif -%}
   </div>

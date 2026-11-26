@@ -12,7 +12,7 @@
 <article class="st-ccard">
   <div class="st-ccard__media">
     {%- if card_image -%}
-      {% render 'image', image: card_image, sizes: sizes, max: 1500, alt: '' %}
+      {% render 'image', image: card_image, fallback_alt: collection.title, sizes: sizes, max: 1500 %}
     {%- else -%}
       {%- assign p_index = placeholder_index | default: 0 | modulo: 6 | plus: 1 -%}
       {%- assign placeholder = 'collection-' | append: p_index -%}

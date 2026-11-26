@@ -4,16 +4,38 @@
   Moving modes always get a pause button and stop for reduced motion.
 {%- endcomment -%}
 {%- if section.settings.enabled and section.blocks.size > 0 -%}
+  {%- liquid
+    # [threshold] in a message becomes the free delivery amount from the theme settings, with the currency.
+    assign fd_cents = settings.free_shipping_threshold | times: 100 | round
+    if cart.currency.iso_code == shop.currency
+      assign fd_amount = fd_cents | money_without_trailing_zeros
+      unless fd_amount contains shop.currency
+        assign fd_amount = fd_amount | append: ' ' | append: shop.currency
+      endunless
+    else
+      assign fd_amount = settings.free_shipping_threshold | append: ' ' | append: shop.currency
+    endif
+    assign fd_amount = '<bdi>' | append: fd_amount | append: '</bdi>'
+  -%}
   {%- capture items -%}
     {%- for block in section.blocks -%}
+      {%- liquid
+        assign message = block.settings.text
+        if message == blank and block.settings.icon == 'truck'
+          assign message = 'general.free_delivery_announcement' | t: amount: '[threshold]'
+        endif
+        assign message = message | replace: '[threshold]', fd_amount
+      -%}
+      {%- if message != blank -%}
       <li class="st-announce__item" {{ block.shopify_attributes }}>
-        {%- if block.settings.icon != 'none' -%}{% render 'icon', name: block.settings.icon %}{%- endif -%}
+        {%- if block.settings.icon != 'none' -%}<span class="st-announce__icon" aria-hidden="true">{% render 'icon', name: block.settings.icon %}</span>{%- endif -%}
         {%- if block.settings.link != blank -%}
-          <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
+          <a href="{{ block.settings.link }}">{{ message }}</a>
         {%- else -%}
-          <span>{{ block.settings.text }}</span>
+          <span>{{ message }}</span>
         {%- endif -%}
       </li>
+      {%- endif -%}
     {%- endfor -%}
   {%- endcapture -%}
   <st-announce
@@ -77,7 +99,7 @@
       "type": "message",
       "name": "t:names.message",
       "settings": [
-        { "type": "inline_richtext", "id": "text", "label": "t:labels.text", "default": "Free 30-day returns" },
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text", "default": "Free 30-day returns", "info": "t:info.announcement_threshold" },
         { "type": "url", "id": "link", "label": "t:labels.link" },
         {
           "type": "select",
@@ -100,7 +122,7 @@
     {
       "name": "t:names.announcement",
       "blocks": [
-        { "type": "message", "settings": { "text": "Free standard delivery over 100", "icon": "truck" } },
+        { "type": "message", "settings": { "text": "Free US delivery from [threshold]", "icon": "truck" } },
         { "type": "message", "settings": { "text": "Free 30-day returns", "icon": "return" } },
         { "type": "message", "settings": { "text": "New season: shop new arrivals", "icon": "spark" } }
       ]

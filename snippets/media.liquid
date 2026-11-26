@@ -6,13 +6,13 @@
 {%- endcomment -%}
 {%- case media.media_type -%}
   {%- when 'image' -%}
-    {% render 'image', image: media, sizes: sizes, eager: eager, class: 'st-media__img' %}
+    {% render 'image', image: media, fallback_alt: title, sizes: sizes, eager: eager, class: 'st-media__img' %}
   {%- when 'video', 'external_video' -%}
     <st-deferred-media class="st-media__deferred">
       <button type="button" class="st-media__poster" data-st-load>
         <span class="st-visually-hidden">{{ 'products.media.play_video' | t }}</span>
         {%- if media.preview_image -%}
-          {% render 'image', image: media.preview_image, sizes: sizes, eager: eager, alt: '', class: 'st-media__img' %}
+          {% render 'image', image: media.preview_image, sizes: sizes, eager: eager, class: 'st-media__img' %}
         {%- endif -%}
         <span class="st-media__badge">{% render 'icon', name: 'play' %}</span>
       </button>
@@ -29,7 +29,7 @@
       <button type="button" class="st-media__poster" data-st-load>
         <span class="st-visually-hidden">{{ 'products.media.load_model' | t }}</span>
         {%- if media.preview_image -%}
-          {% render 'image', image: media.preview_image, sizes: sizes, alt: '', class: 'st-media__img' %}
+          {% render 'image', image: media.preview_image, sizes: sizes, class: 'st-media__img' %}
         {%- endif -%}
         <span class="st-media__badge">{% render 'icon', name: 'cube' %}</span>
       </button>

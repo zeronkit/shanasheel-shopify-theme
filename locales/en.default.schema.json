@@ -314,7 +314,10 @@
     "drop_cap": "Large first letter",
     "show_pager": "Show previous and next post",
     "footer_contact_heading": "Contact window heading",
-    "footer_contact_text": "Contact window text"
+    "footer_contact_text": "Contact window text",
+    "free_shipping_threshold": "Free delivery threshold",
+    "show_article_products": "Show \"Shop the pieces\"",
+    "contact_email": "Store contact email"
   },
   "info": {
     "announcement": "Keep it short: two or three messages work best.",
@@ -335,7 +338,7 @@
     "load_first": "Turn on when this is the first section on the page, so the image loads quickly.",
     "logo_social": "Used in search results, social sharing and on the gift card page.",
     "nested_menu": "Supports three levels. Second level items become column headings, third level items are listed below them.",
-    "new_badge": "Days since a product was published. Set to 0 to hide the badge.",
+    "new_badge": "Products tagged \"new\" always show the badge. Others show it for this many days after they were created. Set to 0 to use the tag only. Sale and Sold out win over New, so a card shows one badge.",
     "newsletter": "Sign-ups are added to your customer list with the newsletter tag.",
     "rail_menu": "Optional row of pill links under the header, for example Women, Men, Kids, Sport.",
     "related": "Recommendations are made automatically. Adjust them in the Search and Discovery app.",
@@ -383,7 +386,11 @@
     "banner_style": "Full image uses the collection image, or the first product image when the collection has none.",
     "rooms_menu": "Leave empty to list collections that have products.",
     "empty_collection": "Leave empty to show the newest products.",
-    "showroom_image": "A photo of your showroom or a styled room."
+    "showroom_image": "A photo of your showroom or a styled room.",
+    "free_shipping_threshold": "Order total in the store currency that gets free delivery. Shown in the cart progress bar and in announcement texts that contain [threshold]. Use 0 to hide the bar.",
+    "announcement_threshold": "[threshold] shows the free delivery amount from Theme settings, Cart. Leave a truck message empty to use the translated default.",
+    "article_products": "Products from the article metafield shanasheel.products, otherwise products whose tags match the article tags, otherwise bestsellers.",
+    "contact_email": "Your own shop address, shown in the footer and on the contact page. Leave empty to show no email: the contact form stays."
   },
   "options": {
     "body": "Body",
