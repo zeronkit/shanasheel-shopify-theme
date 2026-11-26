@@ -68,7 +68,8 @@ The name comes from the carved wooden bay windows of old Baghdad and Basra house
 
 ## Download
 
-- Latest version: [shanasheel-1.1.0.zip](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip), attached to the v1.1.0 release on this page.
+- Latest version: [shanasheel-1.1.0.zip](https://zeronkit.com/downloads/shanasheel-1.1.0.zip) from zeronkit.com, or the same file attached to the [v1.1.0 release](https://github.com/zeronkit/shanasheel-shopify-theme/releases/tag/v1.1.0) on GitHub ([direct link](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip)).
+- Guide: [zeronkit.com/shanasheel-guide](https://zeronkit.com/shanasheel-guide/) (English) and [zeronkit.com/shanasheel-guide-ar](https://zeronkit.com/shanasheel-guide-ar/) (Arabic).
 - What changed: [CHANGELOG.md](CHANGELOG.md) (English and Arabic).
 - In Shopify admin: `Online Store` > `Themes` > `Add theme` > `Upload zip file`.
 
