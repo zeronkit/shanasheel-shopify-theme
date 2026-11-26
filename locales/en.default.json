@@ -406,5 +406,17 @@
   },
   "sh_rooms": {
     "eyebrow": "Shop by room"
+  },
+  "sh_layout": {
+    "cart_pieces": "Pieces in your cart",
+    "cart_lead_default": "In stock, ready to send",
+    "cart_details": "Details",
+    "about_values": "What we care about",
+    "about_next": "Keep walking through the house",
+    "about_contact": "Write to the workshop",
+    "about_journal": "Read the journal",
+    "faq_ask": "Ask the workshop",
+    "faq_card_title": "Still unsure?",
+    "faq_card_button": "Contact us"
   }
 }

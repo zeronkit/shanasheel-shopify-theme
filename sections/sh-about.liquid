@@ -1,0 +1,159 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  About, "a walk through the house": a full width arched photo band with the page title on the walnut sill under
+  the arch, the page text in two magazine columns, the values as a row of small arched cards, then a closing
+  row of links to Contact and the Journal.
+  Values come from the section blocks. Without blocks, the first list in the page text that follows a heading
+  becomes the value cards (and is taken out of the text), so the page and its translations stay the only source.
+{%- endcomment -%}
+{%- liquid
+  assign hero_image = section.settings.image
+  if hero_image == blank
+    for c in collections limit: 20
+      if c.featured_image != blank and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage'
+        assign hero_image = c.featured_image
+        break
+      endif
+    endfor
+  endif
+
+  assign body = page.content
+  assign values_title = section.settings.values_heading
+  assign value_items = ''
+  if section.blocks.size == 0 and section.settings.values_from_page and body contains '<ul>'
+    assign before = body | split: '<ul>' | first
+    assign rest = body | remove_first: before | remove_first: '<ul>'
+    assign list_inner = rest | split: '</ul>' | first
+    assign after = rest | remove_first: list_inner | remove_first: '</ul>'
+    assign heading_html = ''
+    for tag in (2..3)
+      assign open_tag = '<h' | append: tag
+      assign close_tag = '</h' | append: tag | append: '>'
+      if before contains open_tag
+        assign last_part = before | split: open_tag | last
+        assign tail = last_part | split: close_tag | last | strip
+        if last_part contains close_tag and tail == blank
+          assign heading_html = open_tag | append: last_part
+        endif
+      endif
+    endfor
+    assign value_items = list_inner | split: '</li>'
+    if heading_html != blank
+      if values_title == blank
+        assign values_title = heading_html | strip_html | strip
+      endif
+      assign before = before | remove_last: heading_html
+    endif
+    assign body = before | append: after
+  endif
+  if values_title == blank
+    assign values_title = 'sh_layout.about_values' | t
+  endif
+
+  assign contact_page = pages.contact
+  assign journal = blogs.journal
+  if journal.title == blank
+    assign journal = blogs.news
+  endif
+-%}
+<section class="sh-about color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    <header class="sh-about__hero">
+      <div class="sh-about__arch">
+        {%- if hero_image != blank -%}
+          {% render 'image', image: hero_image, sizes: '(min-width: 1400px) 1320px, 100vw', max: 2400, alt: '', eager: true %}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'st-placeholder' }}
+        {%- endif -%}
+      </div>
+      <div class="sh-about__sill">
+        {%- if section.settings.eyebrow != blank -%}<p class="sh-about__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h1 class="sh-about__title">{{ page.title | escape }}</h1>
+      </div>
+    </header>
+
+    {%- if body != blank -%}
+      <div class="st-rte sh-about__text">{{ body }}</div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 or value_items.size > 0 -%}
+      <div class="sh-about__values">
+        <h2 class="sh-about__values-title">{{ values_title | escape }}</h2>
+        <ol class="sh-about__cards" role="list">
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              <li class="sh-about__card" {{ block.shopify_attributes }}>
+                <span class="sh-about__card-arch" aria-hidden="true">
+                  {%- if block.settings.image != blank -%}
+                    {% render 'image', image: block.settings.image, sizes: '240px', max: 480, alt: '' %}
+                  {%- else -%}
+                    <span class="sh-about__card-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                  {%- endif -%}
+                </span>
+                <h3 class="sh-about__card-title">{{ block.settings.title | escape }}</h3>
+                {%- if block.settings.text != blank -%}<p class="sh-about__card-text">{{ block.settings.text | escape }}</p>{%- endif -%}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign n = 0 -%}
+            {%- for item in value_items -%}
+              {%- assign item_text = item | strip_html | strip -%}
+              {%- if item_text != blank -%}
+                {%- assign n = n | plus: 1 -%}
+                <li class="sh-about__card">
+                  <span class="sh-about__card-arch" aria-hidden="true"><span class="sh-about__card-num">{{ n | prepend: '0' | slice: -2, 2 }}</span></span>
+                  <p class="sh-about__card-title">{{ item_text }}</p>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </ol>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_links -%}
+      {%- if contact_page.title != blank or journal.title != blank -%}
+        <nav class="sh-about__next" aria-label="{{ 'sh_layout.about_next' | t }}">
+          <p class="sh-about__next-label">{{ 'sh_layout.about_next' | t }}</p>
+          <ul class="sh-about__links" role="list">
+            {%- if contact_page.title != blank -%}
+              <li><a class="sh-about__link" href="{{ contact_page.url }}"><span>{{ 'sh_layout.about_contact' | t }}</span>{% render 'icon', name: 'arrow' %}</a></li>
+            {%- endif -%}
+            {%- if journal.title != blank -%}
+              <li><a class="sh-about__link" href="{{ journal.url }}"><span>{{ 'sh_layout.about_journal' | t }}</span>{% render 'icon', name: 'arrow' %}</a></li>
+            {%- endif -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.sh_about",
+  "class": "st-shopify-section",
+  "enabled_on": { "templates": ["page"] },
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:labels.image", "info": "t:info.about_image" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "checkbox", "id": "values_from_page", "label": "t:labels.values_from_page", "default": true, "info": "t:info.values_from_page" },
+    { "type": "text", "id": "values_heading", "label": "t:labels.values_heading" },
+    { "type": "checkbox", "id": "show_links", "label": "t:labels.show_closing_links", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "t:names.value",
+      "settings": [
+        { "type": "text", "id": "title", "label": "t:labels.heading", "default": "Solid wood you can repair" },
+        { "type": "text", "id": "text", "label": "t:labels.text" },
+        { "type": "image_picker", "id": "image", "label": "t:labels.image" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "t:names.sh_about" }]
+}
+{% endschema %}

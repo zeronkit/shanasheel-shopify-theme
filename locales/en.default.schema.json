@@ -89,7 +89,11 @@
     "hotspot_1": "Hotspot 1",
     "hotspot_2": "Hotspot 2",
     "hotspot_3": "Hotspot 3",
-    "hotspot_4": "Hotspot 4"
+    "hotspot_4": "Hotspot 4",
+    "sh_about": "About: the house",
+    "sh_faq": "Questions: workshop",
+    "value": "Value",
+    "question": "Question"
   },
   "labels": {
     "accent": "Accent and links",
@@ -317,7 +321,17 @@
     "footer_contact_text": "Contact window text",
     "free_shipping_threshold": "Free delivery threshold",
     "show_article_products": "Show \"Shop the pieces\"",
-    "contact_email": "Store contact email"
+    "contact_email": "Store contact email",
+    "nav_style": "Menu panel",
+    "room_photo": "Room photo",
+    "card_corner": "Buy card corner",
+    "values_from_page": "Values from the page text",
+    "values_heading": "Values heading",
+    "show_closing_links": "Show links to Contact and the Journal",
+    "faq_card": "Still unsure card",
+    "topic": "Topic",
+    "question": "Question",
+    "answer": "Answer"
   },
   "info": {
     "announcement": "Keep it short: two or three messages work best.",
@@ -390,7 +404,15 @@
     "free_shipping_threshold": "Order total in the store currency that gets free delivery. Shown in the cart progress bar and in announcement texts that contain [threshold]. Use 0 to hide the bar.",
     "announcement_threshold": "[threshold] shows the free delivery amount from Theme settings, Cart. Leave a truck message empty to use the translated default.",
     "article_products": "Products from the article metafield shanasheel.products, otherwise products whose tags match the article tags, otherwise bestsellers.",
-    "contact_email": "Your own shop address, shown in the footer and on the contact page. Leave empty to show no email: the contact form stays."
+    "contact_email": "Your own shop address, shown in the footer and on the contact page. Leave empty to show no email: the contact form stays.",
+    "password_image": "Shown in the tall arch. Without an image a collection photo or the store cover image is used.",
+    "room_photo": "A wide photo of the piece in a room. Without it the first product photo is used.",
+    "route_image": "A tall photo, for example a room being set up. Without it a collection photo is used.",
+    "route_icon": "The steps show their number in a small arch; the icon is kept for older layouts.",
+    "values_from_page": "Without value blocks, the first list after a heading in the page text becomes the value cards.",
+    "about_image": "Shown in the wide arch. Without it a collection photo is used.",
+    "faq_topic": "Questions in a row with the same topic are grouped under one heading.",
+    "faq_link": "Without a link the Contact page is used."
   },
   "options": {
     "body": "Body",
@@ -539,6 +561,8 @@
     "banner_plain": "Plain",
     "title_panel": "Soft panel",
     "narrow": "Narrow",
-    "wide": "Wide"
+    "wide": "Wide",
+    "nav_doorways": "Doorways: a row of arched collection doors",
+    "nav_list": "List with image tiles"
   }
 }

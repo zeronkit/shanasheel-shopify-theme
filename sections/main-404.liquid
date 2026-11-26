@@ -1,77 +1,89 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
-  404: an empty wall with a picture frame hanging a little crooked, a floor lamp and a low sideboard,
-  drawn in SVG. The frame settles once when motion is allowed. Then a search field, rooms and new pieces.
+  404, "the empty room": one wide drawing of a room (an arched lattice window, a picture frame hanging crooked,
+  a low sideboard and a floor lamp) across the content width. The title, the text and the search field stand
+  on the walnut floor, centred. Under the room, the rooms of the store as a row of small arched doorways.
+  On phones the drawing is cropped to the frame and the sideboard, and the doorways scroll sideways.
 {%- endcomment -%}
 {%- liquid
-  assign auto_list = ''
-  assign auto_count = 0
-  for c in collections limit: 30
-    if c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' and auto_count < 6
-      assign auto_list = auto_list | append: c.handle | append: ','
-      assign auto_count = auto_count | plus: 1
-    endif
-  endfor
-  assign auto_handles = auto_list | split: ','
-  assign picks = collections.all.products | sort: 'published_at' | reverse
-  assign show_rooms = false
-  if auto_handles.size > 0 or section.settings.rooms_menu.links.size > 0
-    assign show_rooms = true
+  assign door_list = ''
+  if section.settings.rooms_menu.links.size > 0
+    for link in section.settings.rooms_menu.links
+      if link.type == 'collection_link' and link.object.products_count > 0
+        assign door_list = door_list | append: link.object.handle | append: ','
+      endif
+    endfor
   endif
+  if door_list == blank
+    assign door_count = 0
+    for c in collections limit: 30
+      if c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' and door_count < 6
+        assign door_list = door_list | append: c.handle | append: ','
+        assign door_count = door_count | plus: 1
+      endif
+    endfor
+  endif
+  assign door_handles = door_list | split: ','
   assign heading = section.settings.heading
   if heading == blank
     assign heading = 'not_found.title' | t
   endif
 -%}
-<section class="st-section color-{{ section.settings.color_scheme }}">
-  <div class="st-wrap st-404">
-    <div class="st-404__top">
-      <div class="st-404__art" aria-hidden="true">
-        <svg viewBox="0 0 320 300" width="320" height="300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="160" cy="26" r="4" fill="currentColor" stroke="none"/>
-          <g class="st-404__frame">
-            <path d="M160 26l-46 40M160 26l46 40" opacity="0.6"/>
-            <rect x="96" y="66" width="128" height="104" rx="6" fill="var(--st-bg)"/>
-            <rect x="108" y="78" width="104" height="80" rx="3" opacity="0.45"/>
-            <text x="160" y="134" text-anchor="middle" font-size="40" font-weight="700" fill="currentColor" stroke="none" style="font-family: var(--st-font-heading); letter-spacing: -0.03em">404</text>
+<section class="st-section sh-404 color-{{ section.settings.color_scheme }}">
+  <div class="st-wrap">
+    <div class="sh-404__room">
+      <div class="sh-404__drawing" aria-hidden="true">
+        <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" fill="none" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <rect x="0" y="0" width="1200" height="268" fill="#EFE5D6"/>
+          <rect x="0" y="268" width="1200" height="132" fill="#3A2619"/>
+          <path d="M0 252h1200" stroke="#3A2619" stroke-width="2" opacity="0.35"/>
+          <path d="M0 268h1200" stroke="#C9A36A" stroke-width="3"/>
+          <g stroke="#3A2619" stroke-width="2.5">
+            <path d="M190 236V120a80 80 0 0 1 160 0v116z" fill="#F7F1E7"/>
+            <path d="M204 236V122a66 66 0 0 1 132 0v114" opacity="0.55"/>
+            <path d="M270 58v178M204 160h132M204 198h132" opacity="0.45"/>
+            <path d="M226 160l22-22 22 22 22-22 22 22M226 198l22-22 22 22 22-22 22 22" stroke="#C9A36A" stroke-width="2"/>
+            <path d="M178 236h184v12H178z" fill="#EADFCC"/>
           </g>
-          <g class="st-404__lamp">
-            <path d="M262 132h36l-8-30h-20z" fill="currentColor" fill-opacity="0.18"/>
-            <path d="M280 132v122M266 254h28"/>
+          <circle cx="600" cy="34" r="5" fill="#3A2619"/>
+          <g class="sh-404__frame">
+            <path d="M600 34l-74 54M600 34l74 54" stroke="#3A2619" stroke-width="2" opacity="0.6"/>
+            <rect x="506" y="88" width="188" height="126" rx="4" fill="#F7F1E7" stroke="#3A2619" stroke-width="3"/>
+            <rect x="520" y="102" width="160" height="98" rx="2" stroke="#C9A36A" stroke-width="2"/>
+            <text x="600" y="170" text-anchor="middle" font-size="54" font-weight="700" fill="#3A2619" style="font-family: var(--st-font-heading)">404</text>
           </g>
-          <path d="M28 214h176v40H28z" fill="var(--st-bg)"/>
-          <path d="M116 214v40M28 234h176" opacity="0.5"/>
-          <path d="M40 254v14M192 254v14"/>
-          <path d="M60 214v-22a10 10 0 0 1 20 0v22" opacity="0.7"/>
-          <path d="M12 268h296" opacity="0.4"/>
+          <g stroke="#3A2619" stroke-width="2.5">
+            <path d="M708 196h196v56H708z" fill="#E2D2BA"/>
+            <path d="M806 196v56M757 220h4M851 220h4" />
+            <path d="M720 252v14M892 252v14"/>
+            <path d="M742 196v-26a12 12 0 0 1 24 0v26" fill="#C9A36A" fill-opacity="0.35"/>
+            <path d="M846 196c-6-10-4-26 8-34M856 196c4-14 14-22 26-24" opacity="0.6"/>
+          </g>
+          <g stroke="#3A2619" stroke-width="2.5">
+            <path d="M1040 120h56l-12-46h-32z" fill="#8A4F2B" fill-opacity="0.85"/>
+            <path d="M1068 120v146M1046 266h44"/>
+          </g>
         </svg>
       </div>
-      <div class="st-404__copy">
-        <p class="st-eyebrow">404</p>
-        <h1 class="st-h1">{{ heading | escape }}</h1>
-        <p class="st-text--large st-muted">{{ 'not_found.text' | t }}</p>
-        {% render 'search-form', id: 'NotFoundSearch', predictive: false %}
-        <a class="st-button st-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }} {% render 'icon', name: 'arrow' %}</a>
+      <div class="sh-404__copy">
+        <p class="sh-404__eyebrow">404</p>
+        <h1 class="sh-404__title">{{ heading | escape }}</h1>
+        <p class="sh-404__text">{{ 'not_found.text' | t }}</p>
+        <div class="sh-404__search">{% render 'search-form', id: 'NotFoundSearch', predictive: false %}</div>
+        <a class="sh-404__shop" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }} {% render 'icon', name: 'arrow' %}</a>
       </div>
     </div>
 
-    {%- if show_rooms -%}
-      <div class="st-search-block">
-        <h2 class="st-field__label" id="NotFoundCollections-{{ section.id }}">{{ 'not_found.collections' | t }}</h2>
-        {%- assign rooms_label = 'not_found.collections' | t -%}
-        {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, limit: 8, modifier: 'st-roomnav--wrap' %}
-      </div>
-    {%- endif -%}
-
-    {%- if section.settings.show_products and picks.size > 0 -%}
-      <div class="st-search-block">
-        <h2 class="st-h3">{{ 'search.you_may_like' | t }}</h2>
-        <ul class="st-grid st-grid--4 st-grid--m2" role="list">
-          {%- for product in picks limit: 4 -%}
-            <li>{% render 'product-card', product: product %}</li>
+    {%- if door_handles.size > 0 -%}
+      <nav class="sh-404__rooms" aria-labelledby="NotFoundRooms-{{ section.id }}">
+        <h2 class="sh-404__rooms-title" id="NotFoundRooms-{{ section.id }}">{{ 'not_found.collections' | t }}</h2>
+        <ul class="sh-404__doors" role="list">
+          {%- for handle in door_handles -%}
+            {%- assign c = collections[handle] -%}
+            <li>{% render 'nav-tile', url: c.url, title: c.title, collection: c, count: c.products_count, style: 'door' %}</li>
           {%- endfor -%}
         </ul>
-      </div>
+      </nav>
     {%- endif -%}
   </div>
 </section>
@@ -84,7 +96,6 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "t:labels.heading" },
     { "type": "link_list", "id": "rooms_menu", "label": "t:labels.rooms_menu", "info": "t:info.rooms_menu" },
-    { "type": "checkbox", "id": "show_products", "label": "t:labels.show_empty_products", "default": true },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
   ]
 }

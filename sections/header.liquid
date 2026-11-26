@@ -224,16 +224,26 @@
   {%- endif -%}
 </st-header>
 
-{% render 'header-navigator', menu: menu, use_auto: use_auto, auto_handles: auto_handles, key_pages: key_pages, section_id: section.id, nav_label: nav_label, scheme: section.settings.menu_color_scheme %}
+{% render 'header-navigator', menu: menu, use_auto: use_auto, auto_handles: auto_handles, key_pages: key_pages, section_id: section.id, nav_label: nav_label, scheme: section.settings.menu_color_scheme, nav_style: section.settings.nav_style %}
 
 {%- if section.settings.show_search -%}
-  <dialog class="st-search-dialog color-{{ section.settings.menu_color_scheme }}" id="SearchDialog" aria-label="{{ 'header.search' | t }}">
-    <div class="st-wrap st-search-dialog__inner">
-      {% render 'search-form', id: 'HeaderSearch', predictive: settings.predictive_search %}
-      <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
-    </div>
-    <div class="st-wrap st-search-dialog__body">
-      {% render 'search-discovery', id: 'SearchOverlay', show_products: false, heading_tag: 'p' %}
+  {%- comment -%}
+    Search as a side room: a tall drawer from the end side, the field at the top, live results under it
+    (suggestions, a two column grid of arched product thumbnails, collections and pages, See all results),
+    and the popular searches at the bottom before the shopper types.
+  {%- endcomment -%}
+  <dialog class="sh-sideroom" id="SearchDialog" aria-labelledby="SearchDialogTitle">
+    <div class="sh-sideroom__inner">
+      <div class="sh-sideroom__head">
+        <p class="sh-sideroom__title" id="SearchDialogTitle">{{ 'header.search' | t }}</p>
+        <button type="button" class="sh-sideroom__close" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+      </div>
+      <div class="sh-sideroom__field">
+        {% render 'search-form', id: 'HeaderSearch', predictive: settings.predictive_search %}
+      </div>
+      <div class="sh-sideroom__foot">
+        {% render 'search-discovery', id: 'SearchOverlay', show_products: false, heading_tag: 'p', popular_last: true %}
+      </div>
     </div>
   </dialog>
 {%- endif -%}
@@ -313,6 +323,16 @@
     { "type": "link_list", "id": "menu", "label": "t:labels.menu", "default": "main-menu", "info": "t:info.nested_menu" },
     { "type": "checkbox", "id": "show_navigator", "label": "t:labels.show_navigator", "default": true, "info": "t:info.navigator" },
     { "type": "text", "id": "navigator_label", "label": "t:labels.navigator_label", "default": "Shop" },
+    {
+      "type": "select",
+      "id": "nav_style",
+      "label": "t:labels.nav_style",
+      "options": [
+        { "value": "doorways", "label": "t:options.nav_doorways" },
+        { "value": "list", "label": "t:options.nav_list" }
+      ],
+      "default": "doorways"
+    },
     { "type": "checkbox", "id": "hide_first_item", "label": "t:labels.hide_first_item", "default": false, "info": "t:info.hide_first_item" },
     { "type": "link_list", "id": "rail_menu", "label": "t:labels.rail_menu", "info": "t:info.rail_menu" },
     { "type": "header", "content": "t:labels.header_icons" },

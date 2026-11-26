@@ -430,5 +430,17 @@
   },
   "sh_rooms": {
     "eyebrow": "تسوّق حسب الغرفة"
+  },
+  "sh_layout": {
+    "cart_pieces": "القطع في سلتك",
+    "cart_lead_default": "متوفرة وجاهزة للإرسال",
+    "cart_details": "التفاصيل",
+    "about_values": "ما يهمنا",
+    "about_next": "تابع جولتك في البيت",
+    "about_contact": "راسل المشغل",
+    "about_journal": "اقرأ المجلة",
+    "faq_ask": "اسأل المشغل",
+    "faq_card_title": "ما زلت مترددًا؟",
+    "faq_card_button": "تواصل معنا"
   }
 }

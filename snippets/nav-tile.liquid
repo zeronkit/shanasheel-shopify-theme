@@ -1,7 +1,7 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
   Image tile in the navigator.
-  Params: url, title, collection, count, current
+  Params: url, title, collection, count, current, style ('door' draws a tall arched doorway for the doorways menu)
   Uses the collection image, or the first product image when the collection has none.
 {%- endcomment -%}
 {%- liquid
@@ -10,6 +10,21 @@
     assign image = collection.products.first.featured_media.preview_image
   endif
 -%}
+{%- if style == 'door' -%}
+  <a class="sh-door" href="{{ url }}"{% if current %} aria-current="page"{% endif %}>
+    <span class="sh-door__arch">
+      {%- if image -%}
+        {% render 'image', image: image, sizes: '(min-width: 990px) 220px, 45vw', max: 640, alt: '' %}
+      {%- else -%}
+        {{ 'collection-1' | placeholder_svg_tag: 'st-placeholder' }}
+      {%- endif -%}
+    </span>
+    <span class="sh-door__name">{{ title | escape }}</span>
+    {%- if count -%}
+      <span class="sh-door__count">{{ 'collections.product_count' | t: count: count }}</span>
+    {%- endif -%}
+  </a>
+{%- else -%}
 <a class="st-nav__tile" href="{{ url }}"{% if current %} aria-current="page"{% endif %}>
   <span class="st-nav__tile-media">
     {%- if image -%}
@@ -23,3 +38,4 @@
     <span class="st-nav__tile-count">{{ 'collections.product_count' | t: count: count }}</span>
   {%- endif -%}
 </a>
+{%- endif -%}

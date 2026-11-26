@@ -210,9 +210,8 @@
       "settings": {
         "eyebrow": "Piece in focus",
         "show_description": true,
-        "media_limit": 3,
         "show_dynamic_checkout": false,
-        "media_side": "start",
+        "media_side": "end",
         "color_scheme": "scheme-2"
       }
     },

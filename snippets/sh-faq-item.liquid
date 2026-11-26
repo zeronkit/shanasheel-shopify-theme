@@ -1,0 +1,6 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%} One question fold of sections/sh-faq. Params: block {%- endcomment -%}
+<details class="sh-faq__item" {{ block.shopify_attributes }}>
+  <summary class="sh-faq__q"><span>{{ block.settings.question | escape }}</span><span class="sh-faq__mark" aria-hidden="true"></span></summary>
+  <div class="st-rte sh-faq__a">{{ block.settings.answer }}</div>
+</details>

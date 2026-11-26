@@ -1,12 +1,13 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
   What a shopper sees before typing: popular searches, recent searches (filled by search.js) and new products.
-  Params: id (unique), show_products (boolean), heading_tag
+  Params: id (unique), show_products (boolean), heading_tag, popular_last (boolean: popular searches after the recent ones)
 {%- endcomment -%}
 {%- liquid
   assign popular = settings.search_popular | split: ','
   assign heading_tag = heading_tag | default: 'h2'
 -%}
+{%- capture popular_block -%}
 {%- if popular.size > 0 -%}
   <div class="st-search-block">
     <{{ heading_tag }} class="st-field__label">{{ 'search.popular' | t }}</{{ heading_tag }}>
@@ -20,6 +21,8 @@
     </ul>
   </div>
 {%- endif -%}
+{%- endcapture -%}
+{%- unless popular_last %}{{ popular_block }}{% endunless -%}
 
 <div class="st-search-block" data-st-recent hidden>
   <div class="st-recent__head">
@@ -28,6 +31,8 @@
   </div>
   <ul class="st-chips" role="list" data-st-recent-list></ul>
 </div>
+
+{%- if popular_last %}{{ popular_block }}{% endif -%}
 
 {%- if show_products -%}
   {%- assign newest = collections.all.products | sort: 'published_at' | reverse -%}

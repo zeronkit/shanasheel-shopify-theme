@@ -50,6 +50,12 @@ This release comes from a full review of the theme on desktop, tablet and phone,
 
   What to do: to rename a tag, use `Themes`, `...`, `Edit default theme content` and search for the tag name.
 
+- **About and FAQ page templates.** Two new page templates with their own sections. `page.about` (section `About: the house`) opens with a wide arched photo and the page title on a walnut sill, sets your page text in two magazine columns on desktop, turns the first list after a heading into a row of small arched value cards, and ends with links to Contact and the Journal. `page.faq` (section `Questions: workshop`) has a walnut title strip with an "Ask the workshop" link, the questions as folds grouped by topic, and a sticky arched "Still unsure?" card with your showroom hours and a Contact button.
+
+  Why: the About and FAQ pages used the same plain page layout, and a FAQ read as one long text (readability).
+
+  What to do: in `Online Store`, `Pages`, open your About page and choose the template `about`, then open your FAQ page and choose `faq`. Add your questions as blocks in the FAQ section (topic, question, answer) and write your hours in the card text. Without question blocks the FAQ shows your page text as it is.
+
 ### Changed
 
 - **Product gallery.** Every image now has the same frame, and the image number and caption sit together in one label ("01 / 03 | Cream cover in daylight") in the same corner of every image.
@@ -169,6 +175,47 @@ This release comes from a full review of the theme on desktop, tablet and phone,
 
   What to do: alt text you write yourself always wins.
 
+- **Shop menu: doorways.** The menu now hangs from the header across the page width. The top items with sub menus are tabs, and their collections stand in one row of tall arched doorways with the photo, the name and the number of products, plus a "View all" door. Under a brass line, one row holds your pages (New arrivals, Journal, About, FAQ, Contact) and the language and currency pickers. On phones it is a full screen sheet with the tabs on top and the doors in two columns. Arrow keys move between the tabs. `Header`, `Menu panel` switches back to the list with image tiles.
+
+  Why: every page starts here, and the menu should look like this shop (consistency).
+
+  What to do: nothing. Collections show as doors when the menu link points to a collection with products.
+- **Search: a side room.** Search opens as a tall drawer from the side of the screen. The field sits at the top, live results show suggestions, the products as a two column grid of small arched photos with name and price, collections and pages as links, and a full width "See all results" bar. Recent and popular searches wait at the bottom before the shopper types.
+
+  Why: the search panel covered the whole top of the page and products showed as small rows (readability).
+
+  What to do: nothing.
+- **Cart drawer: a room card.** The cart now rises from the bottom of the screen as a wide sheet. The pieces stand side by side as arched cards (photo, name, options, quantity, price, Remove) in a row that scrolls sideways with arrows or the keyboard, and a walnut block at the end holds the free delivery bar, the subtotal, Checkout and "View cart". On phones it fills the screen, the pieces are a list and the subtotal and Checkout stay in a bar at the bottom.
+
+  Why: a side drawer hid most of the page and showed one piece at a time on short screens (buying flow).
+
+  What to do: nothing.
+- **Cart page: delivery to your room.** Each piece is a full width card with a large arched photo, its options and a delivery line (the product's lead time, or "In stock, ready to send"), and the quantity and price at the end. The summary is a walnut band under the pieces that stays at the bottom of the window while you scroll: free delivery bar, subtotal, Checkout and the three delivery promises. On phones the band is a slim bar and "Details" opens the order note and the promises. An empty cart shows the room tiles from the home page.
+
+  Why: the summary box beside the lines was easy to lose on long carts (buying flow).
+
+  What to do: the delivery line reads the product metafield `shanasheel.lead_time` (the same one the product page uses).
+- **404 page: the empty room.** One wide drawing of a room (an arched lattice window, a crooked frame with 404, a sideboard and a lamp) with the title, the text and the search field standing on the walnut floor. Under it your collections show as small arched doorways. The product row was removed.
+
+  Why: a lost shopper needs the search and the rooms first (buying flow).
+
+  What to do: nothing. `Rooms menu` still chooses the collections.
+- **Password page: the workshop door.** A split screen: a tall arched photo on one side, and the shop name plaque, your message, the password fold and the newsletter field on the other. The page now uses the theme's Arabic font. On phones the photo is a band at the top.
+
+  Why: the narrow centred column looked like a plain form (readability).
+
+  What to do: optional. Choose a photo in the `Password` section; without one a collection photo is used.
+- **Home: piece in focus.** One wide room photo of the piece across the page with a raised buy card over its lower corner (name, price, options, quantity, Add to cart, View full details). The short facts run on a brass ruled line under the photo. On phones the card overlaps the bottom of the photo and the facts follow as a list. New settings: `Room photo` and `Buy card corner`.
+
+  Why: the photo and buy box side by side looked like every other product block (consistency).
+
+  What to do: optional. Choose a wide room photo in the section; without one the first product photo is used. The old `Photos to show` setting was removed.
+- **Home: workshop to home.** The delivery steps now run down the page as a route joined by a dotted brass line, each number in a small arch, beside a tall arched photo with your delivery note and link under it. On phones the photo comes first. New setting: `Image`.
+
+  Why: four equal columns made the steps hard to follow on tablets (readability).
+
+  What to do: optional. Choose a photo, for example a room being set up; without one a collection photo is used.
+
 ### Fixed
 
 - The breadcrumb on collection pages on phones: the slash now lines up with the links.
@@ -178,16 +225,19 @@ This release comes from a full review of the theme on desktop, tablet and phone,
   What to do: if you copy your settings from 1.0.0 and the `Cart` section on the cart page still holds the old English heading and text, clear the two fields so the translated texts show.
 - On product pages, the buy panel was pushed about 90 pixels down by a leftover offset. It now starts level with the gallery.
 
+- In Arabic, live search suggestions are not offered by Shopify, and the search panel stayed empty. It now shows a "See all results" link for the words typed, which opens the full search page.
+
 ### Updating from 1.0.0
 
 A theme uploaded from a zip file does not update by itself. Your 1.0.0 store keeps working. Update when you are ready:
 
 1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
 2. Download Shanasheel 1.1.0 and upload the zip with `Add theme`, `Upload zip file`. It arrives as a new, unpublished theme.
-3. Copy your settings. You can set the new theme up in the editor the same way as the old one, or copy the files: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. Version 1.1.0 renamed no setting, so these files fit.
+3. Copy your settings. You can set the new theme up in the editor the same way as the old one, or copy the files: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. Version 1.1.0 renamed no setting, so these files fit. Two settings were removed: `Photos to show` in the home `Piece in focus` section and `Show products` in the 404 section. If you paste an old `templates/index.json` or `templates/404.json`, delete the lines `"media_limit"` and `"show_products"` if the editor complains.
 4. In the new theme, set `Theme settings`, `Cart`, `Free delivery threshold`, and change your delivery message in the `Announcement bar` to use `[threshold]`. Write your shop address in `Theme settings`, `Brand assets`, `Store contact email`, and remove any other address from the footer contact text.
-5. Check the pages: the home page, a collection, a product (also on a phone), the cart with an item in it, a search, a journal post and a normal page, in every language you sell in.
-6. Publish the new theme only when every page looks right. Keep the old copy for a while.
+5. In `Online Store`, `Pages`, give your About page the template `about` and your FAQ page the template `faq`, and add your questions to the FAQ section.
+6. Check the pages: the home page, the menu, the search panel, a collection, a product (also on a phone), the cart drawer and the cart page with items in them, a search, a journal post, About, FAQ and the 404 page, in every language you sell in.
+7. Publish the new theme only when every page looks right. Keep the old copy for a while.
 
 Note: the theme info in the 1.0.0 download said 1.1.0 by mistake. To tell the two apart, use the theme names in your library, or look for the `Free delivery threshold` setting, which only 1.1.0 has.
 
@@ -246,6 +296,12 @@ First release.
   السبب: لا يستطيع Shopify ترجمة الوسوم، فكانت الوسوم الإنجليزية تظهر في الصفحات العربية (العربية).
 
   ما عليك فعله: لتغيير اسم وسم استخدم `Themes` ثم `...` ثم `Edit default theme content` وابحث عن اسمه.
+
+- **قالبا صفحتي "من نحن" والأسئلة.** قالبان جديدان للصفحات لكل منهما قسمه. يبدأ `page.about` (القسم `About: the house`) بصورة عريضة داخل قوس وعنوان الصفحة على عتبة من خشب الجوز، ويعرض نص الصفحة في عمودين كالمجلات على الحاسوب، ويحوّل أول قائمة بعد عنوان إلى صف من بطاقات قيم مقوّسة صغيرة، وينتهي برابطين إلى التواصل والمجلة. أما `page.faq` (القسم `Questions: workshop`) ففيه شريط عنوان من الجوز مع رابط "اسأل المشغل"، والأسئلة طيّات مجمّعة حسب الموضوع، وبطاقة مقوّسة ثابتة "ما زلت مترددًا؟" فيها مواعيد صالة العرض وزر للتواصل.
+
+  السبب: كانت صفحتا "من نحن" والأسئلة بالتصميم العادي نفسه، وكانت الأسئلة تُقرأ نصًا طويلًا واحدًا (سهولة القراءة).
+
+  ما عليك فعله: من `Online Store` ثم `Pages` افتح صفحة "من نحن" واختر القالب `about`، ثم افتح صفحة الأسئلة واختر `faq`. أضف أسئلتك كتلًا في قسم الأسئلة (الموضوع والسؤال والجواب) واكتب مواعيدك في نص البطاقة. بدون كتل الأسئلة تعرض الصفحة نصها كما هو.
 
 ### تغيّر
 
@@ -366,6 +422,47 @@ First release.
 
   ما عليك فعله: النص البديل الذي تكتبه بنفسك له الأولوية دائمًا.
 
+- **قائمة التسوق: المداخل.** صارت القائمة تتدلى من الترويسة بعرض الصفحة. العناصر العليا التي لها قوائم فرعية صارت ألسنة، ومجموعاتها تقف في صف واحد من مداخل مقوّسة طويلة فيها الصورة والاسم وعدد المنتجات، مع باب "عرض الكل". وتحت خط نحاسي صف واحد لصفحاتك (وصل حديثًا، المجلة، من نحن، الأسئلة، التواصل) ولاختيار اللغة والعملة. على الهاتف تملأ الشاشة، والألسنة في الأعلى والأبواب في عمودين. مفاتيح الأسهم تنقل بين الألسنة. ويعيدها `Header` ثم `Menu panel` إلى القائمة مع الصور المصغّرة.
+
+  السبب: كل صفحة تبدأ من هنا، ويجب أن تشبه القائمة هذا المتجر (الاتساق).
+
+  ما عليك فعله: لا شيء. تظهر المجموعة بابًا عندما يشير رابط القائمة إلى مجموعة فيها منتجات.
+- **البحث: غرفة جانبية.** يفتح البحث درجًا طويلًا من جانب الشاشة. الحقل في الأعلى، والنتائج المباشرة تعرض الاقتراحات، والمنتجات في شبكة من عمودين بصور مقوّسة صغيرة مع الاسم والسعر، والمجموعات والصفحات روابط، وشريطًا بعرض كامل "عرض كل النتائج". وتنتظر عمليات البحث الأخيرة والشائعة في الأسفل قبل أن يكتب المتسوق.
+
+  السبب: كانت لوحة البحث تغطي أعلى الصفحة كله والمنتجات صفوفًا صغيرة (سهولة القراءة).
+
+  ما عليك فعله: لا شيء.
+- **درج السلة: بطاقة الغرفة.** صارت السلة ترتفع من أسفل الشاشة لوحًا عريضًا. تقف القطع جنبًا إلى جنب بطاقاتٍ مقوّسة (الصورة والاسم والخيارات والكمية والسعر والإزالة) في صف يمرّر جانبيًا بالأسهم أو بلوحة المفاتيح، وفي آخره كتلة من الجوز فيها شريط التوصيل المجاني والمجموع الفرعي وزر الدفع و"عرض السلة". على الهاتف تملأ الشاشة، والقطع قائمة، والمجموع وزر الدفع في شريط ثابت في الأسفل.
+
+  السبب: كان الدرج الجانبي يخفي معظم الصفحة ويعرض قطعة واحدة في الشاشات القصيرة (مسار الشراء).
+
+  ما عليك فعله: لا شيء.
+- **صفحة السلة: التوصيل إلى غرفتك.** كل قطعة بطاقة بعرض كامل فيها صورة مقوّسة كبيرة وخياراتها وسطر التوصيل (مدة التجهيز من المنتج، أو "متوفرة وجاهزة للإرسال")، والكمية والسعر في آخرها. والملخص شريط من الجوز تحت القطع يبقى أسفل النافذة أثناء التمرير: شريط التوصيل المجاني والمجموع الفرعي وزر الدفع ووعود التوصيل الثلاثة. على الهاتف يصير شريطًا نحيفًا، و"التفاصيل" تفتح ملاحظة الطلب والوعود. والسلة الفارغة تعرض مربعات الغرف من الصفحة الرئيسية.
+
+  السبب: كان من السهل أن يضيع صندوق الملخص بجانب القطع في السلال الطويلة (مسار الشراء).
+
+  ما عليك فعله: سطر التوصيل يقرأ حقل المنتج `shanasheel.lead_time` (الحقل نفسه الذي تستخدمه صفحة المنتج).
+- **صفحة 404: الغرفة الفارغة.** رسم واحد عريض لغرفة (نافذة مقوّسة بمشربية، وإطار مائل عليه 404، وخزانة ومصباح)، والعنوان والنص وحقل البحث واقفة على أرضية الجوز. وتحته مجموعاتك مداخلَ مقوّسة صغيرة. وأُزيل صف المنتجات.
+
+  السبب: المتسوق التائه يحتاج البحث والغرف أولًا (مسار الشراء).
+
+  ما عليك فعله: لا شيء. ما زال `Rooms menu` يحدد المجموعات.
+- **صفحة كلمة المرور: باب المشغل.** شاشة مقسومة: صورة طويلة داخل قوس في جهة، ولوحة اسم المتجر ورسالتك وطيّة كلمة المرور وحقل النشرة في الجهة الأخرى. وصارت الصفحة تستخدم الخط العربي للقالب. على الهاتف تصير الصورة شريطًا في الأعلى.
+
+  السبب: كان العمود الضيق في الوسط يبدو نموذجًا عاديًا (سهولة القراءة).
+
+  ما عليك فعله: اختياري. اختر صورة في قسم `Password`، وبدونها تُستخدم صورة إحدى المجموعات.
+- **الرئيسية: قطعة محددة التركيز.** صورة غرفة واحدة عريضة للقطعة بعرض الصفحة، وفوق زاويتها السفلى بطاقة شراء بارزة (الاسم والسعر والخيارات والكمية وأضف إلى السلة وعرض التفاصيل كاملة). والمعلومات القصيرة على سطر بين خطين نحاسيين تحت الصورة. على الهاتف تتداخل البطاقة مع أسفل الصورة وتليها المعلومات قائمة. إعدادات جديدة: `Room photo` و`Buy card corner`.
+
+  السبب: كانت الصورة وصندوق الشراء جنبًا إلى جنب يشبهان كل كتلة منتج أخرى (الاتساق).
+
+  ما عليك فعله: اختياري. اختر صورة غرفة عريضة في القسم، وبدونها تُستخدم أول صورة للمنتج. وأُزيل الإعداد القديم `Photos to show`.
+- **الرئيسية: من المشغل إلى البيت.** صارت خطوات التوصيل تنزل في الصفحة طريقًا يربطها خط نحاسي منقّط، وكل رقم داخل قوس صغير، بجانب صورة طويلة مقوّسة تحتها ملاحظة التوصيل والرابط. على الهاتف تأتي الصورة أولًا. إعداد جديد: `Image`.
+
+  السبب: كانت الأعمدة الأربعة المتساوية تجعل الخطوات صعبة المتابعة على الجهاز اللوحي (سهولة القراءة).
+
+  ما عليك فعله: اختياري. اختر صورة، مثل غرفة يجري تجهيزها، وبدونها تُستخدم صورة إحدى المجموعات.
+
 ### أُصلح
 
 - مسار التنقل في صفحات المجموعات على الهاتف: صارت الشرطة المائلة على مستوى الروابط.
@@ -375,16 +472,19 @@ First release.
   ما عليك فعله: إذا نقلت إعداداتك من 1.0.0 وبقي في قسم `Cart` بصفحة السلة العنوان والنص الإنجليزيان القديمان، فامسح الحقلين لتظهر النصوص المترجمة.
 - في صفحات المنتجات كانت لوحة الشراء منزاحة نحو 90 بكسل إلى الأسفل بسبب إزاحة متبقية، وصارت تبدأ على مستوى المعرض.
 
+- بالعربية لا يقدّم Shopify اقتراحات البحث المباشرة، فكانت لوحة البحث تبقى فارغة. صارت تعرض رابط "عرض كل النتائج" للكلمات المكتوبة، فيفتح صفحة البحث الكاملة.
+
 ### التحديث من 1.0.0
 
 القالب المرفوع من ملف مضغوط لا يتحدّث وحده، ومتجرك على 1.0.0 يبقى يعمل. حدّثه عندما تكون مستعدًا:
 
 1. من `Online Store` ثم `Themes` افتح قائمة `...` لنسختك الحالية من شناشيل واضغط `Duplicate`. هذه النسخة هي احتياطك.
 2. حمّل شناشيل 1.1.0 وارفع الملف المضغوط من `Add theme` ثم `Upload zip file`، فيظهر قالبًا جديدًا غير منشور.
-3. انقل إعداداتك. يمكنك ضبط القالب الجديد في المحرر كما ضبطت القديم، أو نقل الملفات: في القالب القديم افتح `Edit code` وانسخ محتوى `config/settings_data.json` و`sections/header-group.json` و`sections/footer-group.json` وكل ملف غيّرته داخل `templates`، والصقه في الملفات نفسها في القالب الجديد. لم يتغيّر اسم أي إعداد في 1.1.0، فهذه الملفات تناسبه.
+3. انقل إعداداتك. يمكنك ضبط القالب الجديد في المحرر كما ضبطت القديم، أو نقل الملفات: في القالب القديم افتح `Edit code` وانسخ محتوى `config/settings_data.json` و`sections/header-group.json` و`sections/footer-group.json` وكل ملف غيّرته داخل `templates`، والصقه في الملفات نفسها في القالب الجديد. لم يتغيّر اسم أي إعداد في 1.1.0، فهذه الملفات تناسبه. وأُزيل إعدادان: `Photos to show` في قسم `Piece in focus` بالرئيسية و`Show products` في قسم 404. إذا لصقت ملف `templates/index.json` أو `templates/404.json` قديمًا واعترض المحرر، فاحذف سطري `"media_limit"` و`"show_products"`.
 4. في القالب الجديد اضبط `Theme settings` ثم `Cart` ثم `Free delivery threshold`، وعدّل رسالة التوصيل في `Announcement bar` لتستخدم `[threshold]`. واكتب بريد متجرك في `Theme settings` ثم `Brand assets` ثم `Store contact email`، واحذف أي عنوان آخر من نص التواصل في التذييل.
-5. راجع الصفحات: الرئيسية، ومجموعة، ومنتجًا (على الهاتف أيضًا)، والسلة وفيها منتج، وبحثًا، ومقالًا، وصفحة عادية، بكل اللغات التي تبيع بها.
-6. انشر القالب الجديد فقط عندما تصبح كل الصفحات صحيحة، واحتفظ بالنسخة القديمة فترة.
+5. من `Online Store` ثم `Pages` أعطِ صفحة "من نحن" القالب `about` وصفحة الأسئلة القالب `faq`، وأضف أسئلتك إلى قسم الأسئلة.
+6. راجع الصفحات: الرئيسية، والقائمة، ولوحة البحث، ومجموعة، ومنتجًا (على الهاتف أيضًا)، ودرج السلة وصفحة السلة وفيهما منتجات، وبحثًا، ومقالًا، و"من نحن" والأسئلة وصفحة 404، بكل اللغات التي تبيع بها.
+7. انشر القالب الجديد فقط عندما تصبح كل الصفحات صحيحة، واحتفظ بالنسخة القديمة فترة.
 
 ملاحظة: معلومات القالب في ملف 1.0.0 كانت تذكر الرقم 1.1.0 خطأً. لتميّز بين النسختين استخدم اسمي القالبين في مكتبتك، أو ابحث عن إعداد `Free delivery threshold` الموجود في 1.1.0 فقط.
 

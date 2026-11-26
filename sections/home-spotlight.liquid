@@ -1,7 +1,9 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
-  Piece in focus: one product on a wide plinth with its buy form and short facts
-  (lead time, assembly, care). The buy logic is the shared st-product from assets/product.js.
+  Piece in focus: one room photograph of the piece across the content width (16:7), with a raised buy card over
+  its lower end corner (eyebrow, name, price, finishes, quantity, Add to cart, View full details). The short facts
+  (lead time, assembly, care) run as a brass ruled line under the photo. On phones the card is pulled up over the
+  bottom edge of the photo and the facts follow as a list. The buy logic is the shared st-product from assets/product.js.
 {%- endcomment -%}
 {{ 'home.css' | asset_url | stylesheet_tag }}
 {%- liquid
@@ -15,45 +17,28 @@
     endfor
   endif
   assign variant = product.selected_or_first_available_variant
-  assign models = product.media | where: 'media_type', 'model'
+  assign room_image = section.settings.image
+  if room_image == blank
+    assign room_image = product.featured_media.preview_image
+  endif
+  assign corner = section.settings.media_side | default: 'end'
 -%}
-<section class="st-section st-featured-product st-spotlight st-spotlight--media-{{ section.settings.media_side }} color-{{ section.settings.color_scheme }}">
+<section class="st-section st-featured-product sh-focus sh-focus--card-{{ corner }} color-{{ section.settings.color_scheme }}">
   {%- if product != blank -%}
-    <st-product class="st-wrap st-spotlight__grid" data-section-id="{{ section.id }}" data-url="{{ product.url }}">
-      <div class="st-spotlight__stage">
-        <div class="st-gallery" data-st-gallery>
-          <ol class="st-gallery__sheet st-gallery__sheet--rail" role="list" aria-label="{{ 'products.media.gallery' | t }}">
-            {%- for media in product.media limit: section.settings.media_limit -%}
-              <li class="st-gallery__frame" data-media-id="{{ media.id }}">
-                <div class="st-gallery__media st-gallery__media--{{ media.media_type }}">
-                  {% render 'media', media: media, title: product.title, sizes: '(min-width: 990px) 55vw, 100vw' %}
-                </div>
-              </li>
-            {%- else -%}
-              <li class="st-gallery__frame">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</li>
-            {%- endfor -%}
-          </ol>
-          {%- if models.size > 0 -%}
-            <script type="application/json" data-st-models>{{ models | json }}</script>
-          {%- endif -%}
-        </div>
+    <st-product class="st-wrap sh-focus__grid" data-section-id="{{ section.id }}" data-url="{{ product.url }}">
+      <div class="sh-focus__photo">
+        {%- if room_image != blank -%}
+          {% render 'image', image: room_image, fallback_alt: product.title, sizes: '(min-width: 1400px) 1320px, 100vw', max: 2400 %}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}
+        {%- endif -%}
       </div>
-      <div class="st-product__info st-spotlight__info">
-        {%- if section.settings.eyebrow != blank -%}<p class="st-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
-        <h2 class="st-h2">{{ product.title | escape }}</h2>
+      <div class="st-product__info sh-focus__card">
+        {%- if section.settings.eyebrow != blank -%}<p class="sh-focus__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="sh-focus__name"><a href="{{ product.url }}">{{ product.title | escape }}</a></h2>
         <div data-st-swap="price-featured">{% render 'price', product: product, variant: variant, class: 'st-price--large' %}</div>
         {%- if section.settings.show_description and product.description != blank -%}
-          <p class="st-muted st-spotlight__text">{{ product.description | strip_html | truncatewords: 32 }}</p>
-        {%- endif -%}
-        {%- if section.blocks.size > 0 -%}
-          <dl class="st-spotlight__facts">
-            {%- for block in section.blocks -%}
-              <div class="st-spotlight__fact" {{ block.shopify_attributes }}>
-                <dt>{%- unless block.settings.icon == 'none' -%}{% render 'icon', name: block.settings.icon %}{%- endunless -%}{{ block.settings.label | escape }}</dt>
-                <dd>{{ block.settings.value | escape }}</dd>
-              </div>
-            {%- endfor -%}
-          </dl>
+          <p class="sh-focus__text">{{ product.description | strip_html | truncatewords: 18 }}</p>
         {%- endif -%}
         <div data-st-swap="picker-featured" data-variant-id="{{ variant.id }}" data-variant-media="{{ variant.featured_media.id }}">
           {% render 'variant-picker', product: product, section_id: section.id, style: 'chips' %}
@@ -61,15 +46,25 @@
         <div data-st-swap="buy-featured">
           {% render 'buy-form', product: product, variant: variant, section_id: section.id, show_checkout: section.settings.show_dynamic_checkout, show_pickup: false, show_quantity: true %}
         </div>
-        <a class="st-button st-button--text" href="{{ product.url }}">{{ 'products.view_details' | t }} {% render 'icon', name: 'arrow' %}</a>
+        <a class="sh-focus__more" href="{{ product.url }}">{{ 'products.view_details' | t }}<span class="st-visually-hidden">: {{ product.title | escape }}</span> {% render 'icon', name: 'arrow' %}</a>
       </div>
+      {%- if section.blocks.size > 0 -%}
+        <dl class="sh-focus__facts">
+          {%- for block in section.blocks -%}
+            <div class="sh-focus__fact" {{ block.shopify_attributes }}>
+              <dt>{%- unless block.settings.icon == 'none' -%}{% render 'icon', name: block.settings.icon %}{%- endunless -%}{{ block.settings.label | escape }}</dt>
+              <dd>{{ block.settings.value | escape }}</dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
     </st-product>
   {%- else -%}
-    <div class="st-wrap st-spotlight__grid">
-      <div class="st-spotlight__stage"><div class="st-gallery">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</div></div>
-      <div class="st-product__info st-spotlight__info">
-        <h2 class="st-h2">{{ 'products.placeholder_title' | t }}</h2>
-        <p class="st-muted">{{ 'products.placeholder_help' | t }}</p>
+    <div class="st-wrap sh-focus__grid">
+      <div class="sh-focus__photo">{{ 'product-1' | placeholder_svg_tag: 'st-placeholder' }}</div>
+      <div class="sh-focus__card">
+        <h2 class="sh-focus__name">{{ 'products.placeholder_title' | t }}</h2>
+        <p class="sh-focus__text">{{ 'products.placeholder_help' | t }}</p>
       </div>
     </div>
   {%- endif -%}
@@ -82,19 +77,19 @@
   "max_blocks": 4,
   "settings": [
     { "type": "product", "id": "product", "label": "t:labels.product" },
+    { "type": "image_picker", "id": "image", "label": "t:labels.room_photo", "info": "t:info.room_photo" },
     { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Piece in focus" },
     { "type": "checkbox", "id": "show_description", "label": "t:labels.show_description", "default": true },
-    { "type": "range", "id": "media_limit", "label": "t:labels.media_to_show", "min": 1, "max": 10, "step": 1, "default": 3, "info": "t:info.featured_media" },
     { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": false },
     {
       "type": "select",
       "id": "media_side",
-      "label": "t:labels.media_side",
+      "label": "t:labels.card_corner",
       "options": [
         { "value": "start", "label": "t:options.position_start" },
         { "value": "end", "label": "t:options.position_end" }
       ],
-      "default": "start"
+      "default": "end"
     },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-3" }
   ],

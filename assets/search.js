@@ -36,7 +36,7 @@ class StPredictiveSearch extends HTMLElement {
       try {
         const params = new URLSearchParams({ q: term, 'resources[type]': 'product,collection,page,article,query', 'resources[limit]': '6', section_id: 'predictive-search' });
         const response = await fetch(`${this.dataset.url}?${params}`);
-        this.cache.set(term, await response.text());
+        this.cache.set(term, response.ok ? await response.text() : this.fallback(term));
       } catch (error) {
         return;
       } finally {
@@ -50,6 +50,19 @@ class StPredictiveSearch extends HTMLElement {
     this.input.setAttribute('aria-expanded', 'true');
     this.active = -1;
     announce(this.results.querySelector('[data-st-predictive-status]')?.textContent);
+  }
+
+  // Live suggestions failed: offer the full search page for the typed words instead of an empty panel.
+  fallback(term) {
+    const template = this.querySelector('template[data-st-predictive-fallback]');
+    if (!template) return '';
+    const box = document.createElement('div');
+    box.append(template.content.cloneNode(true));
+    const link = box.querySelector('[data-st-fallback-link]');
+    if (link) link.href += encodeURIComponent(term);
+    const text = box.querySelector('[data-st-fallback-text]');
+    if (text) text.textContent = text.textContent.replace('[terms]', term);
+    return box.innerHTML;
   }
 
   options() { return [...this.results.querySelectorAll('[role="option"]')]; }

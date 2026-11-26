@@ -126,6 +126,8 @@ const renderCartSections = (sections) => {
     const current = cart.querySelector('[data-st-cart-content]');
     if (fresh && current) {
       current.replaceWith(fresh);
+      // A cart that was empty at page load has no slider yet: load the slider script for the new row of pieces.
+      if (modules.slider && fresh.querySelector('st-slider')) import(modules.slider);
       count = fresh.dataset.count;
       label = fresh.dataset.countLabel;
     }
@@ -188,7 +190,7 @@ class StCart extends HTMLElement {
   }
 
   async update(line, quantity) {
-    const row = this.querySelector(`.st-line[data-line="${line}"]`);
+    const row = this.querySelector(`[data-st-line="${line}"]`);
     row?.setAttribute('aria-busy', 'true');
     try {
       const data = await postJSON(`${routes.cartChange}.js`, { line: Number(line), quantity, sections: cartSectionIds().join(',') });
@@ -217,6 +219,13 @@ document.addEventListener('click', (event) => {
 });
 
 
+
+/* Cart page band on phones: Details opens the note and the delivery promises (delegated, so it survives cart updates) */
+document.addEventListener('click', (event) => {
+  const toggle = event.target.closest('[data-sh-band-toggle]');
+  if (!toggle) return;
+  toggle.setAttribute('aria-expanded', String(toggle.getAttribute('aria-expanded') !== 'true'));
+});
 
 /* ---------- Search dialog ---------- */
 document.getElementById('SearchDialog')?.addEventListener('hm:open', (event) => {

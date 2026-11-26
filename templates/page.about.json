@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "sh-about",
+      "settings": {
+        "values_from_page": true,
+        "show_links": true,
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -26,6 +26,20 @@
   </div>
   {%- if predictive -%}
       <div class="st-predictive__results" id="{{ id }}-results" data-st-results hidden></div>
+      {%- comment -%} Shown when live suggestions are not available (for example in a language Shopify does not suggest in). {%- endcomment -%}
+      <template data-st-predictive-fallback>
+        <div class="st-predictive__inner" data-st-predictive-content>
+          <ul class="st-predictive__list" role="listbox" aria-label="{{ 'search.suggestions' | t }}">
+            <li class="st-predictive__group" role="presentation">
+              <ul role="group">
+                <li role="option" id="{{ id }}-all" aria-selected="false" class="st-predictive__all">
+                  <a href="{{ routes.search_url }}?options%5Bprefix%5D=last&amp;q=" tabindex="-1" data-st-fallback-link><span data-st-fallback-text>{{ 'search.view_all' | t: terms: '[terms]' }}</span> {% render 'icon', name: 'arrow' %}</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </template>
     </st-predictive-search>
   {%- endif -%}
 </form>

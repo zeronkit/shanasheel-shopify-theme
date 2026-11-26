@@ -25,13 +25,15 @@
           <li class="st-predictive__group st-predictive__group--products" role="presentation">
             <p class="st-predictive__heading" id="st-ps-h-p" aria-hidden="true">{{ 'search.tab_products' | t }}</p>
             <ul role="group" aria-labelledby="st-ps-h-p">
-              {%- for product in res.products limit: 6 -%}
+              {%- for product in res.products limit: 4 -%}
                 <li role="option" id="st-ps-p-{{ forloop.index }}" aria-selected="false" class="st-predictive__product">
                   <a href="{{ product.url }}" tabindex="-1">
-                    {%- if product.featured_media -%}
-                      {% render 'image', image: product.featured_media.preview_image, sizes: '64px', max: 160, alt: '' %}
-                    {%- endif -%}
-                    <span>
+                    <span class="st-predictive__thumb">
+                      {%- if product.featured_media -%}
+                        {% render 'image', image: product.featured_media.preview_image, sizes: '(min-width: 750px) 180px, 45vw', max: 360, alt: '' %}
+                      {%- endif -%}
+                    </span>
+                    <span class="st-predictive__text">
                       <span class="st-predictive__title">{{ product.title | escape }}</span>
                       {% render 'price', product: product %}
                     </span>

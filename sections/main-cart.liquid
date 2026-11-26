@@ -1,7 +1,10 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
-  Cart page: lines on the start side, a soft summary panel with delivery notes on the end side.
-  An empty cart shows rooms to start from and a few pieces, so it is never a dead end.
+  Cart page, "delivery to your room": full width room cards (a large arched photo, the details with the delivery
+  estimate, quantity and price at the end), then a walnut band with the delivery meter, subtotal, checkout and the
+  three delivery promises. The band stays at the bottom of the window while the cards scroll. On phones it is a
+  bar with the subtotal and checkout, the note and the promises open from Details.
+  An empty cart shows the rooms bento and a few pieces, so it is never a dead end.
 {%- endcomment -%}
 {%- liquid
   assign form_id = 'CartForm-' | append: section.id
@@ -35,27 +38,40 @@
         <a class="st-link-button" href="{{ routes.all_products_collection_url }}">{% render 'icon', name: 'back' %}{{ 'cart.continue' | t }}</a>
       </div>
       {%- if cart.item_count > 0 -%}
-        <div class="st-cart__grid">
-          <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="st-cart__lines" novalidate>
-            {% render 'cart-lines', section_id: section.id %}
+        <div class="sh-cartroom">
+          <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="sh-cartroom__lines" novalidate>
+            {% render 'cart-lines', section_id: section.id, layout: 'room' %}
             <noscript><button type="submit" class="st-button st-button--ghost" name="update">{{ 'cart.update' | t }}</button></noscript>
           </form>
-          <div class="st-cart__aside">
-            {% render 'cart-summary', form_id: form_id, show_note: settings.cart_note, heading: true %}
-            {%- if section.settings.show_assurances -%}
-              {%- liquid
-                assign a1 = t_assurance_1
-                assign a2 = t_assurance_2
-                assign a3 = t_assurance_3
-              -%}
-              {%- if a1 != blank or a2 != blank or a3 != blank -%}
-                <ul class="st-assure" role="list">
-                  {%- if a1 != blank -%}<li>{% render 'icon', name: 'truck' %}<span>{{ a1 }}</span></li>{%- endif -%}
-                  {%- if a2 != blank -%}<li>{% render 'icon', name: 'cube' %}<span>{{ a2 }}</span></li>{%- endif -%}
-                  {%- if a3 != blank -%}<li>{% render 'icon', name: 'return' %}<span>{{ a3 }}</span></li>{%- endif -%}
-                </ul>
+          <div class="sh-cartband" data-sh-band>
+            <h2 class="st-visually-hidden">{{ 'cart.summary' | t }}</h2>
+            {% render 'cart-summary', form_id: form_id, show_note: false %}
+            <button type="button" class="sh-cartband__toggle" aria-expanded="false" aria-controls="CartBandMore-{{ section.id }}" data-sh-band-toggle>
+              <span>{{ 'sh_layout.cart_details' | t }}</span>{% render 'icon', name: 'down' %}
+            </button>
+            <div class="sh-cartband__more" id="CartBandMore-{{ section.id }}">
+              {%- if settings.cart_note -%}
+                <details class="st-fold sh-cartband__note"{% if cart.note != blank %} open{% endif %}>
+                  <summary class="st-fold__summary"><span>{{ 'cart.note' | t }}</span>{% render 'icon', name: 'plus' %}</summary>
+                  <label class="st-visually-hidden" for="{{ form_id }}-note">{{ 'cart.note' | t }}</label>
+                  <textarea class="st-input" id="{{ form_id }}-note" name="note" form="{{ form_id }}" rows="3" data-st-note>{{ cart.note }}</textarea>
+                </details>
               {%- endif -%}
-            {%- endif -%}
+              {%- if section.settings.show_assurances -%}
+                {%- liquid
+                  assign a1 = t_assurance_1
+                  assign a2 = t_assurance_2
+                  assign a3 = t_assurance_3
+                -%}
+                {%- if a1 != blank or a2 != blank or a3 != blank -%}
+                  <ul class="sh-cartband__promises" role="list">
+                    {%- if a1 != blank -%}<li>{% render 'icon', name: 'truck' %}<span>{{ a1 }}</span></li>{%- endif -%}
+                    {%- if a2 != blank -%}<li>{% render 'icon', name: 'cube' %}<span>{{ a2 }}</span></li>{%- endif -%}
+                    {%- if a3 != blank -%}<li>{% render 'icon', name: 'return' %}<span>{{ a3 }}</span></li>{%- endif -%}
+                  </ul>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
           </div>
         </div>
       {%- else -%}
@@ -84,7 +100,7 @@
               assign room_handles = ''
               assign room_count = 0
               for c in collections limit: 40
-                if room_count < 3 and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage'
+                if room_count < 5 and c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage'
                   assign room_handles = room_handles | append: c.handle | append: ','
                   assign room_count = room_count | plus: 1
                 endif
@@ -92,11 +108,12 @@
               assign room_handles = room_handles | split: ','
             -%}
             {%- if room_handles.size > 0 -%}
-              <div class="st-cart-empty__block">
+              {{ 'home.css' | asset_url | stylesheet_tag }}
+              <div class="st-cart-empty__block st-rooms st-rooms--mosaic sh-cart-rooms">
                 <h2 class="st-h4">{{ 'cart.empty_rooms' | t }}</h2>
-                <ul class="st-grid st-grid--3 st-grid--m2" role="list">
+                <ul class="st-rooms__grid" role="list" style="--tiles: {{ room_handles.size }};">
                   {%- for handle in room_handles -%}
-                    <li>{% render 'collection-card', collection: collections[handle], sizes: '(min-width: 750px) 30vw, 50vw', placeholder_index: forloop.index %}</li>
+                    <li class="st-room">{% render 'home-room-tile', room: collections[handle], index: forloop.index0, show_count: true %}</li>
                   {%- endfor -%}
                 </ul>
               </div>

@@ -1,9 +1,172 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- comment -%}
   The navigator dialog: numbered departments, collection image tiles and link groups. Mega menu on desktop, drawer on mobile.
-  Params: menu, use_auto, auto_handles, key_pages, section_id, nav_label, scheme
+  Params: menu, use_auto, auto_handles, key_pages, section_id, nav_label, scheme, nav_style ('doorways' or 'list')
 {%- endcomment -%}
 {%- comment -%} The navigator: index of departments on the start side, image tiles and link groups beside it. {%- endcomment -%}
+{%- if nav_style == 'doorways' -%}
+{%- comment -%}
+  Doorways: the panel drops under the header across the content width. Tabs for the top level items
+  with children, then one row of tall arched doorways (one per collection), a brass rule and a single
+  text row with the pages and the language and currency pickers. On phones it is a full screen sheet.
+{%- endcomment -%}
+{%- liquid
+  # Pages row: top level links without children, then the journal, About, FAQ and Contact when they exist.
+  assign page_urls = ','
+  capture page_links
+    for link in menu.links
+      if link.links.size == 0
+        assign page_urls = page_urls | append: link.url | append: ','
+        echo '<li><a class="sh-doors__page" href="' | append: link.url | append: '"'
+        if link.current
+          echo ' aria-current="page"'
+        endif
+        assign safe_title = link.title | escape
+        echo '>' | append: safe_title | append: '</a></li>'
+      endif
+    endfor
+    assign journal = blogs.journal
+    if journal.title == blank
+      assign journal = blogs.news
+    endif
+    if journal.title != blank and journal.articles_count > 0
+      assign mark = ',' | append: journal.url | append: ','
+      unless page_urls contains mark
+        assign page_urls = page_urls | append: journal.url | append: ','
+        assign safe_title = journal.title | escape
+        echo '<li><a class="sh-doors__page" href="' | append: journal.url | append: '">' | append: safe_title | append: '</a></li>'
+      endunless
+    endif
+    assign page_handles = 'about,about-us,faq,contact' | split: ','
+    for handle in page_handles
+      assign pg = pages[handle]
+      if pg.title != blank
+        assign mark = ',' | append: pg.url | append: ','
+        unless page_urls contains mark
+          assign page_urls = page_urls | append: pg.url | append: ','
+          assign safe_title = pg.title | escape
+          echo '<li><a class="sh-doors__page" href="' | append: pg.url | append: '">' | append: safe_title | append: '</a></li>'
+        endunless
+      endif
+    endfor
+  endcapture
+-%}
+<dialog class="sh-doors" id="Navigator" aria-labelledby="NavigatorTitle">
+  <st-navigator class="sh-doors__inner" data-style="doorways">
+    <div class="sh-doors__top">
+      <p class="sh-doors__title" id="NavigatorTitle">{{ nav_label | escape }}</p>
+      <div class="sh-doors__tabs" role="tablist" aria-labelledby="NavigatorTitle">
+        {%- if use_auto -%}
+          {%- if auto_handles.size > 0 -%}
+            <button type="button" class="sh-doors__tab" role="tab" id="NavTab-{{ section_id }}-auto" aria-controls="Nav-{{ section_id }}-auto" aria-selected="true">{{ 'header.collections' | t }}</button>
+          {%- endif -%}
+        {%- else -%}
+          {%- assign first_tab = true -%}
+          {%- for link in menu.links -%}
+            {%- if link.links.size > 0 -%}
+              <button type="button" class="sh-doors__tab" role="tab" id="NavTab-{{ section_id }}-{{ forloop.index }}" aria-controls="Nav-{{ section_id }}-{{ forloop.index }}" aria-selected="{{ first_tab }}"{% unless first_tab %} tabindex="-1"{% endunless %}>{{ link.title | escape }}</button>
+              {%- assign first_tab = false -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <button type="button" class="sh-doors__close" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+
+    <div class="sh-doors__body">
+      {%- if use_auto and auto_handles.size > 0 -%}
+        <div class="sh-doors__room" role="tabpanel" id="Nav-{{ section_id }}-auto" aria-labelledby="NavTab-{{ section_id }}-auto" tabindex="-1">
+          <st-slider class="sh-doors__slider">
+            <ul class="sh-doors__row" role="list" data-st-slider-track>
+              {%- for handle in auto_handles -%}
+                {%- assign c = collections[handle] -%}
+                <li>{% render 'nav-tile', url: c.url, title: c.title, collection: c, count: c.products_count, style: 'door' %}</li>
+              {%- endfor -%}
+              <li>
+                <a class="sh-door sh-door--all" href="{{ routes.collections_url }}">
+                  <span class="sh-door__arch" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+                  <span class="sh-door__name">{{ 'header.view_all_plain' | t }}</span>
+                  <span class="sh-door__count">{{ 'header.collections' | t }}</span>
+                </a>
+              </li>
+            </ul>
+            {%- assign slider_label = 'header.collections' | t -%}
+            {% render 'slider-controls', label: slider_label %}
+          </st-slider>
+        </div>
+      {%- endif -%}
+
+      {%- assign first_panel = true -%}
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <div class="sh-doors__room" role="tabpanel" id="Nav-{{ section_id }}-{{ forloop.index }}" aria-labelledby="NavTab-{{ section_id }}-{{ forloop.index }}" tabindex="-1"{% unless first_panel %} hidden{% endunless %}>
+            {%- assign first_panel = false -%}
+            {%- liquid
+              assign doors = ''
+              assign groups = ''
+              for child in link.links
+                assign door_collection = nil
+                if child.links.size == 0
+                  if child.type == 'collection_link'
+                    assign door_collection = child.object
+                  elsif child.url contains '/collections/'
+                    assign door_handle = child.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+                    if door_handle != blank and door_handle != 'all'
+                      assign door_collection = collections[door_handle]
+                    endif
+                  endif
+                endif
+                if door_collection and door_collection.products_count > 0
+                  capture door
+                    render 'nav-tile', url: child.url, title: child.title, collection: door_collection, count: door_collection.products_count, current: child.current, style: 'door'
+                  endcapture
+                  assign doors = doors | append: '<li>' | append: door | append: '</li>'
+                else
+                  capture group
+                    render 'nav-group', link: child
+                  endcapture
+                  assign groups = groups | append: group
+                endif
+              endfor
+            -%}
+            {%- if doors != blank -%}
+              <st-slider class="sh-doors__slider">
+                <ul class="sh-doors__row" role="list" data-st-slider-track>
+                  {{ doors }}
+                  <li>
+                    <a class="sh-door sh-door--all" href="{{ link.url }}">
+                      <span class="sh-door__arch" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+                      <span class="sh-door__name">{{ 'header.view_all_plain' | t }}</span>
+                      <span class="sh-door__count">{{ link.title | escape }}</span>
+                    </a>
+                  </li>
+                </ul>
+                {% render 'slider-controls', label: link.title %}
+              </st-slider>
+            {%- else -%}
+              <p><a class="sh-doors__page" href="{{ link.url }}">{{ 'header.view_all_plain' | t }}: {{ link.title | escape }}</a></p>
+            {%- endif -%}
+            {%- if groups != blank -%}
+              <div class="sh-doors__groups">{{ groups }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="sh-doors__foot">
+      {%- if page_links != blank -%}
+        <nav class="sh-doors__pages-nav" aria-label="{{ 'header.secondary_nav' | t }}">
+          <ul class="sh-doors__pages" role="list">{{ page_links }}</ul>
+        </nav>
+      {%- endif -%}
+      <div class="sh-doors__locale">
+        {% render 'localization', id: 'NavLocalization', show_country: true, show_language: true %}
+      </div>
+    </div>
+  </st-navigator>
+</dialog>
+{%- else -%}
 <dialog class="st-nav color-{{ scheme }}" id="Navigator" aria-labelledby="NavigatorTitle">
   <st-navigator class="st-nav__inner">
     <div class="st-nav__head">
@@ -114,3 +277,4 @@
     </div>
   </st-navigator>
 </dialog>
+{%- endif -%}

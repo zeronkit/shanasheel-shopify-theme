@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "main": {
+      "type": "sh-faq",
+      "blocks": {
+        "q-fit": {
+          "type": "question",
+          "settings": {
+            "topic": "Delivery",
+            "question": "How do I know a piece will fit?",
+            "answer": "<p>Every product lists its width, depth and height. Measure your space and your doorways before you order. If you are unsure, email us your room size and we will help.</p>"
+          }
+        },
+        "q-floors": {
+          "type": "question",
+          "settings": {
+            "topic": "Delivery",
+            "question": "Do you deliver to upper floors?",
+            "answer": "<p>Yes. Our delivery team carries large pieces to the room of your choice. Let us know about stairs or narrow doors when you order.</p>"
+          }
+        },
+        "q-time": {
+          "type": "question",
+          "settings": {
+            "topic": "Made to order",
+            "question": "How long does made to order furniture take?",
+            "answer": "<p>Most sofas, beds and tables take 4 to 7 weeks. The exact time is shown on each product page before you buy.</p>"
+          }
+        },
+        "q-samples": {
+          "type": "question",
+          "settings": {
+            "topic": "Made to order",
+            "question": "Can I order fabric samples?",
+            "answer": "<p>Yes. Email us with the product and the colours you like, and we will post small samples.</p>"
+          }
+        },
+        "q-wood": {
+          "type": "question",
+          "settings": {
+            "topic": "Care",
+            "question": "How do I care for solid wood?",
+            "answer": "<p>Wipe with a dry or slightly damp cloth. Use mats under hot dishes. Once a year, refresh the surface with a little hard wax oil.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q-fit",
+        "q-floors",
+        "q-time",
+        "q-samples",
+        "q-wood"
+      ],
+      "settings": {
+        "card_text": "<p>The showroom is open Monday to Friday, 9:00 to 17:00, and Saturday, 10:00 to 15:00. Write to us any day and we answer within a working day.</p>",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

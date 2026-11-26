@@ -1,25 +1,42 @@
 {%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
 {%- assign form_id = 'CartForm-drawer' -%}
-<dialog class="st-drawer st-drawer--cart color-{{ settings.drawer_scheme }}" id="CartDrawer" aria-labelledby="CartDrawerTitle">
-  <st-cart class="st-drawer__cart" data-section-id="cart-drawer">
-    <div class="st-drawer__head">
-      <h2 class="st-h4" id="CartDrawerTitle">{{ 'cart.title' | t }}</h2>
-      <button type="button" class="st-icon-button" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+{%- comment -%}
+  The cart as a room card: a wide sheet that rises from the bottom edge. The pieces stand side by side as arched
+  cards in one row that scrolls sideways, and a walnut summary block holds the delivery meter, subtotal and checkout.
+  On phones it is a full screen sheet: the pieces as a vertical list, the subtotal and checkout in a bar at the bottom.
+{%- endcomment -%}
+<dialog class="sh-roomcart color-{{ settings.drawer_scheme }}" id="CartDrawer" aria-labelledby="CartDrawerTitle">
+  <st-cart class="sh-roomcart__cart" data-section-id="cart-drawer">
+    <div class="sh-roomcart__head">
+      <h2 class="sh-roomcart__title" id="CartDrawerTitle">
+        <span aria-hidden="true">{{ 'cart.title' | t }}</span>
+        <span class="st-visually-hidden" data-st-cart-label>{{ 'cart.title_with_count' | t: count: cart.item_count }}</span>
+      </h2>
+      <span class="sh-roomcart__count" data-st-cart-count aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      <button type="button" class="sh-roomcart__close" data-st-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
     </div>
-    <div class="st-drawer__content" data-st-cart-content data-count="{{ cart.item_count }}" data-count-label="{{ 'cart.title_with_count' | t: count: cart.item_count }}">
+    <div class="sh-roomcart__content" data-st-cart-content data-count="{{ cart.item_count }}" data-count-label="{{ 'cart.title_with_count' | t: count: cart.item_count }}">
       {%- if cart.item_count > 0 -%}
-        <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="st-drawer__body" novalidate>
-          {% render 'cart-lines', section_id: 'drawer' %}
-        </form>
-        <div class="st-drawer__foot">
-          {% render 'cart-summary', form_id: form_id, show_note: false %}
-          <a class="st-link-button" href="{{ routes.cart_url }}">{{ 'cart.view' | t }}</a>
+        <div class="sh-roomcart__body">
+          <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="sh-roomcart__lines" novalidate>
+            <st-slider class="sh-roomcart__slider">
+              <div class="sh-roomcart__track" data-st-slider-track tabindex="0" role="region" aria-label="{{ 'sh_layout.cart_pieces' | t }}">
+                {% render 'cart-lines', section_id: 'drawer', layout: 'row' %}
+              </div>
+              {%- assign pieces_label = 'sh_layout.cart_pieces' | t -%}
+              {% render 'slider-controls', label: pieces_label %}
+            </st-slider>
+          </form>
+          <div class="sh-roomcart__summary">
+            {% render 'cart-summary', form_id: form_id, show_note: false %}
+            <a class="sh-roomcart__view" href="{{ routes.cart_url }}">{{ 'cart.view' | t }}</a>
+          </div>
         </div>
       {%- else -%}
-        <div class="st-drawer-empty">
-          <p class="st-h4">{{ 'cart.empty' | t }}</p>
+        <div class="sh-roomcart__empty">
+          <p class="sh-roomcart__empty-title">{{ 'cart.empty' | t }}</p>
           {%- if section.settings.show_rooms -%}
-            <div>
+            <div class="sh-roomcart__empty-rooms">
               <p class="st-field__label">{{ 'cart.empty_rooms' | t }}</p>
               {%- assign rooms_label = 'cart.empty_rooms' | t -%}
               {% render 'room-chips', menu: section.settings.rooms_menu, label: rooms_label, limit: 6 %}
