@@ -28,9 +28,11 @@ The theme takes its look from those windows:
 - Real furniture details. Dimensions as large figures and a table, a cm and inch switch, materials, care and assembly, all read from product metafields.
 - Fabrics and finishes. Each finish shows its swatch photo and a short note, and clicking it picks that variant.
 - Delivery dates. The product page works out an estimated delivery window from your stock and lead times.
-- Free delivery in view. The announcement bar shows your free delivery amount, and the cart shows how much is left to reach it.
+- Free delivery in view. The announcement bar, the product page and the cart all read the same free delivery amount, and the cart shows how much is left to reach it.
+- A Shop menu of arched doorways, one door per collection, and a search that opens like a side room.
+- A cart that rises from the bottom of the screen with each piece on its own arched card, and a cart page that tells the shopper when each piece reaches their room.
 - A showroom collection page with a numbered room index, a photo collage and a story tile between the products.
-- A magazine style journal, a workshop door contact page and a sand search desk.
+- A magazine style journal, a workshop door contact page, an About page that walks through the house and a FAQ page of workshop questions.
 - Arabic built in, with the Cairo font loaded only for Arabic pages.
 
 ### Licence
@@ -116,7 +118,7 @@ You do not need all of them. Every block hides the parts that have no data, and 
 
 In `Online Store`, `Navigation`:
 
-- `Main menu` drives the header links and the shop menu. A link with child links opens as a panel, and links to collections show the collection photo.
+- `Main menu` drives the header links and the Shop menu. In the Shop menu, every top link that has child links becomes a tab, for example "Shop by room" and "Lighting and decor". Its child links to collections become arched doors with the collection photo and the number of pieces. Top links without child links, such as About or Contact, go in the row of pages under the doors.
 - `Footer menu` fills the footer columns.
 
 ### 3.5 Pages
@@ -124,7 +126,11 @@ In `Online Store`, `Navigation`:
 Create these pages in `Online Store`, `Pages` so every link in the theme has somewhere to go:
 
 - `Contact`, with the theme template `page.contact`.
-- `Shipping and returns`, `FAQ` and, if you sell furniture with sizes, `Measuring guide` (handle `measuring-guide`, it opens in a side drawer from the product page).
+- `About`, with the template `page.about` (see 10.4).
+- `FAQ`, with the template `page.faq` (see 10.5).
+- `Shipping and returns` and, if you sell furniture with sizes, `Measuring guide` (handle `measuring-guide`, it opens in a side drawer from the product page). These use the normal `page` template.
+
+To pick a template, open the page in `Online Store`, `Pages` and choose it under `Theme template`.
 
 ### 3.6 Blog
 
@@ -170,10 +176,10 @@ Arabic is handled for you. When a shopper views the store in Arabic, the theme l
 ### 4.4 Other theme settings
 
 - `Layout`: page width and corner radius.
-- `Product cards`: image shape, second image on hover, sizes in stock, colour swatches, vendor and the "New" badge.
+- `Product cards`: image shape, second image on hover, sizes in stock, colour swatches and vendor. `Show New badge for` sets how many days a new product carries the New badge (30 by default). Set it to 0 and only products tagged "new" get the badge.
 - `Cart`: drawer or a full cart page, an order note, currency codes and the `Free delivery threshold` (see 5.1 and 9).
 - `Search`: live suggestions and your `Popular searches` (separate them with commas).
-- `Brand assets`: the favicon and the logo used for sharing and gift cards.
+- `Brand assets`: the favicon, the logo used for sharing and gift cards, and `Store contact email`. That field is empty at first, and while it is empty no email address shows anywhere in the theme. Fill it in with the address you want shoppers to write to. It then shows in the footer contact window and on the contact page (see 10.1 and 11).
 - `Social media`: links for the footer icons.
 - `Theme credit`: turns the small "Theme by ZeronKit" link in the footer on or off.
 
@@ -215,13 +221,16 @@ Without a logo image, the header shows `Text logo`, or the store name when that 
 ### 5.4 Menu, shop navigator and search
 
 - `Menu` picks the menu for the header links.
-- `Show the Shop navigator button` adds the Shop button that opens the menu with collection photos. On phones this is always the menu.
+- `Show the Shop navigator button` adds the Shop button. On phones this button is always the menu. `Navigator button label` changes its word.
+- `Menu panel` sets how the Shop menu opens. `Doorways: a row of arched collection doors` is the default. The panel hangs from the header across the page. The tabs from your menu sit on top. The chosen tab fills the panel with tall arched doors, each with a walnut frame, the collection photo, its name and how many pieces it holds. A dark "View all" door ends the row. Arrows scroll the row when a tab has more doors than fit. Under a brass line, one row holds your pages and the language and country pickers. `List with image tiles` brings back the older list with photo tiles beside it.
 
-[![Shop navigator: The Shop navigator open, with menu items and collection photos.](images/navigator-en.jpg)](images/navigator-en.jpg)
+[![Shop menu as doorways: Shanasheel Shop menu open on desktop, with room tabs, a row of arched collection doors showing photos and product counts, and the pages row under a brass line.](images/navigator-en.jpg)](images/navigator-en.jpg)
 
-- `Show search` adds the search icon. It opens a band at the top of the page with a large search box, popular searches and room links.
+- `Show search` adds the search icon. Search opens as a tall sand drawer from the side of the screen, a side room off the main hall. The field stays at the top. As the shopper types, it shows word suggestions, then products as a two column grid of small arched photos with name and price, then collections and pages, and a full width "See all results" bar. Before anything is typed, recent and popular searches wait at the bottom.
 
-[![Search band: The search band open under the header.](images/search-overlay-en.jpg)](images/search-overlay-en.jpg)
+[![Search side room: Shanasheel search drawer open from the side of the screen, with the search field, live product results in small arched photos and the See all results bar.](images/search-overlay-en.jpg)](images/search-overlay-en.jpg)
+
+Shopify does not offer live suggestions for Arabic. On the Arabic store the drawer shows a "See all results" bar for the words typed, which opens the full search page. That page does find products.
 
 - `Sticky header`: not sticky, always visible, or visible when the shopper scrolls up.
 - `Transparent over the first section on the home page` lets the header sit over the hero photo until the shopper scrolls.
@@ -264,6 +273,8 @@ A wide photo in a tall tile zooms in toward its subject. To choose which part sh
 
 Pick a `Collection` and how many products to show. Cards have a quick add button, so shoppers can buy without leaving the home page. A product with one variant gets "Add to cart", and a product with options gets "View full details". The button has the same size and position on every card in the theme.
 
+A card carries one badge at most. Sold out comes first, then Sale, then New, so a new piece on sale shows Sale. The New badge follows `Theme settings`, `Product cards`, `Show New badge for` (see 4.4).
+
 ### 6.4 Dimensions and materials
 
 [![Dimensions and materials: One piece with a measured drawing, a cm and inch switch and a materials table.](images/home-dimensions-en.jpg)](images/home-dimensions-en.jpg)
@@ -272,9 +283,17 @@ Choose a `Product`. `Measurement` blocks add rows such as width and height, and 
 
 ### 6.5 Piece in focus
 
-[![Piece in focus: One product with its gallery, facts and an add to cart button.](images/home-spotlight-en.jpg)](images/home-spotlight-en.jpg)
+[![Piece in focus: Shanasheel home page section with one wide photo of an oak dining table, a raised walnut buy card over its corner and the lead time, assembly and care facts on a brass line below.](images/home-spotlight-en.jpg)](images/home-spotlight-en.jpg)
 
-Shows one product with its photos, price, options and buy button. `Fact` blocks add short lines such as lead time or assembly.
+This section shows one piece the way it would stand in a room. A wide room photo runs across the page. A raised walnut card with a brass top edge sits over its lower corner. The card holds the name, the price, the options, the quantity, Add to cart and View full details, so a shopper can buy the piece without leaving the home page.
+
+- `Product` picks the piece.
+- `Room photo` sets the wide photo. Leave it empty to use the product's first photo. A real room photo looks best here.
+- `Buy card corner` puts the card on the start side or the end side of the photo. Pick the side where the photo has a quiet wall or floor, so the card does not cover the piece.
+- `Show collection description` shows the first lines of the product description in the card.
+- Each `Fact` block adds a short fact, for example lead time, assembly or care. The facts run on one brass ruled line under the photo.
+
+On phones the photo comes first, the card overlaps its bottom edge and the facts follow as a list.
 
 ### 6.6 Material library
 
@@ -284,9 +303,16 @@ Each `Material` block has a swatch colour or image, a name, a type, a short text
 
 ### 6.7 Delivery steps
 
-[![Delivery steps: Four delivery steps from order to room.](images/home-delivery-en.jpg)](images/home-delivery-en.jpg)
+[![Workshop to home: Shanasheel delivery section with four steps on a route joined by a dotted brass line, each number in a small walnut arch, beside a tall arched photo and the delivery note.](images/home-delivery-en.jpg)](images/home-delivery-en.jpg)
 
-A heading, a text and a button, then one `Step` block per step with an icon, a title and a short text.
+Furniture buyers want to know what happens after they pay. This section walks them from the order to the day the piece stands in their room. The steps run down the page like a route, joined by a dotted brass line, with each number in a small walnut arch. A tall arched photo stands beside them, with your delivery note and a link under it.
+
+- `Eyebrow text` and `Heading` sit above the steps. `Text` is the delivery note under the photo.
+- `Image` sets the tall photo. Without one, the section uses a collection photo. A photo of a piece being carried in or set up tells the story best.
+- `Button label` and `Link` set the link under the photo, for example your delivery page.
+- Add one `Step` block per step, each with an `Icon`, a `Heading` and a `Text`. Four steps fit well.
+
+On phones the photo comes first and the route follows.
 
 ### 6.8 Newsletter card
 
@@ -300,29 +326,32 @@ Sign-ups go to your customer list with the newsletter tag.
 
 [![Collection header: Collection header with the room index, product count and photo collage.](images/collection-head-en.jpg)](images/collection-head-en.jpg)
 
-[![Products and filters: Filter and sort bar, product cards and the story tile.](images/collection-grid-en.jpg)](images/collection-grid-en.jpg)
+[![Products and story tile: Shanasheel Living Room collection with product cards carrying one badge each and the walnut story tile between the products.](images/collection-grid-en.jpg)](images/collection-grid-en.jpg)
 
 Open any collection in the editor (page picker, `Collections`) and click `Collection: showroom`:
 
 - `Show collection description`, `Show collection image`, `Show breadcrumb` and `Show room chips`.
 - `Room chips menu`: pick a menu to choose which rooms appear in the index. Leave it empty to list your collections.
 - `Products per page`, `Pagination` (numbered, load more or infinite scroll), `Columns on desktop` and `Columns on mobile`.
+- `Let shoppers choose how many products to show` adds the per page choice.
 - `Enable filtering` and `Enable sorting`. Filters come from the Search & Discovery app.
-- `Story tile`: a walnut tile placed between the products, with its own text, button and link. `Place it after product` sets its position.
+- `Show a story tile between products` adds a walnut tile between the products, with its own `Eyebrow`, `Title`, `Text`, `Button label` and `Link`. `Place it after product` sets its position.
+
+On a collection with fewer than 12 pieces, the Filter button and the per page choice stay hidden whatever the settings say, because a short list is easier to scan than to filter. Sorting stays. On bigger collections, a filter group with only one choice (for example Availability with only "In stock") is left out.
 
 ### 7.2 Search page
 
 [![Search desk: The search desk before a search, with popular searches, rooms and new products.](images/search-page-en.jpg)](images/search-page-en.jpg)
 
-[![Search results: Search results under a short band with the title and the search field, then filters and sorting.](images/search-results-en.jpg)](images/search-results-en.jpg)
+[![Search results: Shanasheel search results for oak under a short walnut band with the title and search field, tabs for products, articles and pages, sorting and the matching pieces.](images/search-results-en.jpg)](images/search-results-en.jpg)
 
 After a search, the results open under a short walnut band with the title on one side and the search field on the other, so the first results show in the first screen. The search desk before a search stays as it is. The popular search buttons are large enough to tap easily on phones.
 
-The search page has the same filter and sort bar as collections. `Suggested collection when nothing is found` sets what shows when a search has no results. Popular searches come from `Theme settings`, `Search`.
+The search page has the same filter and sort bar as collections, and it follows the same rule: under 12 results, no Filter button and no per page choice. `Suggested collection when nothing is found` sets what shows when a search has no results. Popular searches come from `Theme settings`, `Search`.
 
 ## 8. The product page
 
-[![Product page: The top of a product page: gallery wall and the walnut buy panel.](images/product-top-en.jpg)](images/product-top-en.jpg)
+[![Product page: Top of a Shanasheel product page with the gallery wall, the free delivery line under the price, the stock and delivery box, and Add to cart beside an outline Buy it now button.](images/product-top-en.jpg)](images/product-top-en.jpg)
 
 Open a product in the editor and click `Product information`. The section has:
 
@@ -336,11 +365,14 @@ Every gallery photo has the same frame and one label in its corner with the phot
 
 The buy panel is made of blocks. Drag them to change their order, or remove the ones you do not need:
 
-- `Title`, `Price`, `Variant picker` (buttons or a dropdown) and `Text`. When a variant has a compare at price, the `Price` block shows a sale badge beside the price, for example "Save 13%".
+- `Title`, `Price`, `Variant picker` (buttons or a dropdown) and `Text`. When a variant has a compare at price, the `Price` block shows a "Save 13%" badge beside the price, in the same notched rust tag as the Sale badge on the cards.
+- Under the price there is one delivery line, for example "Free US delivery from $70 USD. Delivery and returns". It reads the same `Free delivery threshold` as the announcement bar and the cart, and its link opens your shipping policy. Write that policy in `Settings`, `Policies`. Set the threshold to 0 and the line goes away.
 - `Fabrics and finishes`: the finish swatches with their notes. It can link to a free swatch page. When the `Variant picker` already shows the finishes as swatches, this block shows only its heading and the note of the selected finish, and the note changes with the shopper's choice.
 - `Delivery and lead time`: the box that says if the item is in stock and when it should arrive. Set the day ranges for in stock and made to order items, or use the `shanasheel.lead_time` metafield.
-- `Buy buttons`: quantity, add to cart, the Buy it now button and pickup availability.
-- `Description`, `Collapsible tab`, `Complementary products` and `Custom Liquid`.
+- `Buy buttons`: quantity, Add to cart, the Buy it now button and pickup availability. Add to cart is the one filled brass button. Buy it now is an outline button beside it, so the shopper's eye goes to Add to cart first. `Show accelerated checkout buttons` turns Buy it now off.
+- `Description`, `Collapsible tab`, `Complementary products` and `Custom Liquid`. The `Delivery and returns` tab holds the delivery details once and does not repeat the delivery box.
+
+Gift card products skip what does not apply to them: no delivery line, no delivery box, no pickup line and no Buy it now.
 
 On phones, once the main button has scrolled off the screen, a bar slides up at the bottom with the product name, the price and "Add to cart". It adds the variant the shopper picked, shows "Sold out" when that variant is not available, and hides again near the footer. There is nothing to set.
 
@@ -364,33 +396,58 @@ Shopify picks these products. You can change them in the Search & Discovery app.
 
 ## 9. Cart
 
-[![Cart drawer: The cart drawer that slides in after adding a product, with the free delivery bar.](images/cart-drawer-en.jpg)](images/cart-drawer-en.jpg)
+`Theme settings`, `Cart`, `Cart type` chooses between the drawer and a full page. With the drawer, the cart opens each time a shopper adds a piece, and "View cart" leads to the cart page.
 
-[![Cart page: The full cart page with the order slip and the free delivery bar.](images/cart-page-en.jpg)](images/cart-page-en.jpg)
+### 9.1 The cart drawer: a room card
 
-`Theme settings`, `Cart`, `Cart type` chooses between the drawer and a full page.
+[![Cart drawer as a room card: Shanasheel cart drawer rising from the bottom of the screen, with the piece on an arched card and a walnut block holding the free delivery bar, subtotal and Checkout.](images/cart-drawer-en.jpg)](images/cart-drawer-en.jpg)
 
-The drawer and the cart page show a free delivery bar at the top of the summary, for example "$31.00 away from free US delivery", and "You have free US delivery" once the order reaches the amount. The bar reads `Theme settings`, `Cart`, `Free delivery threshold`. Set it to 0 to hide the bar. It also stays hidden when the cart is empty or the shopper pays in another currency. The built-in texts mention the US. If your free delivery covers another country, change them in `Themes`, `...`, `Edit default theme content` (search for "free US delivery").
+The drawer rises from the bottom of the screen as a wide sand sheet with a brass top edge. The pieces stand side by side as arched cards: the photo, the name, the options, the price, the quantity and Remove. If the pieces do not all fit, the shopper scrolls the row sideways with the arrows or the keyboard. A walnut block at the end of the row holds the free delivery bar, the subtotal, a short taxes note, Checkout and "View cart".
 
-Each line shows its price once, on the side. When the quantity is more than 1, the price of one item shows under the name, for example "$39.00 each".
+On phones the drawer fills the screen. The pieces become a list, and the free delivery bar, the subtotal and Checkout stay in a bar at the bottom.
 
-On the cart page (`Cart` section) you can turn on three delivery notes under the order total, and set what shows when the cart is empty. Leave the empty cart `Heading` and `Text` blank to use the built-in English and Arabic texts.
+### 9.2 The cart page: delivery to your room
+
+[![Cart page: Shanasheel cart page with a full width card for each piece, a large arched photo and its delivery line, and the walnut band with the free delivery bar, subtotal, Checkout and delivery promises.](images/cart-page-en.jpg)](images/cart-page-en.jpg)
+
+Each piece gets a full width card with a large arched photo, its options and a delivery line with a small truck. The delivery line is the `shanasheel.lead_time` metafield of the variant or the product, for example "Made by hand to order: ships in 4 to 6 weeks". Without it, a piece in stock says "In stock, ready to send". Fill in the lead time on made to order pieces, so shoppers know before they pay.
+
+Under the cards, a walnut band holds the free delivery bar, the subtotal, Checkout and three delivery promises. The band stays at the bottom of the window while the shopper scrolls. On phones it is a slim bar, and a "Details" button opens the promises and the order note.
+
+In the `Cart` section on the cart page:
+
+- `Show delivery notes` and `Delivery note 1`, `Delivery note 2` and `Delivery note 3` set the three promises. Leave the notes empty to use the built-in English and Arabic texts.
+- Under `Empty cart`, `Heading` and `Text` set what an empty cart says. Leave them blank to use the built-in texts. `Show rooms` shows your room tiles, and `Show products` with `Collection` adds a row of products.
+
+The order note shows in the band only when `Theme settings`, `Cart`, `Enable order note` is on.
+
+### 9.3 The free delivery bar
+
+Both the drawer and the page show a free delivery bar, for example "$31.00 away from free US delivery", then "You have free US delivery" once the order reaches the amount. The bar reads `Theme settings`, `Cart`, `Free delivery threshold`, the same amount as the announcement bar and the line under the product price. Set it to the amount of your free shipping rate in `Settings`, `Shipping and delivery`, or to 0 to hide the bar. It also stays hidden when the cart is empty or the shopper pays in another currency.
+
+The built-in texts mention the US. If your free delivery covers another country, change them in `Themes`, `...`, `Edit default theme content` (search for "free US delivery").
+
+The line under the bar speaks only about taxes. Shipping costs show at checkout, as usual in Shopify.
+
+Each line shows its price once. When the quantity is more than 1, the price of one item shows under the name, for example "$39.00 each".
 
 ## 10. Contact page and other pages
 
 ### 10.1 Contact
 
-[![Contact page: The workshop door contact page: three ways in, the letter form and the showroom card.](images/contact-en.jpg)](images/contact-en.jpg)
+[![Contact page: Shanasheel workshop door contact page with the ways to reach the shop on a dark band, the letter form with topic chips and the arched showroom card.](images/contact-en.jpg)](images/contact-en.jpg)
 
 The contact page uses the `page.contact` template and the `Contact: workshop door` section:
 
-- A dark band with the heading, a reply promise and three ways to reach you: write, email and visit.
+- A dark band with the heading, a reply promise and the ways to reach you: write, email and visit.
 - A letter form with topic chips, name, email, order number and message.
 - An arched showroom card with your address, opening hours, email and quick links. Add one `Quick link` block per link.
 
 Every text has an English and an Arabic default. Type your own text in a field only when you want to replace the default.
 
-Messages go to your store email, set in `Settings`, `General`.
+The page shows the email way and the email line on the card only if it has an address. The page takes it from the section's `Email address` field, or else from `Theme settings`, `Brand assets`, `Store contact email`. With both empty, the page shows two ways, numbered 01 and 02, and the form still works.
+
+Messages from the form go to your store email, set in `Settings`, `General`. Shopify also prints that address in its automatic privacy policy, so set it to an address you are happy to show.
 
 ### 10.2 Journal and posts
 
@@ -400,28 +457,58 @@ Messages go to your store email, set in `Settings`, `General`.
 
 The journal page shows the newest post as a cover story and the rest as numbered rows. Post pages can show the author, the reading time, a large first letter and links to the previous and next post.
 
+Shopify cannot translate tags. The theme carries Arabic names for common journal tags, such as Guides (أدلة), Care, Wood, Lighting, Textiles, Ideas and Living room, and shows them on Arabic pages. Other tags show as you wrote them.
+
 Each post ends with a sign-off, for example "Written by Shanasheel Studio Team, November 24, 2026", and a "Shop the pieces" row of products. In the `Blog post` section, `Show "Shop the pieces"` turns the row on or off, `Heading` replaces its title and `Products to show` sets how many products appear (2 to 6). The products come from the post's `shanasheel.products` metafield (see 3.6), then from products whose tags match the post's tags, then from products tagged "bestseller". If nothing matches, the row stays hidden.
 
 ### 10.3 Normal pages
 
-[![Normal page: A normal page: title in a light sand arch and numbered chapters.](images/page-en.jpg)](images/page-en.jpg)
+[![Normal page: Shanasheel Shipping and Returns page with the title in a light sand arch and the page text in numbered chapters.](images/page-en.jpg)](images/page-en.jpg)
 
-Pages such as shipping or FAQ use the `Page` section. The title sits in a light sand arch with a brass rule, and on desktop it stays in view while the chapters scroll. Each heading inside the page text becomes a numbered chapter.
+Pages such as shipping and returns use the `Page` section. The title sits in a light sand arch with a brass rule, and on desktop it stays in view while the chapters scroll. Each heading inside the page text becomes a numbered chapter.
 
-### 10.4 Collections list and 404
+### 10.4 About: a walk through the house
 
-[![All collections: All collections as arched tiles.](images/collections-list-en.jpg)](images/collections-list-en.jpg)
+[![About page: Shanasheel About page with a wide arched photo, the page title on a walnut sill, the story in two columns and the values as small arched cards.](images/about-en.jpg)](images/about-en.jpg)
 
-[![Page not found: The page not found screen with search, room chips and products.](images/not-found-en.jpg)](images/not-found-en.jpg)
+Give your About page the template `page.about` (see 3.5). The `About: the house` section opens with a wide photo inside an arch and the page title on a walnut sill under it. Your page text follows in two columns on desktop, like a magazine. Then come small arched cards for what you care about, and two links at the end, to Contact and to the Journal.
+
+You write all of this in the page itself, in `Online Store`, `Pages`:
+
+- Write your story as normal text, with headings.
+- Under one heading, for example "What we care about", write a short list. With `Values from the page text` on, the theme turns that first list into the arched value cards and takes it out of the text, so nothing shows twice.
+
+In the section you can also set the `Image` (without one, a collection photo is used), an `Eyebrow text`, a `Values heading`, and `Show links to Contact and the Journal`. If you prefer to type the cards in the editor, add `Value` blocks, each with a `Heading`, a `Text` and an `Image`. The blocks then replace the list.
+
+### 10.5 FAQ: workshop questions
+
+[![FAQ page: Shanasheel FAQ page with a walnut title strip, questions as folds grouped under Delivery, Made to order and Care, and the arched Still unsure card with showroom hours.](images/faq-en.jpg)](images/faq-en.jpg)
+
+Give your FAQ page the template `page.faq`. The `Questions: workshop` section has a walnut title strip with a link at the end ("Ask the workshop", set with `Button label` and `Link`). Under it, the questions open and close like folds, grouped by topic. Beside them, an arched "Still unsure?" card stays in view with your showroom hours and a Contact button.
+
+- Add one `Question` block per question, with its `Topic`, `Question` and `Answer`. Questions with the same topic are grouped under that heading, in the order of the blocks.
+- Under `Still unsure card`, set the card's `Heading`, `Text` and `Button label`.
+
+Without any `Question` block, the page shows your page text as it is. The question texts you type in the editor are translated in Translate & Adapt, under `Theme`.
+
+### 10.6 Collections list, 404 and the password page
+
+[![All collections: Shanasheel collections list page with every collection as an arched photo tile.](images/collections-list-en.jpg)](images/collections-list-en.jpg)
+
+[![Page not found: Shanasheel 404 page drawn as an empty room with an arched lattice window, a crooked 404 frame and the search field on the walnut floor, and the collections as small arched doorways below.](images/not-found-en.jpg)](images/not-found-en.jpg)
+
+The 404 page shows an empty room: an arched lattice window, a picture frame hanging crooked with "404", a sideboard and a lamp. The title, a short text, the search field and "Continue shopping" stand on the walnut floor. Under the drawing, your collections appear as small arched doorways. `Room chips menu` picks which collections show, and `Heading` replaces the title.
+
+The password page, which shoppers see while the store is closed, looks like the workshop door. A tall arched photo fills one half of the screen. The shop name plaque, your message, the password field and a newsletter field fill the other half. In the editor, open the page picker, choose `Password`, and set its `Image` and `Show newsletter sign-up`. On phones the photo becomes a band at the top.
 
 ## 11. The footer
 
-[![Footer: The footer: three windows, menu columns, the lattice band and the store name in large type.](images/footer-en.jpg)](images/footer-en.jpg)
+[![Footer: Shanasheel footer with the contact and newsletter windows, four menu columns, the lattice band and the store name in large type.](images/footer-en.jpg)](images/footer-en.jpg)
 
 Click `Footer` in the left list:
 
 - `Layout`: columns, brand and columns, or centred.
-- `Contact window heading` and `Contact window text`.
+- `Contact window heading` and `Contact window text`. Put your showroom hours or address here. Do not type an email address in this text. Fill in `Theme settings`, `Brand assets`, `Store contact email` and the window adds a "Write to us" line with that address by itself.
 - Blocks: `Menu`, `Text` and `Newsletter`.
 - Switches for social icons, Follow on Shop, country and language selectors, payment icons, policy links and the large store name.
 
@@ -452,23 +539,27 @@ For changes the editor cannot make, use `Themes`, `...`, `Edit code`. Duplicate 
 
 The theme flips to right to left by itself and loads the Arabic font. Theme texts such as buttons, labels and the default section texts already come in English and Arabic.
 
-Your own content (product names, descriptions, collections, pages and posts) needs translating in the Translate & Adapt app. Texts that you type into section settings also get translated there, under `Theme`.
+Your own content (product names, descriptions, collections, pages and posts) needs translating in the Translate & Adapt app. Texts that you type into section settings, such as the FAQ questions, also get translated there, under `Theme`.
+
+Shopify sets two limits here. Journal tags cannot be translated, so the theme shows Arabic names for the common ones (see 10.2). Live search suggestions are not offered for Arabic, so the Arabic search drawer leads to the full search page (see 5.4).
 
 ## 14. On phones
 
 [![Home on a phone: The home page on a phone.](images/m-home-en.jpg)](images/m-home-en.jpg)
 
-[![Phone menu: The phone menu.](images/m-menu-en.jpg)](images/m-menu-en.jpg)
+[![Phone menu: Shanasheel Shop menu on a phone as a full screen sheet with the room tabs and the collection doors in two columns.](images/m-menu-en.jpg)](images/m-menu-en.jpg)
 
 [![Product on a phone: A product page on a phone.](images/m-product-en.jpg)](images/m-product-en.jpg)
 
-[![Collection on a phone: A collection page on a phone, with the filter and sort bar.](images/m-collection-en.jpg)](images/m-collection-en.jpg)
+[![Collection on a phone: Shanasheel Living Room collection on a phone with the product cards in two columns.](images/m-collection-en.jpg)](images/m-collection-en.jpg)
 
-[![Cart on a phone: The cart drawer on a phone.](images/m-cart-en.jpg)](images/m-cart-en.jpg)
+[![Cart on a phone: Shanasheel cart on a phone filling the screen, with the piece in a list and the free delivery bar, subtotal and Checkout in a bar at the bottom.](images/m-cart-en.jpg)](images/m-cart-en.jpg)
+
+[![Contact on a phone: Shanasheel contact page on a phone with the dark band, the reply promise and the ways to reach the shop, numbered 01 and 02 when no contact email is set.](images/m-contact-en.jpg)](images/m-contact-en.jpg)
 
 Every section has its own phone layout. You do not need to set anything. Some sections have a separate setting for phones, such as `Columns on mobile` and `Logo width on mobile`.
 
-On phones every button and link is at least 44 pixels so it is easy to tap, and no text is smaller than 12 pixels. On product pages the gallery sits inside the page margin with the next photo peeking in, and the "Add to cart" bar appears at the bottom once the main button has scrolled away (see 8).
+On phones every button and link is at least 44 pixels so it is easy to tap, card names and links inside page text included, and no text is smaller than 12 pixels. The Shop menu becomes a full screen sheet with the doors in two columns, and the cart fills the screen with Checkout always at the bottom. On product pages the gallery sits inside the page margin with the next photo peeking in, and the "Add to cart" bar appears at the bottom once the main button has scrolled away (see 8).
 
 ## 15. Troubleshooting
 
@@ -490,6 +581,16 @@ On phones every button and link is at least 44 pixels so it is easy to tap, and 
 
 **"Shop the pieces" shows the wrong products or none.** Give the post tags that match your product tags, tag a few products "bestseller", or fill the post's `shanasheel.products` metafield (see 3.6).
 
+**Every card says New.** New shows for products created within `Theme settings`, `Product cards`, `Show New badge for` days. A store that added all its products at once sees New everywhere for a month. Lower the days, or set 0 and tag only your real new pieces "new".
+
+**The Filter button is missing on a collection.** Collections and searches with fewer than 12 products hide the Filter button and the per page choice on purpose. Both come back once the list has 12 products or more.
+
+**No email shows in the footer or on the contact page.** Fill in `Theme settings`, `Brand assets`, `Store contact email`.
+
+**The Arabic search drawer shows no products while typing.** Shopify does not offer live suggestions for Arabic. The "See all results" bar opens the full search page, which finds the products.
+
+**The About or FAQ page looks like a plain page.** Open the page in `Online Store`, `Pages` and set `Theme template` to `about` or `faq`.
+
 **The contact form sends nothing.** Check the store email in `Settings`, `General`, and look in your spam folder.
 
 ## 16. Support
@@ -502,7 +603,7 @@ Newest version first. To update from an earlier version, follow 2.3.
 
 ### 1.1.0 (25 November 2026)
 
-This release comes from a full review of the theme on desktop, tablet and phone, in English and Arabic. Nothing was removed and no setting was renamed, so your content and your choices in the editor keep working.
+This release comes from a full review of the theme on desktop, tablet and phone, in English and Arabic. No setting was renamed, so your content and your choices in the editor keep working. Two settings were removed: `Photos to show` in the home `Piece in focus` section and `Show products` on the 404 page (see "Updating from 1.0.0").
 
 **Added**
 
@@ -531,6 +632,28 @@ This release comes from a full review of the theme on desktop, tablet and phone,
   Why: a reader who likes a story can buy the pieces in it without searching (buying flow).
 
   What to do: optional. Tag a few products "bestseller" or give your posts tags that match your product tags. To pick the products yourself, create a metafield definition for blog posts in `Settings`, `Custom data`, with namespace and key `shanasheel.products` and the type list of products, then fill it on each post. Turn the block off with `Show "Shop the pieces"` if you do not want it.
+
+- **Store contact email.** A new setting, `Theme settings`, `Brand assets`, `Store contact email`, empty by default. When you fill it in, the address shows in the footer contact window under "Write to us" and on the contact page. When it is empty, no email line shows and the contact form stays.
+
+  Why: the 1.0.0 demo content showed the theme maker's address as if it were the store's (trust).
+
+  What to do: write your own shop address in the setting. If your footer contact text or your pages still mention another address, change them.
+- **Meta descriptions everywhere.** Every page now has a meta description: your own SEO text first, then the page's own text (product, collection, article or page), then the shop description, then a short theme line for the home page, the collections list, the journal, search, cart, policies and the 404 page. Product pages also get BreadcrumbList data for search engines.
+
+  Why: the home page, the collections list, the journal, search, cart, policies and the 404 page had no description (search engines).
+
+  What to do: optional. Write a description in `Online Store`, `Preferences` and in the SEO part of your products and collections. The theme fills the gaps.
+- **Journal tags in other languages.** Common journal tags (Guides, Care, Wood, Lighting, Textiles, Ideas, Living room and a few more) now show in Arabic on Arabic pages. Other tags show as written.
+
+  Why: Shopify cannot translate tags, so English tags showed on Arabic pages (Arabic).
+
+  What to do: to rename a tag, use `Themes`, `...`, `Edit default theme content` and search for the tag name.
+
+- **About and FAQ page templates.** Two new page templates with their own sections. `page.about` (section `About: the house`) opens with a wide arched photo and the page title on a walnut sill, sets your page text in two magazine columns on desktop, turns the first list after a heading into a row of small arched value cards, and ends with links to Contact and the Journal. `page.faq` (section `Questions: workshop`) has a walnut title strip with an "Ask the workshop" link, the questions as folds grouped by topic, and a sticky arched "Still unsure?" card with your showroom hours and a Contact button.
+
+  Why: the About and FAQ pages used the same plain page layout, and a FAQ read as one long text (readability).
+
+  What to do: in `Online Store`, `Pages`, open your About page and choose the template `about`, then open your FAQ page and choose `faq`. Add your questions as blocks in the FAQ section (topic, question, answer) and write your hours in the card text. Without question blocks the FAQ shows your page text as it is.
 
 **Changed**
 
@@ -615,6 +738,83 @@ This release comes from a full review of the theme on desktop, tablet and phone,
 
   What to do: keep writing alt text for your product photos.
 
+- **Buy it now.** It is now an outline button on the product panel. Only Add to cart is filled.
+
+  Why: two filled buttons competed for attention (buying flow).
+
+  What to do: nothing.
+- **One delivery message on the product page.** The line under the price now says "Free US delivery from $70 USD" from the same `Free delivery threshold` as the announcement and the cart bar, with a link to your delivery and returns policy. The "Shipping calculated at checkout" line is gone, and the `Delivery and returns` fold no longer repeats the delivery box. In the cart, the line under the bar now speaks only about taxes. Gift card products show no delivery line, no delivery box and no Buy it now.
+
+  Why: the page said "Shipping calculated at checkout" right beside a free delivery offer, and the same delivery facts appeared three times (consistency, trust).
+
+  What to do: keep the threshold equal to your real free shipping rate. Set it to 0 if you do not offer free delivery, then the old line comes back.
+- **Badges.** A product card shows one badge: Sold out, then Sale, then New. New shows for products tagged "new", or created within the days set in `Theme settings`, `Product cards` (default now 30, 0 uses the tag only). The "Save" badge on the product page now has the same notched tag shape as the card badge.
+
+  Why: cards could show Sale and New at the same time (consistency).
+
+  What to do: tag products "new" if you want the badge on older pieces.
+- **Small lists.** Collections and search results with fewer than 12 products no longer show the Filter button or the per page choice. A filter group with only one choice is left out.
+
+  Why: filters on a list of five products only added clicks (readability).
+
+  What to do: nothing.
+- **Cart photos.** Product photos in the cart page and the cart drawer are now 120 pixels wide on every screen.
+
+  Why: at 78 pixels on phones the pieces were hard to recognise (buying flow).
+
+  What to do: nothing.
+- **Phones.** Card names, footer credit links, links under the product price and in the delivery fold, the cart Remove link and the contact page fields are now 44 pixels tall. The search field placeholder is shorter ("Search pieces or colours") so it fits on phones in English and Arabic.
+
+  Why: many links on phones were under 44 pixels, and the search placeholder was cut off (phone use).
+
+  What to do: nothing.
+- **Photo descriptions.** A real photo without its own alt text now uses the product, collection or article title (or the hero heading). Decorative copies keep an empty alt text.
+
+  Why: screen readers heard nothing for these photos (accessibility).
+
+  What to do: alt text you write yourself always wins.
+
+- **Shop menu: doorways.** The menu now hangs from the header across the page width. The top items with sub menus are tabs, and their collections stand in one row of tall arched doorways with the photo, the name and the number of products, plus a "View all" door. Under a brass line, one row holds your pages (New arrivals, Journal, About, FAQ, Contact) and the language and currency pickers. On phones it is a full screen sheet with the tabs on top and the doors in two columns. Arrow keys move between the tabs. `Header`, `Menu panel` switches back to the list with image tiles.
+
+  Why: every page starts here, and the menu should look like this shop (consistency).
+
+  What to do: nothing. Collections show as doors when the menu link points to a collection with products.
+- **Search: a side room.** Search opens as a tall drawer from the side of the screen. The field sits at the top, live results show suggestions, the products as a two column grid of small arched photos with name and price, collections and pages as links, and a full width "See all results" bar. Recent and popular searches wait at the bottom before the shopper types.
+
+  Why: the search panel covered the whole top of the page and products showed as small rows (readability).
+
+  What to do: nothing.
+- **Cart drawer: a room card.** The cart now rises from the bottom of the screen as a wide sheet. The pieces stand side by side as arched cards (photo, name, options, quantity, price, Remove) in a row that scrolls sideways with arrows or the keyboard, and a walnut block at the end holds the free delivery bar, the subtotal, Checkout and "View cart". On phones it fills the screen, the pieces are a list and the subtotal and Checkout stay in a bar at the bottom.
+
+  Why: a side drawer hid most of the page and showed one piece at a time on short screens (buying flow).
+
+  What to do: nothing.
+- **Cart page: delivery to your room.** Each piece is a full width card with a large arched photo, its options and a delivery line (the product's lead time, or "In stock, ready to send"), and the quantity and price at the end. The summary is a walnut band under the pieces that stays at the bottom of the window while you scroll: free delivery bar, subtotal, Checkout and the three delivery promises. On phones the band is a slim bar and "Details" opens the order note and the promises. An empty cart shows the room tiles from the home page.
+
+  Why: the summary box beside the lines was easy to lose on long carts (buying flow).
+
+  What to do: the delivery line reads the product metafield `shanasheel.lead_time` (the same one the product page uses).
+- **404 page: the empty room.** One wide drawing of a room (an arched lattice window, a crooked frame with 404, a sideboard and a lamp) with the title, the text and the search field standing on the walnut floor. Under it your collections show as small arched doorways. The product row was removed.
+
+  Why: a lost shopper needs the search and the rooms first (buying flow).
+
+  What to do: nothing. `Rooms menu` still chooses the collections.
+- **Password page: the workshop door.** A split screen: a tall arched photo on one side, and the shop name plaque, your message, the password fold and the newsletter field on the other. The page now uses the theme's Arabic font. On phones the photo is a band at the top.
+
+  Why: the narrow centred column looked like a plain form (readability).
+
+  What to do: optional. Choose a photo in the `Password` section. Without one, a collection photo is used.
+- **Home: piece in focus.** One wide room photo of the piece across the page with a raised buy card over its lower corner (name, price, options, quantity, Add to cart, View full details). The short facts run on a brass ruled line under the photo. On phones the card overlaps the bottom of the photo and the facts follow as a list. New settings: `Room photo` and `Buy card corner`.
+
+  Why: the photo and buy box side by side looked like every other product block (consistency).
+
+  What to do: optional. Choose a wide room photo in the section. Without one, the first product photo is used. The old `Photos to show` setting was removed.
+- **Home: workshop to home.** The delivery steps now run down the page as a route joined by a dotted brass line, each number in a small arch, beside a tall arched photo with your delivery note and link under it. On phones the photo comes first. New setting: `Image`.
+
+  Why: four equal columns made the steps hard to follow on tablets (readability).
+
+  What to do: optional. Choose a photo, for example a room being set up. Without one, a collection photo is used.
+
 **Fixed**
 
 - The breadcrumb on collection pages on phones: the slash now lines up with the links.
@@ -624,19 +824,24 @@ This release comes from a full review of the theme on desktop, tablet and phone,
   What to do: if you copy your settings from 1.0.0 and the `Cart` section on the cart page still holds the old English heading and text, clear the two fields so the translated texts show.
 - On product pages, the buy panel was pushed about 90 pixels down by a leftover offset. It now starts level with the gallery.
 
+- In Arabic, live search suggestions are not offered by Shopify, and the search panel stayed empty. It now shows a "See all results" link for the words typed, which opens the full search page.
+
 **Updating from 1.0.0**
 
 A theme uploaded from a zip file does not update by itself. Your 1.0.0 store keeps working. Update when you are ready:
 
 1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
 2. Download Shanasheel 1.1.0 and upload the zip with `Add theme`, `Upload zip file`. It arrives as a new, unpublished theme.
-3. Copy your settings. You can set the new theme up in the editor the same way as the old one, or copy the files: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. Version 1.1.0 renamed no setting, so these files fit.
-4. In the new theme, set `Theme settings`, `Cart`, `Free delivery threshold`, and change your delivery message in the `Announcement bar` to use `[threshold]`.
-5. Check the pages: the home page, a collection, a product (also on a phone), the cart with an item in it, a search, a journal post and a normal page, in every language you sell in.
-6. Publish the new theme only when every page looks right. Keep the old copy for a while.
+3. Copy your settings. You can set the new theme up in the editor the same way as the old one, or copy the files: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. Version 1.1.0 renamed no setting, so these files fit. Two settings were removed: `Photos to show` in the home `Piece in focus` section and `Show products` in the 404 section. If you paste an old `templates/index.json` or `templates/404.json`, delete the lines `"media_limit"` and `"show_products"` if the editor complains.
+4. In the new theme, set `Theme settings`, `Cart`, `Free delivery threshold`, and change your delivery message in the `Announcement bar` to use `[threshold]`. Write your shop address in `Theme settings`, `Brand assets`, `Store contact email`, and remove any other address from the footer contact text.
+5. In `Online Store`, `Pages`, give your About page the template `about` and your FAQ page the template `faq`, and add your questions to the FAQ section.
+6. Check the pages: the home page, the menu, the search panel, a collection, a product (also on a phone), the cart drawer and the cart page with items in them, a search, a journal post, About, FAQ and the 404 page, in every language you sell in.
+7. Publish the new theme only when every page looks right. Keep the old copy for a while.
 
 Note: the theme info in the 1.0.0 download said 1.1.0 by mistake. To tell the two apart, use the theme names in your library, or look for the `Free delivery threshold` setting, which only 1.1.0 has.
 
 ### 1.0.0 (25 November 2026)
 
 First release.
+
+---
