@@ -1,0 +1,102 @@
+{%- comment -%} Shanasheel theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  JSON-LD for list pages and posts.
+  type 'collection': CollectionPage with an ItemList of the products shown (pass products: collection.products inside paginate).
+  type 'blog': Blog with the posts shown (pass articles: blog.articles inside paginate).
+  type 'article': BlogPosting for the current article.
+{%- endcomment -%}
+{%- liquid
+  assign site_url = request.origin | append: routes.root_url
+  assign publisher_logo = settings.logo_social | default: settings.share_image
+-%}
+{%- case type -%}
+  {%- when 'collection' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": {{ collection.title | json }},
+        "url": {{ request.origin | append: collection.url | json }},
+        "inLanguage": {{ request.locale.iso_code | json }}
+        {%- if collection.description != blank -%},
+          "description": {{ collection.description | strip_html | strip | truncate: 300 | json }}
+        {%- endif -%}
+        {%- if collection.featured_image -%},
+          "image": {{ collection.featured_image | image_url: width: 1200 | prepend: 'https:' | json }}
+        {%- endif -%},
+        "mainEntity": {
+          "@type": "ItemList",
+          "numberOfItems": {{ products.size }},
+          "itemListElement": [
+            {%- for p in products -%}
+              {
+                "@type": "ListItem",
+                "position": {{ forloop.index | plus: offset }},
+                "url": {{ request.origin | append: p.url | json }},
+                "name": {{ p.title | json }}
+                {%- if p.featured_media -%},
+                  "image": {{ p.featured_media.preview_image | image_url: width: 800 | prepend: 'https:' | json }}
+                {%- endif %}
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          ]
+        }
+      }
+    </script>
+  {%- when 'blog' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": {{ blog.title | json }},
+        "url": {{ request.origin | append: blog.url | json }},
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "publisher": { "@type": "Organization", "name": {{ shop.name | json }}, "url": {{ site_url | json }} },
+        "blogPost": [
+          {%- for a in articles -%}
+            {
+              "@type": "BlogPosting",
+              "headline": {{ a.title | json }},
+              "url": {{ request.origin | append: a.url | json }},
+              "datePublished": {{ a.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+              "dateModified": {{ a.updated_at | default: a.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+              "author": { "@type": "Person", "name": {{ a.author | default: shop.name | json }} }
+              {%- if a.image -%},
+                "image": {{ a.image | image_url: width: 1200 | prepend: 'https:' | json }}
+              {%- endif %}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- when 'article' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": {{ article.title | json }},
+        "url": {{ request.origin | append: article.url | json }},
+        "mainEntityOfPage": {{ request.origin | append: article.url | json }},
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "description": {{ article.excerpt_or_content | strip_html | strip | truncate: 300 | json }},
+        "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+        "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+        "author": { "@type": "Person", "name": {{ article.author | default: shop.name | json }} },
+        "publisher": {
+          "@type": "Organization",
+          "name": {{ shop.name | json }},
+          "url": {{ site_url | json }}
+          {%- if publisher_logo != blank -%},
+            "logo": { "@type": "ImageObject", "url": {{ publisher_logo | image_url: width: 600 | prepend: 'https:' | json }} }
+          {%- endif %}
+        },
+        "isPartOf": { "@type": "Blog", "name": {{ blog.title | json }}, "url": {{ request.origin | append: blog.url | json }} }
+        {%- if article.image -%},
+          "image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}
+        {%- endif -%}
+        {%- if article.tags.size > 0 -%},
+          "keywords": {{ article.tags | join: ', ' | json }}
+        {%- endif %}
+      }
+    </script>
+{%- endcase -%}

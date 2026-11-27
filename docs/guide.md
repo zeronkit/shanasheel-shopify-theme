@@ -1,6 +1,6 @@
 # Shanasheel theme guide
 
-Version 1.1.0. Made by ZeronKit (https://zeronkit.com).
+Version 1.1.2, 26 November 2026. Made by ZeronKit (https://zeronkit.com).
 
 This guide covers the whole Shanasheel theme: what it is, how to install it, how to change its colours, fonts and sections, how to edit every page, and how to update it later. Labels in `code style` are the exact words you see in the Shopify theme editor.
 
@@ -600,6 +600,47 @@ Email info@zeronkit.com. Help is best effort.
 ## 17. Changelog
 
 Newest version first. To update from an earlier version, follow 2.3.
+
+### 1.1.2 (26 November 2026)
+
+A one-fix update. Nothing was added or removed and no setting was renamed.
+
+**Changed**
+
+- On phones, the `cm` and `in` buttons in the home `Dimensions and materials` section are now taller (44 px instead of 36 px), so they are easier to tap with a finger. Tablets and desktops look the same.
+
+**Updating from 1.1.1**
+
+1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
+2. Download Shanasheel 1.1.2 from the theme page and upload the zip with `Add theme`, `Upload zip file`.
+3. Copy your settings: in the old theme open `Edit code` and copy `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and any file in `templates` you changed into the same files in the new theme.
+4. Check the home page on a phone, then publish the new theme. Keep the old copy for a while.
+
+If you come from 1.1.0 or 1.0.0, follow the 1.1.1 and 1.1.0 steps below as well.
+
+### 1.1.1 (26 November 2026)
+
+A small update. No setting was renamed or removed.
+
+**Added**
+
+- `Favicon` in `Theme settings`, `Brand assets` now also sets the icon shoppers see when they save your store to a phone home screen. Use a square image of at least 180 x 180 px.
+- A new `Default share image` setting in `Brand assets`. Pages without their own picture (home, About, Contact, FAQ, policies, journal, search, cart) show it when a link is shared. Use 1200 x 630 px.
+- Better data for search engines on collection pages, the journal and articles.
+
+**Changed**
+
+- On the home page, the hero heading is now the main page heading (h1) instead of the logo. Keep the hero as the first section, or give your first section a heading.
+- The small gold dot above the buy panel on product pages is gone.
+
+**Updating from 1.1.0**
+
+1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
+2. Download Shanasheel 1.1.1 from the theme page and upload the zip with `Add theme`, `Upload zip file`.
+3. Copy your settings: in the old theme open `Edit code` and copy `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and any file in `templates` you changed into the same files in the new theme.
+4. Add your icon in `Favicon` and your share picture in `Default share image`, check a few pages, then publish the new theme.
+
+If you come from 1.0.0, follow the 1.1.0 steps below as well.
 
 ### 1.1.0 (25 November 2026)
 

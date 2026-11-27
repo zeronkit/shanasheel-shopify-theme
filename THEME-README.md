@@ -14,7 +14,7 @@ Shanasheel is built on Online Store 2.0: JSON templates, sections everywhere, he
 
 ## Installing
 
-1. Download the theme zip (`shanasheel-1.0.0.zip`).
+1. Download the theme zip (`shanasheel-1.1.1.zip`).
 2. In Shopify admin go to **Online Store > Themes > Add theme > Upload zip file** and choose the zip.
 3. Click **Customize**, pick a style preset in **Theme settings**, add your menus, logo and collections.
 4. Publish when you are ready.

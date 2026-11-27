@@ -17,10 +17,8 @@
   endif
   assign key_pages = 'about-us,faq,contact' | split: ','
   assign nav_label_down = nav_label | downcase | strip
+  # The logo is never the h1, the home hero heading is the h1 of the home page.
   assign logo_tag = 'p'
-  if request.page_type == 'index'
-    assign logo_tag = 'h1'
-  endif
   assign transparent = false
   if section.settings.transparent_home and request.page_type == 'index'
     assign transparent = true

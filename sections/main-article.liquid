@@ -204,9 +204,7 @@
       </section>
     {%- endif -%}
   </div>
-  <script type="application/ld+json">
-    {{ article | structured_data }}
-  </script>
+  {% render 'structured-data', type: 'article' %}
   </div>
 </article>
 

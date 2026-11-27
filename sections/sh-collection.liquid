@@ -133,6 +133,7 @@
           {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown %}
         </div>
       </st-facets>
+      {% render 'structured-data', type: 'collection', products: collection.products, offset: paginate.current_offset %}
     {%- endpaginate -%}
   </div>
 </section>

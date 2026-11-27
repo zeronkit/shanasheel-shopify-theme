@@ -7,7 +7,7 @@
 <p align="center">
 <a href="docs/guide.md"><img alt="Read the full guide in English" src="https://img.shields.io/badge/Full%20guide-English-C9A36A?style=for-the-badge"></a>
 <a href="docs/guide-ar.md"><img alt="Read the full guide in Arabic" src="https://img.shields.io/badge/Full%20guide-Arabic-C9A36A?style=for-the-badge"></a>
-<a href="https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip"><img alt="Download Shanasheel" src="https://img.shields.io/badge/Download-shanasheel--1.1.0.zip-2ea043?style=for-the-badge"></a>
+<a href="https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.2.zip"><img alt="Download Shanasheel" src="https://img.shields.io/badge/Download-shanasheel--1.1.2.zip-2ea043?style=for-the-badge"></a>
 </p>
 
 <table><tr><td valign="top" width="50%">
@@ -60,7 +60,7 @@ The same guide is on the website: [zeronkit.com/shanasheel-guide](https://zeronk
 
 Shanasheel is a free Shopify theme for furniture, lighting, textiles and home decor stores, in English and Arabic. Made by [ZeronKit](https://zeronkit.com).
 
-Version 1.1.0. See the [changelog](CHANGELOG.md) for what changed and what to do after updating.
+Version 1.1.2. See the [changelog](CHANGELOG.md) for what changed and what to do after updating.
 
 The name comes from the carved wooden bay windows of old Baghdad and Basra houses. The theme borrows their walnut wood, brass fittings, arches and lattice.
 
@@ -68,7 +68,7 @@ The name comes from the carved wooden bay windows of old Baghdad and Basra house
 
 ## Download
 
-- Latest version: [shanasheel-1.1.0.zip](https://zeronkit.com/downloads/shanasheel-1.1.0.zip) from zeronkit.com, or the same file attached to the [v1.1.0 release](https://github.com/zeronkit/shanasheel-shopify-theme/releases/tag/v1.1.0) on GitHub ([direct link](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.0.zip)).
+- Latest version: [shanasheel-1.1.2.zip](https://zeronkit.com/downloads/shanasheel-1.1.2.zip) from zeronkit.com, or the same file attached to the [v1.1.2 release](https://github.com/zeronkit/shanasheel-shopify-theme/releases/tag/v1.1.2) on GitHub ([direct link](https://github.com/zeronkit/shanasheel-shopify-theme/releases/latest/download/shanasheel-1.1.2.zip)).
 - Guide: [zeronkit.com/shanasheel-guide](https://zeronkit.com/shanasheel-guide/) (English) and [zeronkit.com/shanasheel-guide-ar](https://zeronkit.com/shanasheel-guide-ar/) (Arabic).
 - What changed: [CHANGELOG.md](CHANGELOG.md) (English and Arabic).
 - In Shopify admin: `Online Store` > `Themes` > `Add theme` > `Upload zip file`.

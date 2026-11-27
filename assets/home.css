@@ -170,6 +170,7 @@
 .st-dims__unit span { display: grid; place-items: center; min-inline-size: 3.25rem; min-block-size: 2.25rem; padding-inline: 0.9rem; border-radius: 999px; font-size: 0.875rem; }
 .st-dims__unit input:checked + span { background: var(--st-button); color: var(--st-button-label); }
 .st-dims__unit input:focus-visible + span { outline: 2px solid var(--st-text); outline-offset: 2px; }
+@media (max-width: 749px) { .st-dims__unit span { min-block-size: 2.75rem; } }
 .st-dims__table { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .st-dims__caption-head { caption-side: top; text-align: start; padding-block-end: 0.5rem; font-family: var(--st-font-heading); font-weight: var(--st-font-heading-weight); font-size: 1.15rem; }
 .st-dims__table th, .st-dims__table td { padding: 0.7rem 0; padding-inline-end: 1rem; text-align: start; vertical-align: top; border-block-end: 1px solid var(--st-line); font-size: 0.9375rem; }

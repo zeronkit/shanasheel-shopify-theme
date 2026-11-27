@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Shanasheel",
-    "theme_version": "1.1.0",
+    "theme_version": "1.1.2",
     "theme_author": "ZeronKit",
     "theme_documentation_url": "https://zeronkit.com/themes/",
     "theme_support_url": "https://zeronkit.com/legal/"
@@ -549,6 +549,12 @@
         "id": "logo_social",
         "label": "t:labels.logo_social",
         "info": "t:info.logo_social"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "t:labels.share_image",
+        "info": "t:info.share_image"
       },
       {
         "type": "text",

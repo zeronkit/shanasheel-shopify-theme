@@ -81,6 +81,7 @@
         {%- endif -%}
       {%- endif -%}
       {% render 'pagination', paginate: paginate %}
+      {% render 'structured-data', type: 'blog', articles: blog.articles %}
     {%- endpaginate -%}
   </div>
 </section>

@@ -2,6 +2,76 @@
 
 All notable changes to the Shanasheel Shopify theme by ZeronKit. The Arabic version follows the English one.
 
+## 1.1.2 (26 November 2026)
+
+A one-fix release after the owner's second review of the demo store on 26 November 2026. Nothing was added or removed and no setting was renamed.
+
+### Changed
+
+- **Bigger unit switch on phones.** In the `Dimensions and materials` section on the home page, the `cm` and `in` buttons are now 44 px tall on phones (they were 36 px). They keep the same width, pill shape and colours. Tablets and desktops are unchanged.
+
+  Why: 36 px was too small to tap with a finger. 44 x 44 px is the usual minimum for touch (accessibility).
+
+  What to do: nothing.
+
+### Updating from 1.1.1
+
+1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
+2. Download Shanasheel 1.1.2 and upload the zip with `Add theme`, `Upload zip file`. It arrives as a new, unpublished theme.
+3. Copy your settings: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. No setting was renamed or removed, so these files fit.
+4. Check the home page on a phone, then publish the new theme. Keep the old copy for a while.
+
+If you come from 1.1.0 or 1.0.0, follow the 1.1.1 and 1.1.0 steps below as well.
+
+## 1.1.1 (26 November 2026)
+
+A small release after the owner's review of the demo store on 26 November 2026. Nothing was removed and no setting was renamed.
+
+### Added
+
+- **Phone home screen icon.** The `Favicon` setting in `Theme settings`, `Brand assets` now also gives the icon for phone home screens (apple-touch-icon, 180 x 180 px) beside the 32 x 32 px browser tab icon.
+
+  Why: without it, a phone showed a screenshot of the page when a shopper saved the store to the home screen (brand).
+
+  What to do: upload a square image of at least 180 x 180 px in `Favicon`.
+- **Default share image.** A new setting, `Theme settings`, `Brand assets`, `Default share image`. Products, collections and articles share their own image. Other pages (home, About, Contact, FAQ, policies, the journal, search, cart) share this image, or the `Brand logo for sharing and gift cards` when it is empty. Every page now also has `twitter:image`.
+
+  Why: most pages had no share picture, so a link posted on social media or in a chat showed no image (sharing).
+
+  What to do: upload a 1200 x 630 px picture of your store in `Default share image`.
+- **More structured data for search engines.** Collection pages get CollectionPage with a list of the products shown on that page. The journal page gets Blog with its posts. Articles now use BlogPosting with the author, the dates, the image, the publisher and the tags. Product, BreadcrumbList, Organization and WebSite data stay as before.
+
+  Why: search engines understand list pages and posts better with this data (search engines).
+
+  What to do: nothing.
+
+### Changed
+
+- **One h1 on the home page.** The hero heading (for example "Rooms that ask you to stay a while") is now the h1 of the home page when the `Room scene hero` section is the first section. The logo in the header is no longer an h1. When the hero heading is empty, the store name is the h1, hidden from view.
+
+  Why: with an image logo the h1 had no text, and the visible heading was an h2 (accessibility, search engines).
+
+  What to do: keep the hero as the first section of the home page, or give your first section a heading.
+- **No dot above the buy panel.** The small gold dot at the top centre of the dark buy panel on the product page is gone, and the panel has a little less space at the top.
+
+  Why: it looked like a stray mark rather than a part of the design (polish).
+
+  What to do: nothing.
+
+### Demo store only
+
+The demo store got a favicon and a share picture made from its own logo and home hero, and its footer no longer shows Contact twice: the Shop column uses a new `Footer shop` menu without Contact, and Contact stays under Help. These are store content, not theme files.
+
+### Updating from 1.1.0
+
+1. In `Online Store`, `Themes`, open the `...` menu of your current Shanasheel and click `Duplicate`. The copy is your backup.
+2. Download Shanasheel 1.1.1 and upload the zip with `Add theme`, `Upload zip file`. It arrives as a new, unpublished theme.
+3. Copy your settings: in the old theme open `Edit code`, copy the content of `config/settings_data.json`, `sections/header-group.json`, `sections/footer-group.json` and each file in `templates` that you changed, and paste it into the same files in the new theme. No setting was renamed or removed, so these files fit.
+4. In the new theme, upload your icon in `Theme settings`, `Brand assets`, `Favicon` and your share picture in `Default share image`.
+5. Check the home page, a product page, a collection and the journal, then publish the new theme. Keep the old copy for a while.
+
+If you come from 1.0.0, follow the 1.1.0 steps below as well.
+
 ## 1.1.0 (25 November 2026)
 
 This release comes from a full review of the theme on desktop, tablet and phone, in English and Arabic. Nothing was removed and no setting was renamed, so your content and your choices in the editor keep working.
@@ -248,6 +318,76 @@ First release.
 ---
 
 # سجل تغييرات شناشيل
+
+## 1.1.2 (26 نوفمبر 2026)
+
+إصدار بإصلاح واحد بعد المراجعة الثانية لصاحب المتجر للمتجر التجريبي في 26 نوفمبر 2026. لم يُضَف شيء ولم يُحذف شيء ولم يتغيّر اسم أي إعداد.
+
+### تغيّر
+
+- **مبدّل الوحدات أكبر على الهاتف.** في قسم `Dimensions and materials` في الصفحة الرئيسية، صار ارتفاع زرّي `سم` و`إنش` على الهاتف 44 بكسل (كان 36 بكسل). العرض والشكل والألوان كما هي. الأجهزة اللوحية وأجهزة الكمبيوتر لم تتغيّر.
+
+  السبب: 36 بكسل صغير جدًا للمس بالإصبع، و44 × 44 بكسل هو الحد الأدنى المعتاد للمس (سهولة الاستخدام).
+
+  ما عليك فعله: لا شيء.
+
+### التحديث من 1.1.1
+
+1. من `Online Store` ثم `Themes` افتح قائمة `...` لنسختك الحالية من شناشيل واضغط `Duplicate`. هذه النسخة هي احتياطك.
+2. نزّل شناشيل 1.1.2 وارفع الملف المضغوط عبر `Add theme` ثم `Upload zip file`. يصل كقالب جديد غير منشور.
+3. انسخ إعداداتك: في القالب القديم افتح `Edit code` وانسخ محتوى `config/settings_data.json` و`sections/header-group.json` و`sections/footer-group.json` وكل ملف غيّرته في `templates`، والصقه في الملفات نفسها في القالب الجديد. لم يتغيّر اسم أي إعداد ولم يُحذف شيء، فهذه الملفات تناسبه.
+4. افحص الصفحة الرئيسية على الهاتف، ثم انشر القالب الجديد. احتفظ بالنسخة القديمة لفترة.
+
+إن كنت تحدّث من 1.1.0 أو 1.0.0 فاتبع خطوات 1.1.1 و1.1.0 أدناه أيضًا.
+
+## 1.1.1 (26 نوفمبر 2026)
+
+إصدار صغير بعد مراجعة صاحب المتجر للمتجر التجريبي في 26 نوفمبر 2026. لم يُحذف شيء ولم يتغيّر اسم أي إعداد.
+
+### أُضيف
+
+- **أيقونة الشاشة الرئيسية للهاتف.** إعداد `Favicon` في `Theme settings` ثم `Brand assets` يعطي الآن أيضًا أيقونة الشاشة الرئيسية للهاتف (apple-touch-icon بمقاس 180 × 180 بكسل) إلى جانب أيقونة تبويب المتصفح بمقاس 32 × 32 بكسل.
+
+  السبب: بدونها كان الهاتف يعرض صورة مصغّرة للصفحة عندما يحفظ المتسوق المتجر على الشاشة الرئيسية (الهوية).
+
+  ما عليك فعله: ارفع صورة مربعة لا يقل مقاسها عن 180 × 180 بكسل في `Favicon`.
+- **صورة المشاركة الافتراضية.** إعداد جديد في `Theme settings` ثم `Brand assets` باسم `Default share image`. المنتجات والمجموعات والمقالات تُشارَك بصورتها الخاصة. باقي الصفحات (الرئيسية، من نحن، تواصل معنا، الأسئلة، السياسات، المجلة، البحث، السلة) تُشارَك بهذه الصورة، أو بشعار العلامة للمشاركة إن كانت فارغة. وكل صفحة فيها الآن `twitter:image`.
+
+  السبب: معظم الصفحات لم تكن لها صورة مشاركة، فكان الرابط في مواقع التواصل أو المحادثات يظهر بلا صورة (المشاركة).
+
+  ما عليك فعله: ارفع صورة لمتجرك بمقاس 1200 × 630 بكسل في `Default share image`.
+- **بيانات منظّمة أكثر لمحركات البحث.** صفحات المجموعات فيها CollectionPage مع قائمة المنتجات المعروضة في الصفحة. صفحة المجلة فيها Blog مع مقالاتها. المقالات تستخدم الآن BlogPosting مع الكاتب والتواريخ والصورة والناشر والوسوم. بيانات Product وBreadcrumbList وOrganization وWebSite باقية كما هي.
+
+  السبب: محركات البحث تفهم صفحات القوائم والمقالات أفضل بهذه البيانات (محركات البحث).
+
+  ما عليك فعله: لا شيء.
+
+### تغيّر
+
+- **عنوان h1 واحد في الصفحة الرئيسية.** عنوان الواجهة (مثل "غرف تدعوك إلى البقاء لفترة") صار عنوان h1 للصفحة الرئيسية عندما يكون قسم `Room scene hero` هو القسم الأول. الشعار في الرأس لم يعد h1. إن كان عنوان الواجهة فارغًا فاسم المتجر هو h1، مخفيًا عن العين.
+
+  السبب: مع شعار من صورة كان h1 بلا نص، والعنوان الظاهر كان h2 (سهولة الوصول، محركات البحث).
+
+  ما عليك فعله: أبقِ الواجهة أول قسم في الصفحة الرئيسية، أو ضع عنوانًا لقسمك الأول.
+- **لا نقطة فوق لوحة الشراء.** النقطة الذهبية الصغيرة في أعلى منتصف لوحة الشراء الداكنة في صفحة المنتج أُزيلت، وصارت المسافة في أعلى اللوحة أقل قليلًا.
+
+  السبب: كانت تبدو علامة شاردة لا جزءًا من التصميم (اللمسات الأخيرة).
+
+  ما عليك فعله: لا شيء.
+
+### في المتجر التجريبي فقط
+
+حصل المتجر التجريبي على أيقونة وصورة مشاركة مصنوعتين من شعاره وواجهته الرئيسية، ولم يعد التذييل يعرض "تواصل معنا" مرتين: عمود التسوق يستخدم قائمة جديدة باسم `Footer shop` بدون تواصل معنا، ويبقى تواصل معنا تحت المساعدة. هذه محتويات المتجر وليست ملفات القالب.
+
+### التحديث من 1.1.0
+
+1. من `Online Store` ثم `Themes` افتح قائمة `...` لنسختك الحالية من شناشيل واضغط `Duplicate`. هذه النسخة هي احتياطك.
+2. نزّل شناشيل 1.1.1 وارفع الملف المضغوط عبر `Add theme` ثم `Upload zip file`. يصل كقالب جديد غير منشور.
+3. انسخ إعداداتك: في القالب القديم افتح `Edit code` وانسخ محتوى `config/settings_data.json` و`sections/header-group.json` و`sections/footer-group.json` وكل ملف غيّرته في `templates`، والصقه في الملفات نفسها في القالب الجديد. لم يتغيّر اسم أي إعداد ولم يُحذف شيء، فهذه الملفات تناسبه.
+4. في القالب الجديد ارفع أيقونتك في `Theme settings` ثم `Brand assets` ثم `Favicon`، وصورة المشاركة في `Default share image`.
+5. افحص الصفحة الرئيسية وصفحة منتج ومجموعة والمجلة، ثم انشر القالب الجديد. احتفظ بالنسخة القديمة لفترة.
+
+إن كنت تحدّث من 1.0.0 فاتبع خطوات 1.1.0 أدناه أيضًا.
 
 ## 1.1.0 (25 نوفمبر 2026)
 
